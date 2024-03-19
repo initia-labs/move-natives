@@ -1,5 +1,5 @@
 
-<a name="0x1_simple_map"></a>
+<a id="0x1_simple_map"></a>
 
 # Module `0x1::simple_map`
 
@@ -31,7 +31,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_SimpleMap"></a>
+<a id="0x1_simple_map_SimpleMap"></a>
 
 ## Struct `SimpleMap`
 
@@ -55,7 +55,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 </dl>
 
 
-<a name="0x1_simple_map_Element"></a>
+<a id="0x1_simple_map_Element"></a>
 
 ## Struct `Element`
 
@@ -85,12 +85,12 @@ This module provides a solution for sorted maps, that is it has the properties t
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_simple_map_EKEY_ALREADY_EXISTS"></a>
+<a id="0x1_simple_map_EKEY_ALREADY_EXISTS"></a>
 
 
 
@@ -99,7 +99,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_EKEY_NOT_FOUND"></a>
+<a id="0x1_simple_map_EKEY_NOT_FOUND"></a>
 
 
 
@@ -108,7 +108,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_length"></a>
+<a id="0x1_simple_map_length"></a>
 
 ## Function `length`
 
@@ -129,7 +129,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_create"></a>
+<a id="0x1_simple_map_create"></a>
 
 ## Function `create`
 
@@ -152,7 +152,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_borrow"></a>
+<a id="0x1_simple_map_borrow"></a>
 
 ## Function `borrow`
 
@@ -179,7 +179,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_borrow_mut"></a>
+<a id="0x1_simple_map_borrow_mut"></a>
 
 ## Function `borrow_mut`
 
@@ -206,7 +206,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_contains_key"></a>
+<a id="0x1_simple_map_contains_key"></a>
 
 ## Function `contains_key`
 
@@ -231,7 +231,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_destroy_empty"></a>
+<a id="0x1_simple_map_destroy_empty"></a>
 
 ## Function `destroy_empty`
 
@@ -253,7 +253,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_add"></a>
+<a id="0x1_simple_map_add"></a>
 
 ## Function `add`
 
@@ -289,7 +289,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_remove"></a>
+<a id="0x1_simple_map_remove"></a>
 
 ## Function `remove`
 

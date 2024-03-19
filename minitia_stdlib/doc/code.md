@@ -1,5 +1,5 @@
 
-<a name="0x1_code"></a>
+<a id="0x1_code"></a>
 
 # Module `0x1::code`
 
@@ -13,6 +13,7 @@
 -  [Function `can_change_upgrade_policy_to`](#0x1_code_can_change_upgrade_policy_to)
 -  [Function `init_genesis`](#0x1_code_init_genesis)
 -  [Function `set_allow_arbitrary`](#0x1_code_set_allow_arbitrary)
+-  [Function `set_allowed_publishers`](#0x1_code_set_allowed_publishers)
 -  [Function `publish`](#0x1_code_publish)
 
 
@@ -21,11 +22,12 @@
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">0x1::signer</a>;
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string">0x1::string</a>;
 <b>use</b> <a href="table.md#0x1_table">0x1::table</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">0x1::vector</a>;
 </code></pre>
 
 
 
-<a name="0x1_code_ModuleStore"></a>
+<a id="0x1_code_ModuleStore"></a>
 
 ## Resource `ModuleStore`
 
@@ -46,10 +48,17 @@
 <dd>
 
 </dd>
+<dt>
+<code>allowed_publishers: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;</code>
+</dt>
+<dd>
+ It is a list of addresses with permission to distribute contracts,
+ and an empty list is interpreted as allowing anyone to distribute.
+</dd>
 </dl>
 
 
-<a name="0x1_code_MetadataStore"></a>
+<a id="0x1_code_MetadataStore"></a>
 
 ## Resource `MetadataStore`
 
@@ -73,7 +82,7 @@
 </dl>
 
 
-<a name="0x1_code_ModuleMetadata"></a>
+<a id="0x1_code_ModuleMetadata"></a>
 
 ## Struct `ModuleMetadata`
 
@@ -98,7 +107,7 @@ Describes an upgrade policy
 </dl>
 
 
-<a name="0x1_code_ModulePublishedEvent"></a>
+<a id="0x1_code_ModulePublishedEvent"></a>
 
 ## Struct `ModulePublishedEvent`
 
@@ -129,12 +138,12 @@ Describes an upgrade policy
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_code_EINCOMPATIBLE_POLICY_DISABLED"></a>
+<a id="0x1_code_EINCOMPATIBLE_POLICY_DISABLED"></a>
 
 Creating a package with incompatible upgrade policy is disabled.
 
@@ -144,7 +153,17 @@ Creating a package with incompatible upgrade policy is disabled.
 
 
 
-<a name="0x1_code_EINVALID_ARGUMENTS"></a>
+<a id="0x1_code_EINVALID_ALLOWED_PUBLISHERS"></a>
+
+allowed_publishers argument is invalid.
+
+
+<pre><code><b>const</b> <a href="code.md#0x1_code_EINVALID_ALLOWED_PUBLISHERS">EINVALID_ALLOWED_PUBLISHERS</a>: u64 = 6;
+</code></pre>
+
+
+
+<a id="0x1_code_EINVALID_ARGUMENTS"></a>
 
 The publish request args are invalid.
 
@@ -154,7 +173,7 @@ The publish request args are invalid.
 
 
 
-<a name="0x1_code_EINVALID_CHAIN_OPERATOR"></a>
+<a id="0x1_code_EINVALID_CHAIN_OPERATOR"></a>
 
 The operation is expected to be executed by chain signer.
 
@@ -164,7 +183,7 @@ The operation is expected to be executed by chain signer.
 
 
 
-<a name="0x1_code_EUPGRADE_IMMUTABLE"></a>
+<a id="0x1_code_EUPGRADE_IMMUTABLE"></a>
 
 Cannot upgrade an immutable package.
 
@@ -174,7 +193,7 @@ Cannot upgrade an immutable package.
 
 
 
-<a name="0x1_code_EUPGRADE_WEAKER_POLICY"></a>
+<a id="0x1_code_EUPGRADE_WEAKER_POLICY"></a>
 
 Cannot downgrade a package's upgradability policy.
 
@@ -184,7 +203,7 @@ Cannot downgrade a package's upgradability policy.
 
 
 
-<a name="0x1_code_UPGRADE_POLICY_ARBITRARY"></a>
+<a id="0x1_code_UPGRADE_POLICY_ARBITRARY"></a>
 
 Whether unconditional code upgrade with no compatibility check is allowed. This
 publication mode should only be used for modules which aren't shared with user others.
@@ -197,7 +216,7 @@ stored on chain.
 
 
 
-<a name="0x1_code_UPGRADE_POLICY_COMPATIBLE"></a>
+<a id="0x1_code_UPGRADE_POLICY_COMPATIBLE"></a>
 
 Whether a compatibility check should be performed for upgrades. The check only passes if
 a new module has (a) the same public functions (b) for existing resources, no layout change.
@@ -208,7 +227,7 @@ a new module has (a) the same public functions (b) for existing resources, no la
 
 
 
-<a name="0x1_code_UPGRADE_POLICY_IMMUTABLE"></a>
+<a id="0x1_code_UPGRADE_POLICY_IMMUTABLE"></a>
 
 Whether the modules in the package are immutable and cannot be upgraded.
 
@@ -218,7 +237,7 @@ Whether the modules in the package are immutable and cannot be upgraded.
 
 
 
-<a name="0x1_code_can_change_upgrade_policy_to"></a>
+<a id="0x1_code_can_change_upgrade_policy_to"></a>
 
 ## Function `can_change_upgrade_policy_to`
 
@@ -241,13 +260,13 @@ strengthened but not weakened.
 
 
 
-<a name="0x1_code_init_genesis"></a>
+<a id="0x1_code_init_genesis"></a>
 
 ## Function `init_genesis`
 
 
 
-<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_init_genesis">init_genesis</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, module_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, allow_arbitrary: bool)
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_init_genesis">init_genesis</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, module_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, allow_arbitrary: bool, allowed_publishers: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;)
 </code></pre>
 
 
@@ -255,7 +274,12 @@ strengthened but not weakened.
 ##### Implementation
 
 
-<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_init_genesis">init_genesis</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, module_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;, allow_arbitrary: bool) <b>acquires</b> <a href="code.md#0x1_code_ModuleStore">ModuleStore</a> {
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_init_genesis">init_genesis</a>(
+    chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    module_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+    allow_arbitrary: bool,
+    allowed_publishers: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;,
+) <b>acquires</b> <a href="code.md#0x1_code_ModuleStore">ModuleStore</a> {
     <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @minitia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="code.md#0x1_code_EINVALID_CHAIN_OPERATOR">EINVALID_CHAIN_OPERATOR</a>));
 
     <b>let</b> metadata_table = <a href="table.md#0x1_table_new">table::new</a>&lt;String, <a href="code.md#0x1_code_ModuleMetadata">ModuleMetadata</a>&gt;();
@@ -271,19 +295,20 @@ strengthened but not weakened.
         metadata: metadata_table,
     });
 
-    <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(allow_arbitrary);
+    <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(chain, allow_arbitrary);
+    <a href="code.md#0x1_code_set_allowed_publishers">set_allowed_publishers</a>(chain, allowed_publishers);
 }
 </code></pre>
 
 
 
-<a name="0x1_code_set_allow_arbitrary"></a>
+<a id="0x1_code_set_allow_arbitrary"></a>
 
 ## Function `set_allow_arbitrary`
 
 
 
-<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(allow_arbitrary: bool)
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, allow_arbitrary: bool)
 </code></pre>
 
 
@@ -291,7 +316,9 @@ strengthened but not weakened.
 ##### Implementation
 
 
-<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(allow_arbitrary: bool) <b>acquires</b> <a href="code.md#0x1_code_ModuleStore">ModuleStore</a> {
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allow_arbitrary">set_allow_arbitrary</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, allow_arbitrary: bool) <b>acquires</b> <a href="code.md#0x1_code_ModuleStore">ModuleStore</a> {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @minitia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="code.md#0x1_code_EINVALID_CHAIN_OPERATOR">EINVALID_CHAIN_OPERATOR</a>));
+
     <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="code.md#0x1_code_ModuleStore">ModuleStore</a>&gt;(@minitia_std);
     module_store.allow_arbitrary = allow_arbitrary;
 }
@@ -299,7 +326,32 @@ strengthened but not weakened.
 
 
 
-<a name="0x1_code_publish"></a>
+<a id="0x1_code_set_allowed_publishers"></a>
+
+## Function `set_allowed_publishers`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allowed_publishers">set_allowed_publishers</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, allowed_publishers: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;)
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="code.md#0x1_code_set_allowed_publishers">set_allowed_publishers</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, allowed_publishers: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;) <b>acquires</b> <a href="code.md#0x1_code_ModuleStore">ModuleStore</a> {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @minitia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="code.md#0x1_code_EINVALID_CHAIN_OPERATOR">EINVALID_CHAIN_OPERATOR</a>));
+    <a href="code.md#0x1_code_assert_allowed">assert_allowed</a>(&allowed_publishers, @minitia_std);
+
+    <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="code.md#0x1_code_ModuleStore">ModuleStore</a>&gt;(@minitia_std);
+    module_store.allowed_publishers = allowed_publishers;
+}
+</code></pre>
+
+
+
+<a id="0x1_code_publish"></a>
 
 ## Function `publish`
 
@@ -332,6 +384,8 @@ package.
     );
 
     <b>let</b> addr = <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(owner);
+    <a href="code.md#0x1_code_assert_allowed">assert_allowed</a>(&module_store.allowed_publishers, addr);
+
     <b>if</b> (!<b>exists</b>&lt;<a href="code.md#0x1_code_MetadataStore">MetadataStore</a>&gt;(addr)) {
         <b>move_to</b>&lt;<a href="code.md#0x1_code_MetadataStore">MetadataStore</a>&gt;(owner, <a href="code.md#0x1_code_MetadataStore">MetadataStore</a> {
             metadata: <a href="table.md#0x1_table_new">table::new</a>(),

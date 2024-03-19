@@ -1,5 +1,5 @@
 
-<a name="0x1_royalty"></a>
+<a id="0x1_royalty"></a>
 
 # Module `0x1::royalty`
 
@@ -23,14 +23,14 @@ royalty.
 
 
 <pre><code><b>use</b> <a href="decimal128.md#0x1_decimal128">0x1::decimal128</a>;
-<b>use</b> <a href="">0x1::error</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
 <b>use</b> <a href="object.md#0x1_object">0x1::object</a>;
-<b>use</b> <a href="">0x1::option</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">0x1::option</a>;
 </code></pre>
 
 
 
-<a name="0x1_royalty_Royalty"></a>
+<a id="0x1_royalty_Royalty"></a>
 
 ## Resource `Royalty`
 
@@ -63,7 +63,7 @@ Royalties are optional for a collection.
 </dl>
 
 
-<a name="0x1_royalty_MutatorRef"></a>
+<a id="0x1_royalty_MutatorRef"></a>
 
 ## Struct `MutatorRef`
 
@@ -88,12 +88,12 @@ This enables creating or overwriting a <code><a href="royalty.md#0x1_royalty_Mut
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_royalty_EROYALTY_DENOMINATOR_IS_ZERO"></a>
+<a id="0x1_royalty_EROYALTY_DENOMINATOR_IS_ZERO"></a>
 
 The royalty denominator cannot be 0
 
@@ -103,7 +103,7 @@ The royalty denominator cannot be 0
 
 
 
-<a name="0x1_royalty_EROYALTY_DOES_NOT_EXIST"></a>
+<a id="0x1_royalty_EROYALTY_DOES_NOT_EXIST"></a>
 
 Royalty does not exist
 
@@ -113,7 +113,7 @@ Royalty does not exist
 
 
 
-<a name="0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM"></a>
+<a id="0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM"></a>
 
 The royalty cannot be greater than 100%
 
@@ -123,7 +123,7 @@ The royalty cannot be greater than 100%
 
 
 
-<a name="0x1_royalty_init"></a>
+<a id="0x1_royalty_init"></a>
 
 ## Function `init`
 
@@ -139,14 +139,14 @@ Add a royalty, given a ConstructorRef.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="royalty.md#0x1_royalty_init">init</a>(ref: &ConstructorRef, <a href="royalty.md#0x1_royalty">royalty</a>: <a href="royalty.md#0x1_royalty_Royalty">Royalty</a>) {
-    <b>let</b> <a href="">signer</a> = <a href="object.md#0x1_object_generate_signer">object::generate_signer</a>(ref);
-    <b>move_to</b>(&<a href="">signer</a>, <a href="royalty.md#0x1_royalty">royalty</a>);
+    <b>let</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a> = <a href="object.md#0x1_object_generate_signer">object::generate_signer</a>(ref);
+    <b>move_to</b>(&<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="royalty.md#0x1_royalty">royalty</a>);
 }
 </code></pre>
 
 
 
-<a name="0x1_royalty_update"></a>
+<a id="0x1_royalty_update"></a>
 
 ## Function `update`
 
@@ -167,14 +167,14 @@ Set the royalty if it does not exist, replace it otherwise.
         <b>move_from</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(addr);
     };
 
-    <b>let</b> <a href="">signer</a> = <a href="object.md#0x1_object_generate_signer_for_extending">object::generate_signer_for_extending</a>(&mutator_ref.inner);
-    <b>move_to</b>(&<a href="">signer</a>, <a href="royalty.md#0x1_royalty">royalty</a>);
+    <b>let</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a> = <a href="object.md#0x1_object_generate_signer_for_extending">object::generate_signer_for_extending</a>(&mutator_ref.inner);
+    <b>move_to</b>(&<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="royalty.md#0x1_royalty">royalty</a>);
 }
 </code></pre>
 
 
 
-<a name="0x1_royalty_create"></a>
+<a id="0x1_royalty_create"></a>
 
 ## Function `create`
 
@@ -190,7 +190,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="royalty.md#0x1_royalty_create">create</a>(<a href="royalty.md#0x1_royalty">royalty</a>: Decimal128, payee_address: <b>address</b>): <a href="royalty.md#0x1_royalty_Royalty">Royalty</a> {
-    <b>assert</b>!(<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="royalty.md#0x1_royalty">royalty</a>) &lt;= <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>()), <a href="_out_of_range">error::out_of_range</a>(<a href="royalty.md#0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM">EROYALTY_EXCEEDS_MAXIMUM</a>));
+    <b>assert</b>!(<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="royalty.md#0x1_royalty">royalty</a>) &lt;= <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>()), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_out_of_range">error::out_of_range</a>(<a href="royalty.md#0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM">EROYALTY_EXCEEDS_MAXIMUM</a>));
 
     <a href="royalty.md#0x1_royalty_Royalty">Royalty</a> { <a href="royalty.md#0x1_royalty">royalty</a>, payee_address }
 }
@@ -198,7 +198,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_generate_mutator_ref"></a>
+<a id="0x1_royalty_generate_mutator_ref"></a>
 
 ## Function `generate_mutator_ref`
 
@@ -219,7 +219,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_exists_at"></a>
+<a id="0x1_royalty_exists_at"></a>
 
 ## Function `exists_at`
 
@@ -240,7 +240,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_delete"></a>
+<a id="0x1_royalty_delete"></a>
 
 ## Function `delete`
 
@@ -255,20 +255,20 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="royalty.md#0x1_royalty_delete">delete</a>(addr: <b>address</b>) <b>acquires</b> <a href="royalty.md#0x1_royalty_Royalty">Royalty</a> {
-    <b>assert</b>!(<b>exists</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(addr), <a href="_not_found">error::not_found</a>(<a href="royalty.md#0x1_royalty_EROYALTY_DOES_NOT_EXIST">EROYALTY_DOES_NOT_EXIST</a>));
+    <b>assert</b>!(<b>exists</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(addr), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="royalty.md#0x1_royalty_EROYALTY_DOES_NOT_EXIST">EROYALTY_DOES_NOT_EXIST</a>));
     <b>move_from</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(addr);
 }
 </code></pre>
 
 
 
-<a name="0x1_royalty_get"></a>
+<a id="0x1_royalty_get"></a>
 
 ## Function `get`
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="royalty.md#0x1_royalty_get">get</a>&lt;T: key&gt;(maybe_royalty: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;): <a href="_Option">option::Option</a>&lt;<a href="royalty.md#0x1_royalty_Royalty">royalty::Royalty</a>&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="royalty.md#0x1_royalty_get">get</a>&lt;T: key&gt;(maybe_royalty: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;): <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;<a href="royalty.md#0x1_royalty_Royalty">royalty::Royalty</a>&gt;
 </code></pre>
 
 
@@ -279,16 +279,16 @@ Creates a new royalty, verifying that it is a valid percentage
 <pre><code><b>public</b> <b>fun</b> <a href="royalty.md#0x1_royalty_get">get</a>&lt;T: key&gt;(maybe_royalty: Object&lt;T&gt;): Option&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt; <b>acquires</b> <a href="royalty.md#0x1_royalty_Royalty">Royalty</a> {
     <b>let</b> obj_addr = <a href="object.md#0x1_object_object_address">object::object_address</a>(maybe_royalty);
     <b>if</b> (<b>exists</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(obj_addr)) {
-        <a href="_some">option::some</a>(*<b>borrow_global</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(obj_addr))
+        <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(*<b>borrow_global</b>&lt;<a href="royalty.md#0x1_royalty_Royalty">Royalty</a>&gt;(obj_addr))
     } <b>else</b> {
-        <a href="_none">option::none</a>()
+        <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_none">option::none</a>()
     }
 }
 </code></pre>
 
 
 
-<a name="0x1_royalty_royalty"></a>
+<a id="0x1_royalty_royalty"></a>
 
 ## Function `royalty`
 
@@ -309,7 +309,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_payee_address"></a>
+<a id="0x1_royalty_payee_address"></a>
 
 ## Function `payee_address`
 

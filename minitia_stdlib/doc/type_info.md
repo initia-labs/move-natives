@@ -1,5 +1,5 @@
 
-<a name="0x1_type_info"></a>
+<a id="0x1_type_info"></a>
 
 # Module `0x1::type_info`
 
@@ -18,7 +18,7 @@
 
 
 
-<a name="0x1_type_info_TypeInfo"></a>
+<a id="0x1_type_info_TypeInfo"></a>
 
 ## Struct `TypeInfo`
 
@@ -54,7 +54,7 @@
 </dl>
 
 
-<a name="0x1_type_info_account_address"></a>
+<a id="0x1_type_info_account_address"></a>
 
 ## Function `account_address`
 
@@ -75,7 +75,7 @@
 
 
 
-<a name="0x1_type_info_module_name"></a>
+<a id="0x1_type_info_module_name"></a>
 
 ## Function `module_name`
 
@@ -96,7 +96,7 @@
 
 
 
-<a name="0x1_type_info_struct_name"></a>
+<a id="0x1_type_info_struct_name"></a>
 
 ## Function `struct_name`
 
@@ -117,7 +117,7 @@
 
 
 
-<a name="0x1_type_info_type_of"></a>
+<a id="0x1_type_info_type_of"></a>
 
 ## Function `type_of`
 
@@ -136,7 +136,7 @@
 
 
 
-<a name="0x1_type_info_type_name"></a>
+<a id="0x1_type_info_type_name"></a>
 
 ## Function `type_name`
 

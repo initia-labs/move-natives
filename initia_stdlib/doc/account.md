@@ -1,5 +1,5 @@
 
-<a name="0x1_account"></a>
+<a id="0x1_account"></a>
 
 # Module `0x1::account`
 
@@ -22,17 +22,17 @@
 -  [Function `create_signer`](#0x1_account_create_signer)
 
 
-<pre><code><b>use</b> <a href="">0x1::error</a>;
+<pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
 </code></pre>
 
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_account_ACCOUNT_TYPE_BASE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_BASE"></a>
 
 Account Types
 
@@ -42,7 +42,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_MODULE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_MODULE"></a>
 
 
 
@@ -51,7 +51,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_OBJECT"></a>
+<a id="0x1_account_ACCOUNT_TYPE_OBJECT"></a>
 
 
 
@@ -60,7 +60,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_TABLE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_TABLE"></a>
 
 
 
@@ -69,7 +69,7 @@ Account Types
 
 
 
-<a name="0x1_account_EACCOUNT_ALREADY_EXISTS"></a>
+<a id="0x1_account_EACCOUNT_ALREADY_EXISTS"></a>
 
 This error type is used in native function.
 
@@ -79,7 +79,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_EACCOUNT_NOT_FOUND"></a>
+<a id="0x1_account_EACCOUNT_NOT_FOUND"></a>
 
 
 
@@ -88,7 +88,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_account_script"></a>
+<a id="0x1_account_create_account_script"></a>
 
 ## Function `create_account_script`
 
@@ -109,7 +109,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_account"></a>
+<a id="0x1_account_create_account"></a>
 
 ## Function `create_account`
 
@@ -125,7 +125,7 @@ This error type is used in native function.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_create_account">create_account</a>(addr: <b>address</b>): u64 {
     <b>let</b> (found, _, _, _) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(!found, <a href="_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>));
+    <b>assert</b>!(!found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>));
 
     <a href="account.md#0x1_account_request_create_account">request_create_account</a>(addr, <a href="account.md#0x1_account_ACCOUNT_TYPE_BASE">ACCOUNT_TYPE_BASE</a>)
 }
@@ -133,7 +133,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_table_account"></a>
+<a id="0x1_account_create_table_account"></a>
 
 ## Function `create_table_account`
 
@@ -151,7 +151,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_table_account">create_table_account</a>(addr: <b>address</b>): u64 {
     <b>let</b> (found, _, _, _) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(!found, <a href="_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>));
+    <b>assert</b>!(!found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>));
 
     <a href="account.md#0x1_account_request_create_account">request_create_account</a>(addr, <a href="account.md#0x1_account_ACCOUNT_TYPE_TABLE">ACCOUNT_TYPE_TABLE</a>)
 }
@@ -159,7 +159,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_create_object_account"></a>
+<a id="0x1_account_create_object_account"></a>
 
 ## Function `create_object_account`
 
@@ -186,7 +186,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
         <b>if</b> (account_type == <a href="account.md#0x1_account_ACCOUNT_TYPE_OBJECT">ACCOUNT_TYPE_OBJECT</a>) {
             account_number
         } <b>else</b> {
-            <b>abort</b>(<a href="_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>))
+            <b>abort</b>(<a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_already_exists">error::already_exists</a>(<a href="account.md#0x1_account_EACCOUNT_ALREADY_EXISTS">EACCOUNT_ALREADY_EXISTS</a>))
         }
     } <b>else</b> {
         <a href="account.md#0x1_account_request_create_account">request_create_account</a>(addr, <a href="account.md#0x1_account_ACCOUNT_TYPE_OBJECT">ACCOUNT_TYPE_OBJECT</a>)
@@ -196,7 +196,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_exists_at"></a>
+<a id="0x1_account_exists_at"></a>
 
 ## Function `exists_at`
 
@@ -219,7 +219,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_account_number"></a>
+<a id="0x1_account_get_account_number"></a>
 
 ## Function `get_account_number`
 
@@ -236,7 +236,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_get_account_number">get_account_number</a>(addr: <b>address</b>): u64 {
     <b>let</b> (found, account_number, _, _) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     account_number
 }
@@ -244,7 +244,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_sequence_number"></a>
+<a id="0x1_account_get_sequence_number"></a>
 
 ## Function `get_sequence_number`
 
@@ -261,7 +261,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_get_sequence_number">get_sequence_number</a>(addr: <b>address</b>): u64 {
     <b>let</b> (found, _, sequence_number, _) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     sequence_number
 }
@@ -269,7 +269,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_base_account"></a>
+<a id="0x1_account_is_base_account"></a>
 
 ## Function `is_base_account`
 
@@ -286,7 +286,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_base_account">is_base_account</a>(addr: <b>address</b>): bool {
     <b>let</b> (found, _, _, account_type) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     account_type == <a href="account.md#0x1_account_ACCOUNT_TYPE_BASE">ACCOUNT_TYPE_BASE</a>
 }
@@ -294,7 +294,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_object_account"></a>
+<a id="0x1_account_is_object_account"></a>
 
 ## Function `is_object_account`
 
@@ -311,7 +311,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_object_account">is_object_account</a>(addr: <b>address</b>): bool {
     <b>let</b> (found, _, _, account_type) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     account_type == <a href="account.md#0x1_account_ACCOUNT_TYPE_OBJECT">ACCOUNT_TYPE_OBJECT</a>
 }
@@ -319,7 +319,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_table_account"></a>
+<a id="0x1_account_is_table_account"></a>
 
 ## Function `is_table_account`
 
@@ -336,7 +336,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_table_account">is_table_account</a>(addr: <b>address</b>): bool {
     <b>let</b> (found, _, _, account_type) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     account_type == <a href="account.md#0x1_account_ACCOUNT_TYPE_TABLE">ACCOUNT_TYPE_TABLE</a>
 }
@@ -344,7 +344,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_module_account"></a>
+<a id="0x1_account_is_module_account"></a>
 
 ## Function `is_module_account`
 
@@ -361,7 +361,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_module_account">is_module_account</a>(addr: <b>address</b>): bool {
     <b>let</b> (found, _, _, account_type) = <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr);
-    <b>assert</b>!(found, <a href="_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="account.md#0x1_account_EACCOUNT_NOT_FOUND">EACCOUNT_NOT_FOUND</a>));
 
     account_type == <a href="account.md#0x1_account_ACCOUNT_TYPE_MODULE">ACCOUNT_TYPE_MODULE</a>
 }
@@ -369,7 +369,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_account_info"></a>
+<a id="0x1_account_get_account_info"></a>
 
 ## Function `get_account_info`
 
@@ -388,13 +388,13 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_create_address"></a>
+<a id="0x1_account_create_address"></a>
 
 ## Function `create_address`
 
 
 
-<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_address">create_address</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <b>address</b>
+<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_address">create_address</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <b>address</b>
 </code></pre>
 
 
@@ -402,18 +402,18 @@ as both cannot have a pubkey, there is no way to use the account externally.
 ##### Implementation
 
 
-<pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_address">create_address</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <b>address</b>;
+<pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_address">create_address</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <b>address</b>;
 </code></pre>
 
 
 
-<a name="0x1_account_create_signer"></a>
+<a id="0x1_account_create_signer"></a>
 
 ## Function `create_signer`
 
 
 
-<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_signer">create_signer</a>(addr: <b>address</b>): <a href="">signer</a>
+<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_signer">create_signer</a>(addr: <b>address</b>): <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>
 </code></pre>
 
 
@@ -421,5 +421,5 @@ as both cannot have a pubkey, there is no way to use the account externally.
 ##### Implementation
 
 
-<pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_signer">create_signer</a>(addr: <b>address</b>): <a href="">signer</a>;
+<pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_signer">create_signer</a>(addr: <b>address</b>): <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>;
 </code></pre>

@@ -1,5 +1,5 @@
 
-<a name="0x1_collection"></a>
+<a id="0x1_collection"></a>
 
 # Module `0x1::collection`
 
@@ -63,7 +63,7 @@ require adding the field original_name.
 
 
 
-<a name="0x1_collection_Collection"></a>
+<a id="0x1_collection_Collection"></a>
 
 ## Resource `Collection`
 
@@ -113,7 +113,7 @@ Represents the common fields for a collection.
 </dl>
 
 
-<a name="0x1_collection_MutatorRef"></a>
+<a id="0x1_collection_MutatorRef"></a>
 
 ## Struct `MutatorRef`
 
@@ -138,7 +138,7 @@ This enables mutating description and URI by higher level services.
 </dl>
 
 
-<a name="0x1_collection_MutationEvent"></a>
+<a id="0x1_collection_MutationEvent"></a>
 
 ## Struct `MutationEvent`
 
@@ -183,7 +183,7 @@ directly understand the behavior in a writeset.
 </dl>
 
 
-<a name="0x1_collection_FixedSupply"></a>
+<a id="0x1_collection_FixedSupply"></a>
 
 ## Resource `FixedSupply`
 
@@ -221,7 +221,7 @@ and adding events and supply tracking to a collection.
 </dl>
 
 
-<a name="0x1_collection_UnlimitedSupply"></a>
+<a id="0x1_collection_UnlimitedSupply"></a>
 
 ## Resource `UnlimitedSupply`
 
@@ -252,7 +252,7 @@ Unlimited supply tracker, this is useful for adding events and supply tracking t
 </dl>
 
 
-<a name="0x1_collection_NftResponse"></a>
+<a id="0x1_collection_NftResponse"></a>
 
 ## Struct `NftResponse`
 
@@ -282,7 +282,7 @@ Unlimited supply tracker, this is useful for adding events and supply tracking t
 </dl>
 
 
-<a name="0x1_collection_CreateCollectionEvent"></a>
+<a id="0x1_collection_CreateCollectionEvent"></a>
 
 ## Struct `CreateCollectionEvent`
 
@@ -319,7 +319,7 @@ Unlimited supply tracker, this is useful for adding events and supply tracking t
 </dl>
 
 
-<a name="0x1_collection_BurnEvent"></a>
+<a id="0x1_collection_BurnEvent"></a>
 
 ## Struct `BurnEvent`
 
@@ -356,7 +356,7 @@ Unlimited supply tracker, this is useful for adding events and supply tracking t
 </dl>
 
 
-<a name="0x1_collection_MintEvent"></a>
+<a id="0x1_collection_MintEvent"></a>
 
 ## Struct `MintEvent`
 
@@ -393,12 +393,12 @@ Unlimited supply tracker, this is useful for adding events and supply tracking t
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_collection_EURI_TOO_LONG"></a>
+<a id="0x1_collection_EURI_TOO_LONG"></a>
 
 The URI is over the maximum length
 
@@ -408,7 +408,7 @@ The URI is over the maximum length
 
 
 
-<a name="0x1_collection_MAX_URI_LENGTH"></a>
+<a id="0x1_collection_MAX_URI_LENGTH"></a>
 
 
 
@@ -417,7 +417,7 @@ The URI is over the maximum length
 
 
 
-<a name="0x1_collection_ECOLLECTION_DOES_NOT_EXIST"></a>
+<a id="0x1_collection_ECOLLECTION_DOES_NOT_EXIST"></a>
 
 The collection does not exist
 
@@ -427,7 +427,7 @@ The collection does not exist
 
 
 
-<a name="0x1_collection_ECOLLECTION_NAME_TOO_LONG"></a>
+<a id="0x1_collection_ECOLLECTION_NAME_TOO_LONG"></a>
 
 The collection name is over the maximum length
 
@@ -437,7 +437,7 @@ The collection name is over the maximum length
 
 
 
-<a name="0x1_collection_ECOLLECTION_SUPPLY_EXCEEDED"></a>
+<a id="0x1_collection_ECOLLECTION_SUPPLY_EXCEEDED"></a>
 
 The collection has reached its supply and no more nfts can be minted, unless some are burned
 
@@ -447,7 +447,7 @@ The collection has reached its supply and no more nfts can be minted, unless som
 
 
 
-<a name="0x1_collection_EDESCRIPTION_TOO_LONG"></a>
+<a id="0x1_collection_EDESCRIPTION_TOO_LONG"></a>
 
 The description is over the maximum length
 
@@ -457,7 +457,7 @@ The description is over the maximum length
 
 
 
-<a name="0x1_collection_EMAX_SUPPLY_CANNOT_BE_ZERO"></a>
+<a id="0x1_collection_EMAX_SUPPLY_CANNOT_BE_ZERO"></a>
 
 The max supply must be positive
 
@@ -467,7 +467,7 @@ The max supply must be positive
 
 
 
-<a name="0x1_collection_MAX_COLLECTION_NAME_LENGTH"></a>
+<a id="0x1_collection_MAX_COLLECTION_NAME_LENGTH"></a>
 
 
 
@@ -476,7 +476,7 @@ The max supply must be positive
 
 
 
-<a name="0x1_collection_MAX_DESCRIPTION_LENGTH"></a>
+<a id="0x1_collection_MAX_DESCRIPTION_LENGTH"></a>
 
 
 
@@ -485,7 +485,7 @@ The max supply must be positive
 
 
 
-<a name="0x1_collection_MAX_QUERY_LIMIT"></a>
+<a id="0x1_collection_MAX_QUERY_LIMIT"></a>
 
 
 
@@ -494,7 +494,7 @@ The max supply must be positive
 
 
 
-<a name="0x1_collection_create_fixed_collection"></a>
+<a id="0x1_collection_create_fixed_collection"></a>
 
 ## Function `create_fixed_collection`
 
@@ -523,7 +523,7 @@ Beyond that, it adds supply tracking with events.
 ): ConstructorRef {
     <b>assert</b>!(max_supply != 0, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="collection.md#0x1_collection_EMAX_SUPPLY_CANNOT_BE_ZERO">EMAX_SUPPLY_CANNOT_BE_ZERO</a>));
     <b>let</b> collection_seed = <a href="collection.md#0x1_collection_create_collection_seed">create_collection_seed</a>(&name);
-    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_named_object">object::create_named_object</a>(creator, collection_seed);
+    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_named_object">object::create_named_object</a>(creator, collection_seed, <b>false</b>);
 
     <b>let</b> supply = <a href="collection.md#0x1_collection_FixedSupply">FixedSupply</a> {
         current_supply: 0,
@@ -545,7 +545,7 @@ Beyond that, it adds supply tracking with events.
 
 
 
-<a name="0x1_collection_create_unlimited_collection"></a>
+<a id="0x1_collection_create_unlimited_collection"></a>
 
 ## Function `create_unlimited_collection`
 
@@ -569,7 +569,7 @@ the supply of nfts.
     uri: String,
 ): ConstructorRef {
     <b>let</b> collection_seed = <a href="collection.md#0x1_collection_create_collection_seed">create_collection_seed</a>(&name);
-    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_named_object">object::create_named_object</a>(creator, collection_seed);
+    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_named_object">object::create_named_object</a>(creator, collection_seed, <b>false</b>);
 
     <b>let</b> supply = <a href="collection.md#0x1_collection_UnlimitedSupply">UnlimitedSupply</a> {
         current_supply: 0,
@@ -590,7 +590,7 @@ the supply of nfts.
 
 
 
-<a name="0x1_collection_create_collection_address"></a>
+<a id="0x1_collection_create_collection_address"></a>
 
 ## Function `create_collection_address`
 
@@ -612,7 +612,7 @@ Generates the collections address based upon the creators address and the collec
 
 
 
-<a name="0x1_collection_create_collection_seed"></a>
+<a id="0x1_collection_create_collection_seed"></a>
 
 ## Function `create_collection_seed`
 
@@ -635,7 +635,7 @@ Named objects are derived from a seed, the collection's seed is its name.
 
 
 
-<a name="0x1_collection_increment_supply"></a>
+<a id="0x1_collection_increment_supply"></a>
 
 ## Function `increment_supply`
 
@@ -683,7 +683,7 @@ Called by nft on mint to increment supply if there's an appropriate Supply struc
 
 
 
-<a name="0x1_collection_decrement_supply"></a>
+<a id="0x1_collection_decrement_supply"></a>
 
 ## Function `decrement_supply`
 
@@ -725,7 +725,7 @@ Called by nft on burn to decrement supply if there's an appropriate Supply struc
 
 
 
-<a name="0x1_collection_generate_mutator_ref"></a>
+<a id="0x1_collection_generate_mutator_ref"></a>
 
 ## Function `generate_mutator_ref`
 
@@ -748,7 +748,7 @@ Creates a MutatorRef, which gates the ability to mutate any fields that support 
 
 
 
-<a name="0x1_collection_count"></a>
+<a id="0x1_collection_count"></a>
 
 ## Function `count`
 
@@ -782,7 +782,7 @@ Provides the count of the current selection if supply tracking is used
 
 
 
-<a name="0x1_collection_creator"></a>
+<a id="0x1_collection_creator"></a>
 
 ## Function `creator`
 
@@ -804,7 +804,7 @@ Provides the count of the current selection if supply tracking is used
 
 
 
-<a name="0x1_collection_description"></a>
+<a id="0x1_collection_description"></a>
 
 ## Function `description`
 
@@ -826,7 +826,7 @@ Provides the count of the current selection if supply tracking is used
 
 
 
-<a name="0x1_collection_name"></a>
+<a id="0x1_collection_name"></a>
 
 ## Function `name`
 
@@ -848,7 +848,7 @@ Provides the count of the current selection if supply tracking is used
 
 
 
-<a name="0x1_collection_uri"></a>
+<a id="0x1_collection_uri"></a>
 
 ## Function `uri`
 
@@ -870,7 +870,7 @@ Provides the count of the current selection if supply tracking is used
 
 
 
-<a name="0x1_collection_nfts"></a>
+<a id="0x1_collection_nfts"></a>
 
 ## Function `nfts`
 
@@ -925,7 +925,7 @@ if <code>start_after</code> is not none, seach nfts in range (start_after, ...]
 
 
 
-<a name="0x1_collection_decompose_nft_response"></a>
+<a id="0x1_collection_decompose_nft_response"></a>
 
 ## Function `decompose_nft_response`
 
@@ -946,7 +946,7 @@ if <code>start_after</code> is not none, seach nfts in range (start_after, ...]
 
 
 
-<a name="0x1_collection_set_description"></a>
+<a id="0x1_collection_set_description"></a>
 
 ## Function `set_description`
 
@@ -977,7 +977,7 @@ if <code>start_after</code> is not none, seach nfts in range (start_after, ...]
 
 
 
-<a name="0x1_collection_set_uri"></a>
+<a id="0x1_collection_set_uri"></a>
 
 ## Function `set_uri`
 

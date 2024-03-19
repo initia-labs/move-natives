@@ -1,5 +1,5 @@
 
-<a name="0x1_royalty"></a>
+<a id="0x1_royalty"></a>
 
 # Module `0x1::royalty`
 
@@ -30,7 +30,7 @@ royalty.
 
 
 
-<a name="0x1_royalty_Royalty"></a>
+<a id="0x1_royalty_Royalty"></a>
 
 ## Resource `Royalty`
 
@@ -63,7 +63,7 @@ Royalties are optional for a collection.
 </dl>
 
 
-<a name="0x1_royalty_MutatorRef"></a>
+<a id="0x1_royalty_MutatorRef"></a>
 
 ## Struct `MutatorRef`
 
@@ -88,12 +88,12 @@ This enables creating or overwriting a <code><a href="royalty.md#0x1_royalty_Mut
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_royalty_EROYALTY_DENOMINATOR_IS_ZERO"></a>
+<a id="0x1_royalty_EROYALTY_DENOMINATOR_IS_ZERO"></a>
 
 The royalty denominator cannot be 0
 
@@ -103,7 +103,7 @@ The royalty denominator cannot be 0
 
 
 
-<a name="0x1_royalty_EROYALTY_DOES_NOT_EXIST"></a>
+<a id="0x1_royalty_EROYALTY_DOES_NOT_EXIST"></a>
 
 Royalty does not exist
 
@@ -113,7 +113,7 @@ Royalty does not exist
 
 
 
-<a name="0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM"></a>
+<a id="0x1_royalty_EROYALTY_EXCEEDS_MAXIMUM"></a>
 
 The royalty cannot be greater than 100%
 
@@ -123,7 +123,7 @@ The royalty cannot be greater than 100%
 
 
 
-<a name="0x1_royalty_init"></a>
+<a id="0x1_royalty_init"></a>
 
 ## Function `init`
 
@@ -146,7 +146,7 @@ Add a royalty, given a ConstructorRef.
 
 
 
-<a name="0x1_royalty_update"></a>
+<a id="0x1_royalty_update"></a>
 
 ## Function `update`
 
@@ -174,7 +174,7 @@ Set the royalty if it does not exist, replace it otherwise.
 
 
 
-<a name="0x1_royalty_create"></a>
+<a id="0x1_royalty_create"></a>
 
 ## Function `create`
 
@@ -198,7 +198,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_generate_mutator_ref"></a>
+<a id="0x1_royalty_generate_mutator_ref"></a>
 
 ## Function `generate_mutator_ref`
 
@@ -219,7 +219,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_exists_at"></a>
+<a id="0x1_royalty_exists_at"></a>
 
 ## Function `exists_at`
 
@@ -240,7 +240,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_delete"></a>
+<a id="0x1_royalty_delete"></a>
 
 ## Function `delete`
 
@@ -262,7 +262,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_get"></a>
+<a id="0x1_royalty_get"></a>
 
 ## Function `get`
 
@@ -288,7 +288,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_royalty"></a>
+<a id="0x1_royalty_royalty"></a>
 
 ## Function `royalty`
 
@@ -309,7 +309,7 @@ Creates a new royalty, verifying that it is a valid percentage
 
 
 
-<a name="0x1_royalty_payee_address"></a>
+<a id="0x1_royalty_payee_address"></a>
 
 ## Function `payee_address`
 

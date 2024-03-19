@@ -1,5 +1,5 @@
 
-<a name="0x1_decimal128"></a>
+<a id="0x1_decimal128"></a>
 
 # Module `0x1::decimal128`
 
@@ -31,7 +31,7 @@
 
 
 
-<a name="0x1_decimal128_Decimal128"></a>
+<a id="0x1_decimal128_Decimal128"></a>
 
 ## Struct `Decimal128`
 
@@ -56,12 +56,12 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_decimal128_DECIMAL_FRACTIONAL"></a>
+<a id="0x1_decimal128_DECIMAL_FRACTIONAL"></a>
 
 
 
@@ -70,7 +70,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_EDIV_WITH_ZERO"></a>
+<a id="0x1_decimal128_EDIV_WITH_ZERO"></a>
 
 
 
@@ -79,7 +79,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_EFAILED_TO_DESERIALIZE"></a>
+<a id="0x1_decimal128_EFAILED_TO_DESERIALIZE"></a>
 
 
 
@@ -88,7 +88,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_EOUT_OF_RANGE"></a>
+<a id="0x1_decimal128_EOUT_OF_RANGE"></a>
 
 
 
@@ -97,7 +97,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_FRACTIONAL_LENGTH"></a>
+<a id="0x1_decimal128_FRACTIONAL_LENGTH"></a>
 
 
 
@@ -106,7 +106,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_MAX_INTEGER_PART"></a>
+<a id="0x1_decimal128_MAX_INTEGER_PART"></a>
 
 
 
@@ -115,7 +115,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_new"></a>
+<a id="0x1_decimal128_new"></a>
 
 ## Function `new`
 
@@ -136,7 +136,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_new_u64"></a>
+<a id="0x1_decimal128_new_u64"></a>
 
 ## Function `new_u64`
 
@@ -157,7 +157,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_one"></a>
+<a id="0x1_decimal128_one"></a>
 
 ## Function `one`
 
@@ -178,7 +178,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_zero"></a>
+<a id="0x1_decimal128_zero"></a>
 
 ## Function `zero`
 
@@ -199,7 +199,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_from_ratio_u64"></a>
+<a id="0x1_decimal128_from_ratio_u64"></a>
 
 ## Function `from_ratio_u64`
 
@@ -222,7 +222,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_from_ratio"></a>
+<a id="0x1_decimal128_from_ratio"></a>
 
 ## Function `from_ratio`
 
@@ -245,7 +245,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_add"></a>
+<a id="0x1_decimal128_add"></a>
 
 ## Function `add`
 
@@ -266,7 +266,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_sub"></a>
+<a id="0x1_decimal128_sub"></a>
 
 ## Function `sub`
 
@@ -287,7 +287,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_mul_u64"></a>
+<a id="0x1_decimal128_mul_u64"></a>
 
 ## Function `mul_u64`
 
@@ -308,7 +308,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_mul_u128"></a>
+<a id="0x1_decimal128_mul_u128"></a>
 
 ## Function `mul_u128`
 
@@ -329,7 +329,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_mul"></a>
+<a id="0x1_decimal128_mul"></a>
 
 ## Function `mul`
 
@@ -350,7 +350,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_div_u64"></a>
+<a id="0x1_decimal128_div_u64"></a>
 
 ## Function `div_u64`
 
@@ -371,7 +371,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_div"></a>
+<a id="0x1_decimal128_div"></a>
 
 ## Function `div`
 
@@ -392,7 +392,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_val"></a>
+<a id="0x1_decimal128_val"></a>
 
 ## Function `val`
 
@@ -413,7 +413,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_is_same"></a>
+<a id="0x1_decimal128_is_same"></a>
 
 ## Function `is_same`
 
@@ -434,7 +434,7 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-<a name="0x1_decimal128_from_string"></a>
+<a id="0x1_decimal128_from_string"></a>
 
 ## Function `from_string`
 

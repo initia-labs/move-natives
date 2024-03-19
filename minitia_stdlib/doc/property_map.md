@@ -1,5 +1,5 @@
 
-<a name="0x1_property_map"></a>
+<a id="0x1_property_map"></a>
 
 # Module `0x1::property_map`
 
@@ -40,6 +40,7 @@ represent types and storing values in bcs format.
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
 <b>use</b> <a href="from_bcs.md#0x1_from_bcs">0x1::from_bcs</a>;
 <b>use</b> <a href="object.md#0x1_object">0x1::object</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">0x1::signer</a>;
 <b>use</b> <a href="simple_map.md#0x1_simple_map">0x1::simple_map</a>;
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string">0x1::string</a>;
 <b>use</b> <a href="type_info.md#0x1_type_info">0x1::type_info</a>;
@@ -48,7 +49,7 @@ represent types and storing values in bcs format.
 
 
 
-<a name="0x1_property_map_PropertyMap"></a>
+<a id="0x1_property_map_PropertyMap"></a>
 
 ## Resource `PropertyMap`
 
@@ -74,7 +75,7 @@ should keep track of what keys are what types, and parse them accordingly.
 </dl>
 
 
-<a name="0x1_property_map_PropertyValue"></a>
+<a id="0x1_property_map_PropertyValue"></a>
 
 ## Struct `PropertyValue`
 
@@ -105,7 +106,7 @@ A typed value for the <code><a href="property_map.md#0x1_property_map_PropertyMa
 </dl>
 
 
-<a name="0x1_property_map_MutatorRef"></a>
+<a id="0x1_property_map_MutatorRef"></a>
 
 ## Struct `MutatorRef`
 
@@ -130,12 +131,12 @@ A mutator ref that allows for mutation of the property map
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_property_map_ETYPE_MISMATCH"></a>
+<a id="0x1_property_map_ETYPE_MISMATCH"></a>
 
 Property value does not match expected type
 
@@ -145,7 +146,7 @@ Property value does not match expected type
 
 
 
-<a name="0x1_property_map_ADDRESS"></a>
+<a id="0x1_property_map_ADDRESS"></a>
 
 
 
@@ -154,7 +155,7 @@ Property value does not match expected type
 
 
 
-<a name="0x1_property_map_BOOL"></a>
+<a id="0x1_property_map_BOOL"></a>
 
 
 
@@ -163,7 +164,7 @@ Property value does not match expected type
 
 
 
-<a name="0x1_property_map_BYTE_VECTOR"></a>
+<a id="0x1_property_map_BYTE_VECTOR"></a>
 
 
 
@@ -172,7 +173,7 @@ Property value does not match expected type
 
 
 
-<a name="0x1_property_map_EKEY_ALREADY_EXISTS_IN_PROPERTY_MAP"></a>
+<a id="0x1_property_map_EKEY_ALREADY_EXISTS_IN_PROPERTY_MAP"></a>
 
 The property key already exists
 
@@ -182,7 +183,7 @@ The property key already exists
 
 
 
-<a name="0x1_property_map_EKEY_TYPE_COUNT_MISMATCH"></a>
+<a id="0x1_property_map_EKEY_TYPE_COUNT_MISMATCH"></a>
 
 Property key and type counts do not match
 
@@ -192,7 +193,7 @@ Property key and type counts do not match
 
 
 
-<a name="0x1_property_map_EKEY_VALUE_COUNT_MISMATCH"></a>
+<a id="0x1_property_map_EKEY_VALUE_COUNT_MISMATCH"></a>
 
 Property key and value counts do not match
 
@@ -202,7 +203,7 @@ Property key and value counts do not match
 
 
 
-<a name="0x1_property_map_EPROPERTY_MAP_DOES_NOT_EXIST"></a>
+<a id="0x1_property_map_EPROPERTY_MAP_DOES_NOT_EXIST"></a>
 
 The property map does not exist
 
@@ -212,7 +213,7 @@ The property map does not exist
 
 
 
-<a name="0x1_property_map_EPROPERTY_MAP_KEY_TOO_LONG"></a>
+<a id="0x1_property_map_EPROPERTY_MAP_KEY_TOO_LONG"></a>
 
 The key of the property is too long
 
@@ -222,7 +223,7 @@ The key of the property is too long
 
 
 
-<a name="0x1_property_map_ETOO_MANY_PROPERTIES"></a>
+<a id="0x1_property_map_ETOO_MANY_PROPERTIES"></a>
 
 The number of properties exceeds the maximum
 
@@ -232,7 +233,7 @@ The number of properties exceeds the maximum
 
 
 
-<a name="0x1_property_map_ETYPE_INVALID"></a>
+<a id="0x1_property_map_ETYPE_INVALID"></a>
 
 Invalid value type specified
 
@@ -242,7 +243,7 @@ Invalid value type specified
 
 
 
-<a name="0x1_property_map_MAX_PROPERTY_MAP_SIZE"></a>
+<a id="0x1_property_map_MAX_PROPERTY_MAP_SIZE"></a>
 
 Maximum number of items in a <code><a href="property_map.md#0x1_property_map_PropertyMap">PropertyMap</a></code>
 
@@ -252,7 +253,7 @@ Maximum number of items in a <code><a href="property_map.md#0x1_property_map_Pro
 
 
 
-<a name="0x1_property_map_MAX_PROPERTY_NAME_LENGTH"></a>
+<a id="0x1_property_map_MAX_PROPERTY_NAME_LENGTH"></a>
 
 Maximum number of characters in a property name
 
@@ -262,7 +263,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_STRING"></a>
+<a id="0x1_property_map_STRING"></a>
 
 
 
@@ -271,7 +272,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U128"></a>
+<a id="0x1_property_map_U128"></a>
 
 
 
@@ -280,7 +281,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U16"></a>
+<a id="0x1_property_map_U16"></a>
 
 
 
@@ -289,7 +290,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U256"></a>
+<a id="0x1_property_map_U256"></a>
 
 
 
@@ -298,7 +299,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U32"></a>
+<a id="0x1_property_map_U32"></a>
 
 
 
@@ -307,7 +308,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U64"></a>
+<a id="0x1_property_map_U64"></a>
 
 
 
@@ -316,7 +317,7 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_U8"></a>
+<a id="0x1_property_map_U8"></a>
 
 
 
@@ -325,13 +326,13 @@ Maximum number of characters in a property name
 
 
 
-<a name="0x1_property_map_init"></a>
+<a id="0x1_property_map_init"></a>
 
 ## Function `init`
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_init">init</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>, container: <a href="property_map.md#0x1_property_map_PropertyMap">property_map::PropertyMap</a>)
+<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_init">init</a>(s: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, container: <a href="property_map.md#0x1_property_map_PropertyMap">property_map::PropertyMap</a>)
 </code></pre>
 
 
@@ -339,15 +340,14 @@ Maximum number of characters in a property name
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_init">init</a>(ref: &ConstructorRef, container: <a href="property_map.md#0x1_property_map_PropertyMap">PropertyMap</a>) {
-    <b>let</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a> = <a href="object.md#0x1_object_generate_signer">object::generate_signer</a>(ref);
-    <b>move_to</b>(&<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, container);
+<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_init">init</a>(s: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, container: <a href="property_map.md#0x1_property_map_PropertyMap">PropertyMap</a>) {
+    <b>move_to</b>(s, container);
 }
 </code></pre>
 
 
 
-<a name="0x1_property_map_burn"></a>
+<a id="0x1_property_map_burn"></a>
 
 ## Function `burn`
 
@@ -370,7 +370,7 @@ TODO: hanlde when table is not empty
 
 
 
-<a name="0x1_property_map_prepare_input"></a>
+<a id="0x1_property_map_prepare_input"></a>
 
 ## Function `prepare_input`
 
@@ -418,13 +418,13 @@ Helper for external entry functions to produce a valid container for property va
 
 
 
-<a name="0x1_property_map_generate_mutator_ref"></a>
+<a id="0x1_property_map_generate_mutator_ref"></a>
 
 ## Function `generate_mutator_ref`
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_generate_mutator_ref">generate_mutator_ref</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>): <a href="property_map.md#0x1_property_map_MutatorRef">property_map::MutatorRef</a>
+<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_generate_mutator_ref">generate_mutator_ref</a>(s: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): <a href="property_map.md#0x1_property_map_MutatorRef">property_map::MutatorRef</a>
 </code></pre>
 
 
@@ -432,14 +432,14 @@ Helper for external entry functions to produce a valid container for property va
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_generate_mutator_ref">generate_mutator_ref</a>(ref: &ConstructorRef): <a href="property_map.md#0x1_property_map_MutatorRef">MutatorRef</a> {
-    <a href="property_map.md#0x1_property_map_MutatorRef">MutatorRef</a> { self: <a href="object.md#0x1_object_address_from_constructor_ref">object::address_from_constructor_ref</a>(ref) }
+<pre><code><b>public</b> <b>fun</b> <a href="property_map.md#0x1_property_map_generate_mutator_ref">generate_mutator_ref</a>(s: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): <a href="property_map.md#0x1_property_map_MutatorRef">MutatorRef</a> {
+    <a href="property_map.md#0x1_property_map_MutatorRef">MutatorRef</a> { self: <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(s) }
 }
 </code></pre>
 
 
 
-<a name="0x1_property_map_contains_key"></a>
+<a id="0x1_property_map_contains_key"></a>
 
 ## Function `contains_key`
 
@@ -462,7 +462,7 @@ Helper for external entry functions to produce a valid container for property va
 
 
 
-<a name="0x1_property_map_length"></a>
+<a id="0x1_property_map_length"></a>
 
 ## Function `length`
 
@@ -485,7 +485,7 @@ Helper for external entry functions to produce a valid container for property va
 
 
 
-<a name="0x1_property_map_read"></a>
+<a id="0x1_property_map_read"></a>
 
 ## Function `read`
 
@@ -513,7 +513,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_bool"></a>
+<a id="0x1_property_map_read_bool"></a>
 
 ## Function `read_bool`
 
@@ -535,7 +535,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u8"></a>
+<a id="0x1_property_map_read_u8"></a>
 
 ## Function `read_u8`
 
@@ -557,7 +557,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u16"></a>
+<a id="0x1_property_map_read_u16"></a>
 
 ## Function `read_u16`
 
@@ -579,7 +579,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u32"></a>
+<a id="0x1_property_map_read_u32"></a>
 
 ## Function `read_u32`
 
@@ -601,7 +601,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u64"></a>
+<a id="0x1_property_map_read_u64"></a>
 
 ## Function `read_u64`
 
@@ -623,7 +623,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u128"></a>
+<a id="0x1_property_map_read_u128"></a>
 
 ## Function `read_u128`
 
@@ -645,7 +645,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_u256"></a>
+<a id="0x1_property_map_read_u256"></a>
 
 ## Function `read_u256`
 
@@ -667,7 +667,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_address"></a>
+<a id="0x1_property_map_read_address"></a>
 
 ## Function `read_address`
 
@@ -689,7 +689,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_bytes"></a>
+<a id="0x1_property_map_read_bytes"></a>
 
 ## Function `read_bytes`
 
@@ -711,7 +711,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_read_string"></a>
+<a id="0x1_property_map_read_string"></a>
 
 ## Function `read_string`
 
@@ -733,7 +733,7 @@ The preferred method is to use <code>read_&lt;type&gt;</code> where the type is 
 
 
 
-<a name="0x1_property_map_add"></a>
+<a id="0x1_property_map_add"></a>
 
 ## Function `add`
 
@@ -757,7 +757,7 @@ Add a property, already bcs encoded as a <code><a href="../../move_nursery/../mo
 
 
 
-<a name="0x1_property_map_add_typed"></a>
+<a id="0x1_property_map_add_typed"></a>
 
 ## Function `add_typed`
 
@@ -780,7 +780,7 @@ Add a property that isn't already encoded as a <code><a href="../../move_nursery
 
 
 
-<a name="0x1_property_map_update"></a>
+<a id="0x1_property_map_update"></a>
 
 ## Function `update`
 
@@ -804,7 +804,7 @@ Updates a property in place already bcs encoded
 
 
 
-<a name="0x1_property_map_update_typed"></a>
+<a id="0x1_property_map_update_typed"></a>
 
 ## Function `update_typed`
 
@@ -827,7 +827,7 @@ Updates a property in place that is not already bcs encoded
 
 
 
-<a name="0x1_property_map_remove"></a>
+<a id="0x1_property_map_remove"></a>
 
 ## Function `remove`
 

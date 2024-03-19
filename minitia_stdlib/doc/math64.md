@@ -1,5 +1,5 @@
 
-<a name="0x1_math64"></a>
+<a id="0x1_math64"></a>
 
 # Module `0x1::math64`
 
@@ -25,12 +25,12 @@ Standard math utilities missing in the Move Language.
 
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_math64_EDIVISION_BY_ZERO"></a>
+<a id="0x1_math64_EDIVISION_BY_ZERO"></a>
 
 
 
@@ -39,7 +39,7 @@ Standard math utilities missing in the Move Language.
 
 
 
-<a name="0x1_math64_EINVALID_ARG_FLOOR_LOG2"></a>
+<a id="0x1_math64_EINVALID_ARG_FLOOR_LOG2"></a>
 
 Abort value when an invalid argument is provided.
 
@@ -49,7 +49,7 @@ Abort value when an invalid argument is provided.
 
 
 
-<a name="0x1_math64_max"></a>
+<a id="0x1_math64_max"></a>
 
 ## Function `max`
 
@@ -71,7 +71,7 @@ Return the largest of two numbers.
 
 
 
-<a name="0x1_math64_min"></a>
+<a id="0x1_math64_min"></a>
 
 ## Function `min`
 
@@ -93,7 +93,7 @@ Return the smallest of two numbers.
 
 
 
-<a name="0x1_math64_average"></a>
+<a id="0x1_math64_average"></a>
 
 ## Function `average`
 
@@ -119,7 +119,7 @@ Return the average of two.
 
 
 
-<a name="0x1_math64_mul_div"></a>
+<a id="0x1_math64_mul_div"></a>
 
 ## Function `mul_div`
 
@@ -141,7 +141,7 @@ Returns a * b / c going through u128 to prevent intermediate overflow
 
 
 
-<a name="0x1_math64_clamp"></a>
+<a id="0x1_math64_clamp"></a>
 
 ## Function `clamp`
 
@@ -163,7 +163,7 @@ Return x clamped to the interval [lower, upper].
 
 
 
-<a name="0x1_math64_pow"></a>
+<a id="0x1_math64_pow"></a>
 
 ## Function `pow`
 
@@ -197,7 +197,7 @@ Return the value of n raised to power e
 
 
 
-<a name="0x1_math64_floor_log2"></a>
+<a id="0x1_math64_floor_log2"></a>
 
 ## Function `floor_log2`
 
@@ -230,7 +230,7 @@ Returns floor(lg2(x))
 
 
 
-<a name="0x1_math64_log2"></a>
+<a id="0x1_math64_log2"></a>
 
 ## Function `log2`
 
@@ -269,7 +269,7 @@ Returns floor(lg2(x))
 
 
 
-<a name="0x1_math64_sqrt"></a>
+<a id="0x1_math64_sqrt"></a>
 
 ## Function `sqrt`
 
@@ -305,7 +305,7 @@ Returns square root of x, precisely floor(sqrt(x))
 
 
 
-<a name="0x1_math64_ceil_div"></a>
+<a id="0x1_math64_ceil_div"></a>
 
 ## Function `ceil_div`
 

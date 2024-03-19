@@ -1,5 +1,5 @@
 
-<a name="0x1_transaction_context"></a>
+<a id="0x1_transaction_context"></a>
 
 # Module `0x1::transaction_context`
 
@@ -13,7 +13,7 @@
 
 
 
-<a name="0x1_transaction_context_get_transaction_hash"></a>
+<a id="0x1_transaction_context_get_transaction_hash"></a>
 
 ## Function `get_transaction_hash`
 
@@ -33,7 +33,7 @@ Return a transaction hash of this execution.
 
 
 
-<a name="0x1_transaction_context_generate_unique_address"></a>
+<a id="0x1_transaction_context_generate_unique_address"></a>
 
 ## Function `generate_unique_address`
 

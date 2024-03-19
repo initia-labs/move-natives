@@ -1,5 +1,5 @@
 
-<a name="0x1_cosmos"></a>
+<a id="0x1_cosmos"></a>
 
 # Module `0x1::cosmos`
 
@@ -7,24 +7,160 @@ This module provides interfaces to allow CosmosMessage
 execution after the move execution finished.
 
 
+-  [Function `stargate_vote`](#0x1_cosmos_stargate_vote)
+-  [Function `stargate`](#0x1_cosmos_stargate)
+-  [Function `move_execute`](#0x1_cosmos_move_execute)
+-  [Function `move_script`](#0x1_cosmos_move_script)
 -  [Function `delegate`](#0x1_cosmos_delegate)
 -  [Function `fund_community_pool`](#0x1_cosmos_fund_community_pool)
 -  [Function `transfer`](#0x1_cosmos_transfer)
 -  [Function `nft_transfer`](#0x1_cosmos_nft_transfer)
 -  [Function `pay_fee`](#0x1_cosmos_pay_fee)
--  [Function `initiate_token_deposit`](#0x1_cosmos_initiate_token_deposit)
 
 
 <pre><code><b>use</b> <a href="collection.md#0x1_collection">0x1::collection</a>;
 <b>use</b> <a href="fungible_asset.md#0x1_fungible_asset">0x1::fungible_asset</a>;
+<b>use</b> <a href="json.md#0x1_json">0x1::json</a>;
 <b>use</b> <a href="object.md#0x1_object">0x1::object</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">0x1::option</a>;
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">0x1::signer</a>;
+<b>use</b> <a href="simple_json.md#0x1_simple_json">0x1::simple_json</a>;
 <b>use</b> <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string">0x1::string</a>;
 </code></pre>
 
 
 
-<a name="0x1_cosmos_delegate"></a>
+<a id="0x1_cosmos_stargate_vote"></a>
+
+## Function `stargate_vote`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate_vote">stargate_vote</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, proposal_id: u64, voter: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">option</a>: u64, metadata: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>)
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate_vote">stargate_vote</a>(
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    proposal_id: u64,
+    voter: String,
+    <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">option</a>: u64,
+    metadata: String
+) {
+    <b>let</b> obj = <a href="simple_json.md#0x1_simple_json_empty">simple_json::empty</a>();
+    <a href="simple_json.md#0x1_simple_json_set_object">simple_json::set_object</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_none">option::none</a>&lt;String&gt;());
+    <a href="simple_json.md#0x1_simple_json_increase_depth">simple_json::increase_depth</a>(&<b>mut</b> obj);
+    <a href="simple_json.md#0x1_simple_json_set_int_raw">simple_json::set_int_raw</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"proposal_id")), <b>true</b>, (proposal_id <b>as</b> u256));
+    <a href="simple_json.md#0x1_simple_json_set_string">simple_json::set_string</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"voter")), voter);
+    <a href="simple_json.md#0x1_simple_json_set_int_raw">simple_json::set_int_raw</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">option</a>")), <b>true</b>, (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">option</a> <b>as</b> u256));
+    <a href="simple_json.md#0x1_simple_json_set_string">simple_json::set_string</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"metadata")), metadata);
+    <a href="simple_json.md#0x1_simple_json_set_string">simple_json::set_string</a>(&<b>mut</b> obj, <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"@type")), <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"/<a href="cosmos.md#0x1_cosmos">cosmos</a>.gov.v1.MsgVote"));
+
+    <b>let</b> req = <a href="json.md#0x1_json_stringify">json::stringify</a>(<a href="simple_json.md#0x1_simple_json_to_json_object">simple_json::to_json_object</a>(&obj));
+    <a href="cosmos.md#0x1_cosmos_stargate">stargate</a>(sender, req);
+}
+</code></pre>
+
+
+
+<a id="0x1_cosmos_stargate"></a>
+
+## Function `stargate`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate">stargate</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, data: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>)
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate">stargate</a> (
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    data: String,
+) {
+    <a href="cosmos.md#0x1_cosmos_stargate_internal">stargate_internal</a>(
+        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
+        *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&data),
+    )
+}
+</code></pre>
+
+
+
+<a id="0x1_cosmos_move_execute"></a>
+
+## Function `move_execute`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute">move_execute</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, module_address: <b>address</b>, module_name: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>, function_name: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;)
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute">move_execute</a> (
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    module_address: <b>address</b>,
+    module_name: String,
+    function_name: String,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+) {
+    <a href="cosmos.md#0x1_cosmos_move_execute_internal">move_execute_internal</a>(
+        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
+        module_address,
+        *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&module_name),
+        *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&function_name),
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        args,
+    )
+}
+</code></pre>
+
+
+
+<a id="0x1_cosmos_move_script"></a>
+
+## Function `move_script`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script">move_script</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;)
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script">move_script</a> (
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+) {
+    <a href="cosmos.md#0x1_cosmos_move_script_internal">move_script_internal</a>(
+        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
+        code_bytes,
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        args,
+    )
+}
+</code></pre>
+
+
+
+<a id="0x1_cosmos_delegate"></a>
 
 ## Function `delegate`
 
@@ -55,7 +191,7 @@ execution after the move execution finished.
 
 
 
-<a name="0x1_cosmos_fund_community_pool"></a>
+<a id="0x1_cosmos_fund_community_pool"></a>
 
 ## Function `fund_community_pool`
 
@@ -84,7 +220,7 @@ execution after the move execution finished.
 
 
 
-<a name="0x1_cosmos_transfer"></a>
+<a id="0x1_cosmos_transfer"></a>
 
 ## Function `transfer`
 
@@ -129,7 +265,7 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-020-fungible-token-transfer
 
 
 
-<a name="0x1_cosmos_nft_transfer"></a>
+<a id="0x1_cosmos_nft_transfer"></a>
 
 ## Function `nft_transfer`
 
@@ -174,7 +310,7 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-721-nft-transfer
 
 
 
-<a name="0x1_cosmos_pay_fee"></a>
+<a id="0x1_cosmos_pay_fee"></a>
 
 ## Function `pay_fee`
 
@@ -211,41 +347,6 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-029-fee-payment
         ack_fee_amount,
         &timeout_fee_metadata,
         timeout_fee_amount,
-    )
-}
-</code></pre>
-
-
-
-<a name="0x1_cosmos_initiate_token_deposit"></a>
-
-## Function `initiate_token_deposit`
-
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_initiate_token_deposit">initiate_token_deposit</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, bridge_id: u64, <b>to</b>: <b>address</b>, metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, amount: u64, data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;)
-</code></pre>
-
-
-
-##### Implementation
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_initiate_token_deposit">initiate_token_deposit</a> (
-    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
-    bridge_id: u64,
-    <b>to</b>: <b>address</b>,
-    metadata: Object&lt;Metadata&gt;,
-    amount: u64,
-    data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
-) {
-    <a href="cosmos.md#0x1_cosmos_initiate_token_deposit_internal">initiate_token_deposit_internal</a>(
-        bridge_id,
-        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
-        <b>to</b>,
-        &metadata,
-        amount,
-        data,
     )
 }
 </code></pre>

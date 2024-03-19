@@ -1,5 +1,5 @@
 
-<a name="0x1_fixed_point64"></a>
+<a id="0x1_fixed_point64"></a>
 
 # Module `0x1::fixed_point64`
 
@@ -27,7 +27,7 @@ a 64-bit fractional part.
 
 
 
-<a name="0x1_fixed_point64_FixedPoint64"></a>
+<a id="0x1_fixed_point64_FixedPoint64"></a>
 
 ## Struct `FixedPoint64`
 
@@ -60,12 +60,12 @@ decimal.
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_fixed_point64_MAX_U128"></a>
+<a id="0x1_fixed_point64_MAX_U128"></a>
 
 
 
@@ -74,7 +74,7 @@ decimal.
 
 
 
-<a name="0x1_fixed_point64_EDENOMINATOR"></a>
+<a id="0x1_fixed_point64_EDENOMINATOR"></a>
 
 The denominator provided was zero
 
@@ -84,7 +84,7 @@ The denominator provided was zero
 
 
 
-<a name="0x1_fixed_point64_EDIVISION"></a>
+<a id="0x1_fixed_point64_EDIVISION"></a>
 
 The quotient value would be too large to be held in a <code>u128</code>
 
@@ -94,7 +94,7 @@ The quotient value would be too large to be held in a <code>u128</code>
 
 
 
-<a name="0x1_fixed_point64_EDIVISION_BY_ZERO"></a>
+<a id="0x1_fixed_point64_EDIVISION_BY_ZERO"></a>
 
 A division by zero was encountered
 
@@ -104,7 +104,7 @@ A division by zero was encountered
 
 
 
-<a name="0x1_fixed_point64_EMULTIPLICATION"></a>
+<a id="0x1_fixed_point64_EMULTIPLICATION"></a>
 
 The multiplied value would be too large to be held in a <code>u128</code>
 
@@ -114,7 +114,7 @@ The multiplied value would be too large to be held in a <code>u128</code>
 
 
 
-<a name="0x1_fixed_point64_ERATIO_OUT_OF_RANGE"></a>
+<a id="0x1_fixed_point64_ERATIO_OUT_OF_RANGE"></a>
 
 The computed ratio when converting to a <code><a href="fixed_point64.md#0x1_fixed_point64_FixedPoint64">FixedPoint64</a></code> would be unrepresentable
 
@@ -124,7 +124,7 @@ The computed ratio when converting to a <code><a href="fixed_point64.md#0x1_fixe
 
 
 
-<a name="0x1_fixed_point64_multiply_u128"></a>
+<a id="0x1_fixed_point64_multiply_u128"></a>
 
 ## Function `multiply_u128`
 
@@ -157,7 +157,7 @@ overflows.
 
 
 
-<a name="0x1_fixed_point64_divide_u128"></a>
+<a id="0x1_fixed_point64_divide_u128"></a>
 
 ## Function `divide_u128`
 
@@ -184,14 +184,14 @@ is zero or if the quotient overflows.
     // Check whether the value is too large.
     <b>assert</b>!(quotient &lt;= <a href="fixed_point64.md#0x1_fixed_point64_MAX_U128">MAX_U128</a>, <a href="fixed_point64.md#0x1_fixed_point64_EDIVISION">EDIVISION</a>);
     // the value may be too large, which will cause the cast <b>to</b> fail
-    // <b>with</b> an arithmetic <a href="">error</a>.
+    // <b>with</b> an arithmetic <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">error</a>.
     (quotient <b>as</b> u128)
 }
 </code></pre>
 
 
 
-<a name="0x1_fixed_point64_create_from_rational"></a>
+<a id="0x1_fixed_point64_create_from_rational"></a>
 
 ## Function `create_from_rational`
 
@@ -232,7 +232,7 @@ rounding, e.g., 0.0125 will round down to 0.012 instead of up to 0.013.
 
 
 
-<a name="0x1_fixed_point64_create_from_raw_value"></a>
+<a id="0x1_fixed_point64_create_from_raw_value"></a>
 
 ## Function `create_from_raw_value`
 
@@ -254,7 +254,7 @@ Create a fixedpoint value from a raw value.
 
 
 
-<a name="0x1_fixed_point64_get_raw_value"></a>
+<a id="0x1_fixed_point64_get_raw_value"></a>
 
 ## Function `get_raw_value`
 
@@ -278,7 +278,7 @@ values directly.
 
 
 
-<a name="0x1_fixed_point64_is_zero"></a>
+<a id="0x1_fixed_point64_is_zero"></a>
 
 ## Function `is_zero`
 
@@ -300,7 +300,7 @@ Returns true if the ratio is zero.
 
 
 
-<a name="0x1_fixed_point64_min"></a>
+<a id="0x1_fixed_point64_min"></a>
 
 ## Function `min`
 
@@ -326,7 +326,7 @@ Returns the smaller of the two FixedPoint64 numbers.
 
 
 
-<a name="0x1_fixed_point64_max"></a>
+<a id="0x1_fixed_point64_max"></a>
 
 ## Function `max`
 
@@ -352,7 +352,7 @@ Returns the larger of the two FixedPoint64 numbers.
 
 
 
-<a name="0x1_fixed_point64_create_from_u128"></a>
+<a id="0x1_fixed_point64_create_from_u128"></a>
 
 ## Function `create_from_u128`
 
@@ -376,7 +376,7 @@ Create a fixedpoint value from a u128 value.
 
 
 
-<a name="0x1_fixed_point64_floor"></a>
+<a id="0x1_fixed_point64_floor"></a>
 
 ## Function `floor`
 
@@ -398,7 +398,7 @@ Returns the largest integer less than or equal to a given number.
 
 
 
-<a name="0x1_fixed_point64_ceil"></a>
+<a id="0x1_fixed_point64_ceil"></a>
 
 ## Function `ceil`
 
@@ -425,7 +425,7 @@ Rounds up the given FixedPoint64 to the next largest integer.
 
 
 
-<a name="0x1_fixed_point64_round"></a>
+<a id="0x1_fixed_point64_round"></a>
 
 ## Function `round`
 

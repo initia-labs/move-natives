@@ -1,5 +1,5 @@
 
-<a name="0x1_secp256k1"></a>
+<a id="0x1_secp256k1"></a>
 
 # Module `0x1::secp256k1`
 
@@ -23,7 +23,7 @@ This module implements ECDSA signatures based on the prime-order secp256k1 ellpt
 
 
 
-<a name="0x1_secp256k1_PublicKey"></a>
+<a id="0x1_secp256k1_PublicKey"></a>
 
 ## Struct `PublicKey`
 
@@ -49,7 +49,7 @@ It can be raw or compressed public key.
 </dl>
 
 
-<a name="0x1_secp256k1_Signature"></a>
+<a id="0x1_secp256k1_Signature"></a>
 
 ## Struct `Signature`
 
@@ -74,12 +74,12 @@ A secp256k1-based ECDSA signature.
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_secp256k1_E_WRONG_PUBKEY_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_PUBKEY_SIZE"></a>
 
 Wrong number of bytes were given as pubkey.
 
@@ -89,7 +89,7 @@ Wrong number of bytes were given as pubkey.
 
 
 
-<a name="0x1_secp256k1_E_WRONG_SIGNATURE_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_SIGNATURE_SIZE"></a>
 
 Wrong number of bytes were given as signature.
 
@@ -99,7 +99,7 @@ Wrong number of bytes were given as signature.
 
 
 
-<a name="0x1_secp256k1_PUBLIC_KEY_SIZE"></a>
+<a id="0x1_secp256k1_PUBLIC_KEY_SIZE"></a>
 
 The size of a secp256k1-based ECDSA compressed-public key, in bytes.
 
@@ -109,7 +109,7 @@ The size of a secp256k1-based ECDSA compressed-public key, in bytes.
 
 
 
-<a name="0x1_secp256k1_SIGNATURE_SIZE"></a>
+<a id="0x1_secp256k1_SIGNATURE_SIZE"></a>
 
 The size of a secp256k1-based ECDSA signature, in bytes.
 
@@ -119,7 +119,7 @@ The size of a secp256k1-based ECDSA signature, in bytes.
 
 
 
-<a name="0x1_secp256k1_E_WRONG_MESSAGE_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_MESSAGE_SIZE"></a>
 
 Wrong number of bytes were given as message.
 
@@ -129,7 +129,7 @@ Wrong number of bytes were given as message.
 
 
 
-<a name="0x1_secp256k1_MESSAGE_SIZE"></a>
+<a id="0x1_secp256k1_MESSAGE_SIZE"></a>
 
 The size of a hashed message for secp256k1-based ECDSA signing
 
@@ -139,7 +139,7 @@ The size of a hashed message for secp256k1-based ECDSA signing
 
 
 
-<a name="0x1_secp256k1_public_key_from_bytes"></a>
+<a id="0x1_secp256k1_public_key_from_bytes"></a>
 
 ## Function `public_key_from_bytes`
 
@@ -165,7 +165,7 @@ Constructs an PublicKey struct, given 33-byte representation.
 
 
 
-<a name="0x1_secp256k1_signature_from_bytes"></a>
+<a id="0x1_secp256k1_signature_from_bytes"></a>
 
 ## Function `signature_from_bytes`
 
@@ -188,7 +188,7 @@ Constructs an Signature struct from the given 64 bytes.
 
 
 
-<a name="0x1_secp256k1_public_key_to_bytes"></a>
+<a id="0x1_secp256k1_public_key_to_bytes"></a>
 
 ## Function `public_key_to_bytes`
 
@@ -210,7 +210,7 @@ Serializes an PublicKey struct to bytes.
 
 
 
-<a name="0x1_secp256k1_signature_to_bytes"></a>
+<a id="0x1_secp256k1_signature_to_bytes"></a>
 
 ## Function `signature_to_bytes`
 
@@ -232,7 +232,7 @@ Serializes an Signature struct to bytes.
 
 
 
-<a name="0x1_secp256k1_verify"></a>
+<a id="0x1_secp256k1_verify"></a>
 
 ## Function `verify`
 
@@ -263,7 +263,7 @@ Returns <code><b>true</b></code> only the signature can verify the public key on
 
 
 
-<a name="0x1_secp256k1_recover_public_key"></a>
+<a id="0x1_secp256k1_recover_public_key"></a>
 
 ## Function `recover_public_key`
 

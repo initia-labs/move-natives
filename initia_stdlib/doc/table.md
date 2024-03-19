@@ -1,5 +1,5 @@
 
-<a name="0x1_table"></a>
+<a id="0x1_table"></a>
 
 # Module `0x1::table`
 
@@ -33,14 +33,14 @@ Type of large-scale storage tables.
 
 
 <pre><code><b>use</b> <a href="account.md#0x1_account">0x1::account</a>;
-<b>use</b> <a href="">0x1::bcs</a>;
-<b>use</b> <a href="">0x1::error</a>;
-<b>use</b> <a href="">0x1::option</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs">0x1::bcs</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">0x1::option</a>;
 </code></pre>
 
 
 
-<a name="0x1_table_Table"></a>
+<a id="0x1_table_Table"></a>
 
 ## Struct `Table`
 
@@ -71,7 +71,7 @@ Type of tables
 </dl>
 
 
-<a name="0x1_table_TableIter"></a>
+<a id="0x1_table_TableIter"></a>
 
 ## Struct `TableIter`
 
@@ -96,7 +96,7 @@ Type of table iterators
 </dl>
 
 
-<a name="0x1_table_TableIterMut"></a>
+<a id="0x1_table_TableIterMut"></a>
 
 ## Struct `TableIterMut`
 
@@ -121,7 +121,7 @@ Type of mutable table iterators
 </dl>
 
 
-<a name="0x1_table_Box"></a>
+<a id="0x1_table_Box"></a>
 
 ## Resource `Box`
 
@@ -146,12 +146,12 @@ Wrapper for values. Required for making values appear as resources in the implem
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_table_EALREADY_EXISTS"></a>
+<a id="0x1_table_EALREADY_EXISTS"></a>
 
 
 
@@ -160,7 +160,7 @@ Wrapper for values. Required for making values appear as resources in the implem
 
 
 
-<a name="0x1_table_ENOT_EMPTY"></a>
+<a id="0x1_table_ENOT_EMPTY"></a>
 
 
 
@@ -169,7 +169,7 @@ Wrapper for values. Required for making values appear as resources in the implem
 
 
 
-<a name="0x1_table_ENOT_FOUND"></a>
+<a id="0x1_table_ENOT_FOUND"></a>
 
 
 
@@ -178,7 +178,7 @@ Wrapper for values. Required for making values appear as resources in the implem
 
 
 
-<a name="0x1_table_new"></a>
+<a id="0x1_table_new"></a>
 
 ## Function `new`
 
@@ -205,7 +205,7 @@ Create a new Table.
 
 
 
-<a name="0x1_table_destroy_empty"></a>
+<a id="0x1_table_destroy_empty"></a>
 
 ## Function `destroy_empty`
 
@@ -221,7 +221,7 @@ Destroy a table. The table must be empty to succeed.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_destroy_empty">destroy_empty</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;) {
-    <b>assert</b>!(<a href="table.md#0x1_table">table</a>.length == 0, <a href="_invalid_state">error::invalid_state</a>(<a href="table.md#0x1_table_ENOT_EMPTY">ENOT_EMPTY</a>));
+    <b>assert</b>!(<a href="table.md#0x1_table">table</a>.length == 0, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_state">error::invalid_state</a>(<a href="table.md#0x1_table_ENOT_EMPTY">ENOT_EMPTY</a>));
     <a href="table.md#0x1_table_destroy_empty_box">destroy_empty_box</a>&lt;K, V, <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;&gt;(&<a href="table.md#0x1_table">table</a>);
     <a href="table.md#0x1_table_drop_unchecked_box">drop_unchecked_box</a>&lt;K, V, <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;&gt;(<a href="table.md#0x1_table">table</a>)
 }
@@ -229,7 +229,7 @@ Destroy a table. The table must be empty to succeed.
 
 
 
-<a name="0x1_table_handle"></a>
+<a id="0x1_table_handle"></a>
 
 ## Function `handle`
 
@@ -251,7 +251,7 @@ Return a table handle address.
 
 
 
-<a name="0x1_table_add"></a>
+<a id="0x1_table_add"></a>
 
 ## Function `add`
 
@@ -276,7 +276,7 @@ table, and cannot be discovered from it.
 
 
 
-<a name="0x1_table_borrow"></a>
+<a id="0x1_table_borrow"></a>
 
 ## Function `borrow`
 
@@ -299,7 +299,7 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-<a name="0x1_table_borrow_with_default"></a>
+<a id="0x1_table_borrow_with_default"></a>
 
 ## Function `borrow_with_default`
 
@@ -326,7 +326,7 @@ Returns specified default value if there is no entry for <code>key</code>.
 
 
 
-<a name="0x1_table_borrow_mut"></a>
+<a id="0x1_table_borrow_mut"></a>
 
 ## Function `borrow_mut`
 
@@ -349,7 +349,7 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-<a name="0x1_table_length"></a>
+<a id="0x1_table_length"></a>
 
 ## Function `length`
 
@@ -371,7 +371,7 @@ Returns the length of the table, i.e. the number of entries.
 
 
 
-<a name="0x1_table_empty"></a>
+<a id="0x1_table_empty"></a>
 
 ## Function `empty`
 
@@ -393,7 +393,7 @@ Returns true if this table is empty.
 
 
 
-<a name="0x1_table_borrow_mut_with_default"></a>
+<a id="0x1_table_borrow_mut_with_default"></a>
 
 ## Function `borrow_mut_with_default`
 
@@ -419,7 +419,7 @@ Insert the pair (<code>key</code>, <code>default</code>) first if there is no en
 
 
 
-<a name="0x1_table_upsert"></a>
+<a id="0x1_table_upsert"></a>
 
 ## Function `upsert`
 
@@ -447,7 +447,7 @@ update the value of the entry for <code>key</code> to <code>value</code> otherwi
 
 
 
-<a name="0x1_table_remove"></a>
+<a id="0x1_table_remove"></a>
 
 ## Function `remove`
 
@@ -472,7 +472,7 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-<a name="0x1_table_contains"></a>
+<a id="0x1_table_contains"></a>
 
 ## Function `contains`
 
@@ -494,7 +494,7 @@ Returns true iff <code><a href="table.md#0x1_table">table</a></code> contains an
 
 
 
-<a name="0x1_table_iter"></a>
+<a id="0x1_table_iter"></a>
 
 ## Function `iter`
 
@@ -512,12 +512,12 @@ let (key, value) = table::next<K, V>(&mut iter);
 
 NOTE: The default BCS number encoding follows the Little Endian method.
 As a result, the byte order may differ from the numeric order. To maintain
-the numeric order, use <code><a href="">vector</a>&lt;u8&gt;</code> as the key and utilize <code>0x1::std::table_key</code>
+the numeric order, use <code><a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;</code> as the key and utilize <code>0x1::std::table_key</code>
 functions to obtain the Big Endian key bytes of a number.
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter">iter</a>&lt;K: <b>copy</b>, drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="_Option">option::Option</a>&lt;K&gt;, end: <a href="_Option">option::Option</a>&lt;K&gt;, order: u8): <a href="table.md#0x1_table_TableIter">table::TableIter</a>&lt;K, V&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter">iter</a>&lt;K: <b>copy</b>, drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;K&gt;, end: <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;K&gt;, order: u8): <a href="table.md#0x1_table_TableIter">table::TableIter</a>&lt;K, V&gt;
 </code></pre>
 
 
@@ -531,16 +531,16 @@ functions to obtain the Big Endian key bytes of a number.
     end: Option&lt;K&gt;, /* exclusive */
     order: u8 /* 1: Ascending, 2: Descending */,
 ): <a href="table.md#0x1_table_TableIter">TableIter</a>&lt;K, V&gt; {
-    <b>let</b> start_bytes: <a href="">vector</a>&lt;u8&gt; = <b>if</b> (<a href="_is_some">option::is_some</a>(&start)) {
-        <a href="_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="_extract">option::extract</a>(&<b>mut</b> start))
+    <b>let</b> start_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&start)) {
+        <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> start))
     } <b>else</b> {
-        <a href="_empty">vector::empty</a>()
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_empty">vector::empty</a>()
     };
 
-    <b>let</b> end_bytes: <a href="">vector</a>&lt;u8&gt; = <b>if</b> (<a href="_is_some">option::is_some</a>(&end)) {
-        <a href="_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="_extract">option::extract</a>(&<b>mut</b> end))
+    <b>let</b> end_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&end)) {
+        <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> end))
     } <b>else</b> {
-        <a href="_empty">vector::empty</a>()
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_empty">vector::empty</a>()
     };
 
     <b>let</b> iterator_id = <a href="table.md#0x1_table_new_table_iter">new_table_iter</a>&lt;K, V, <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;&gt;(<a href="table.md#0x1_table">table</a>, start_bytes, end_bytes, order);
@@ -552,7 +552,7 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-<a name="0x1_table_prepare"></a>
+<a id="0x1_table_prepare"></a>
 
 ## Function `prepare`
 
@@ -573,7 +573,7 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-<a name="0x1_table_next"></a>
+<a id="0x1_table_next"></a>
 
 ## Function `next`
 
@@ -595,7 +595,7 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-<a name="0x1_table_iter_mut"></a>
+<a id="0x1_table_iter_mut"></a>
 
 ## Function `iter_mut`
 
@@ -613,12 +613,12 @@ let (key, value) = table::next_mut<K, V>(&mut iter);
 
 NOTE: The default BCS number encoding follows the Little Endian method.
 As a result, the byte order may differ from the numeric order. To maintain
-the numeric order, use <code><a href="">vector</a>&lt;u8&gt;</code> as the key and utilize <code>0x1::std::table_key</code>
+the numeric order, use <code><a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;</code> as the key and utilize <code>0x1::std::table_key</code>
 functions to obtain the Big Endian key bytes of a number.
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter_mut">iter_mut</a>&lt;K: <b>copy</b>, drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="_Option">option::Option</a>&lt;K&gt;, end: <a href="_Option">option::Option</a>&lt;K&gt;, order: u8): <a href="table.md#0x1_table_TableIterMut">table::TableIterMut</a>&lt;K, V&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter_mut">iter_mut</a>&lt;K: <b>copy</b>, drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;K&gt;, end: <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;K&gt;, order: u8): <a href="table.md#0x1_table_TableIterMut">table::TableIterMut</a>&lt;K, V&gt;
 </code></pre>
 
 
@@ -632,16 +632,16 @@ functions to obtain the Big Endian key bytes of a number.
     end: Option&lt;K&gt;, /* exclusive */
     order: u8 /* 1: Ascending, 2: Descending */,
 ): <a href="table.md#0x1_table_TableIterMut">TableIterMut</a>&lt;K, V&gt; {
-    <b>let</b> start_bytes: <a href="">vector</a>&lt;u8&gt; = <b>if</b> (<a href="_is_some">option::is_some</a>(&start)) {
-        <a href="_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="_extract">option::extract</a>(&<b>mut</b> start))
+    <b>let</b> start_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&start)) {
+        <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> start))
     } <b>else</b> {
-        <a href="_empty">vector::empty</a>()
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_empty">vector::empty</a>()
     };
 
-    <b>let</b> end_bytes: <a href="">vector</a>&lt;u8&gt; = <b>if</b> (<a href="_is_some">option::is_some</a>(&end)) {
-        <a href="_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="_extract">option::extract</a>(&<b>mut</b> end))
+    <b>let</b> end_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&end)) {
+        <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>&lt;K&gt;(&<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> end))
     } <b>else</b> {
-        <a href="_empty">vector::empty</a>()
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_empty">vector::empty</a>()
     };
 
     <b>let</b> iterator_id = <a href="table.md#0x1_table_new_table_iter_mut">new_table_iter_mut</a>&lt;K, V, <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;&gt;(<a href="table.md#0x1_table">table</a>, start_bytes, end_bytes, order);
@@ -653,7 +653,7 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-<a name="0x1_table_prepare_mut"></a>
+<a id="0x1_table_prepare_mut"></a>
 
 ## Function `prepare_mut`
 
@@ -674,7 +674,7 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-<a name="0x1_table_next_mut"></a>
+<a id="0x1_table_next_mut"></a>
 
 ## Function `next_mut`
 

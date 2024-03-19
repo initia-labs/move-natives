@@ -1,5 +1,5 @@
 
-<a name="0x1_account"></a>
+<a id="0x1_account"></a>
 
 # Module `0x1::account`
 
@@ -27,12 +27,12 @@
 
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_account_ACCOUNT_TYPE_BASE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_BASE"></a>
 
 Account Types
 
@@ -42,7 +42,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_MODULE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_MODULE"></a>
 
 
 
@@ -51,7 +51,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_OBJECT"></a>
+<a id="0x1_account_ACCOUNT_TYPE_OBJECT"></a>
 
 
 
@@ -60,7 +60,7 @@ Account Types
 
 
 
-<a name="0x1_account_ACCOUNT_TYPE_TABLE"></a>
+<a id="0x1_account_ACCOUNT_TYPE_TABLE"></a>
 
 
 
@@ -69,7 +69,7 @@ Account Types
 
 
 
-<a name="0x1_account_EACCOUNT_ALREADY_EXISTS"></a>
+<a id="0x1_account_EACCOUNT_ALREADY_EXISTS"></a>
 
 This error type is used in native function.
 
@@ -79,7 +79,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_EACCOUNT_NOT_FOUND"></a>
+<a id="0x1_account_EACCOUNT_NOT_FOUND"></a>
 
 
 
@@ -88,7 +88,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_account_script"></a>
+<a id="0x1_account_create_account_script"></a>
 
 ## Function `create_account_script`
 
@@ -109,7 +109,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_account"></a>
+<a id="0x1_account_create_account"></a>
 
 ## Function `create_account`
 
@@ -133,7 +133,7 @@ This error type is used in native function.
 
 
 
-<a name="0x1_account_create_table_account"></a>
+<a id="0x1_account_create_table_account"></a>
 
 ## Function `create_table_account`
 
@@ -159,7 +159,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_create_object_account"></a>
+<a id="0x1_account_create_object_account"></a>
 
 ## Function `create_object_account`
 
@@ -196,7 +196,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_exists_at"></a>
+<a id="0x1_account_exists_at"></a>
 
 ## Function `exists_at`
 
@@ -219,7 +219,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_account_number"></a>
+<a id="0x1_account_get_account_number"></a>
 
 ## Function `get_account_number`
 
@@ -244,7 +244,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_sequence_number"></a>
+<a id="0x1_account_get_sequence_number"></a>
 
 ## Function `get_sequence_number`
 
@@ -269,7 +269,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_base_account"></a>
+<a id="0x1_account_is_base_account"></a>
 
 ## Function `is_base_account`
 
@@ -294,7 +294,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_object_account"></a>
+<a id="0x1_account_is_object_account"></a>
 
 ## Function `is_object_account`
 
@@ -319,7 +319,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_table_account"></a>
+<a id="0x1_account_is_table_account"></a>
 
 ## Function `is_table_account`
 
@@ -344,7 +344,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_is_module_account"></a>
+<a id="0x1_account_is_module_account"></a>
 
 ## Function `is_module_account`
 
@@ -369,7 +369,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_get_account_info"></a>
+<a id="0x1_account_get_account_info"></a>
 
 ## Function `get_account_info`
 
@@ -388,7 +388,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_create_address"></a>
+<a id="0x1_account_create_address"></a>
 
 ## Function `create_address`
 
@@ -407,7 +407,7 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-<a name="0x1_account_create_signer"></a>
+<a id="0x1_account_create_signer"></a>
 
 ## Function `create_signer`
 

@@ -1,5 +1,5 @@
 
-<a name="0x1_secp256k1"></a>
+<a id="0x1_secp256k1"></a>
 
 # Module `0x1::secp256k1`
 
@@ -17,13 +17,13 @@ This module implements ECDSA signatures based on the prime-order secp256k1 ellpt
 -  [Function `recover_public_key`](#0x1_secp256k1_recover_public_key)
 
 
-<pre><code><b>use</b> <a href="">0x1::error</a>;
-<b>use</b> <a href="">0x1::option</a>;
+<pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">0x1::option</a>;
 </code></pre>
 
 
 
-<a name="0x1_secp256k1_PublicKey"></a>
+<a id="0x1_secp256k1_PublicKey"></a>
 
 ## Struct `PublicKey`
 
@@ -41,7 +41,7 @@ It can be raw or compressed public key.
 
 <dl>
 <dt>
-<code>bytes: <a href="">vector</a>&lt;u8&gt;</code>
+<code>bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;</code>
 </dt>
 <dd>
 
@@ -49,7 +49,7 @@ It can be raw or compressed public key.
 </dl>
 
 
-<a name="0x1_secp256k1_Signature"></a>
+<a id="0x1_secp256k1_Signature"></a>
 
 ## Struct `Signature`
 
@@ -66,7 +66,7 @@ A secp256k1-based ECDSA signature.
 
 <dl>
 <dt>
-<code>bytes: <a href="">vector</a>&lt;u8&gt;</code>
+<code>bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;</code>
 </dt>
 <dd>
 
@@ -74,12 +74,12 @@ A secp256k1-based ECDSA signature.
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_secp256k1_E_WRONG_PUBKEY_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_PUBKEY_SIZE"></a>
 
 Wrong number of bytes were given as pubkey.
 
@@ -89,7 +89,7 @@ Wrong number of bytes were given as pubkey.
 
 
 
-<a name="0x1_secp256k1_E_WRONG_SIGNATURE_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_SIGNATURE_SIZE"></a>
 
 Wrong number of bytes were given as signature.
 
@@ -99,7 +99,7 @@ Wrong number of bytes were given as signature.
 
 
 
-<a name="0x1_secp256k1_PUBLIC_KEY_SIZE"></a>
+<a id="0x1_secp256k1_PUBLIC_KEY_SIZE"></a>
 
 The size of a secp256k1-based ECDSA compressed-public key, in bytes.
 
@@ -109,7 +109,7 @@ The size of a secp256k1-based ECDSA compressed-public key, in bytes.
 
 
 
-<a name="0x1_secp256k1_SIGNATURE_SIZE"></a>
+<a id="0x1_secp256k1_SIGNATURE_SIZE"></a>
 
 The size of a secp256k1-based ECDSA signature, in bytes.
 
@@ -119,7 +119,7 @@ The size of a secp256k1-based ECDSA signature, in bytes.
 
 
 
-<a name="0x1_secp256k1_E_WRONG_MESSAGE_SIZE"></a>
+<a id="0x1_secp256k1_E_WRONG_MESSAGE_SIZE"></a>
 
 Wrong number of bytes were given as message.
 
@@ -129,7 +129,7 @@ Wrong number of bytes were given as message.
 
 
 
-<a name="0x1_secp256k1_MESSAGE_SIZE"></a>
+<a id="0x1_secp256k1_MESSAGE_SIZE"></a>
 
 The size of a hashed message for secp256k1-based ECDSA signing
 
@@ -139,14 +139,14 @@ The size of a hashed message for secp256k1-based ECDSA signing
 
 
 
-<a name="0x1_secp256k1_public_key_from_bytes"></a>
+<a id="0x1_secp256k1_public_key_from_bytes"></a>
 
 ## Function `public_key_from_bytes`
 
 Constructs an PublicKey struct, given 33-byte representation.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_from_bytes">public_key_from_bytes</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_from_bytes">public_key_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>
 </code></pre>
 
 
@@ -154,7 +154,7 @@ Constructs an PublicKey struct, given 33-byte representation.
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_from_bytes">public_key_from_bytes</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a> {
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_from_bytes">public_key_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a> {
     <b>assert</b>!(
         std::vector::length(&bytes) == <a href="secp256k1.md#0x1_secp256k1_PUBLIC_KEY_SIZE">PUBLIC_KEY_SIZE</a>,
         std::error::invalid_argument(<a href="secp256k1.md#0x1_secp256k1_PUBLIC_KEY_SIZE">PUBLIC_KEY_SIZE</a>),
@@ -165,14 +165,14 @@ Constructs an PublicKey struct, given 33-byte representation.
 
 
 
-<a name="0x1_secp256k1_signature_from_bytes"></a>
+<a id="0x1_secp256k1_signature_from_bytes"></a>
 
 ## Function `signature_from_bytes`
 
 Constructs an Signature struct from the given 64 bytes.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_from_bytes">signature_from_bytes</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_from_bytes">signature_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>
 </code></pre>
 
 
@@ -180,7 +180,7 @@ Constructs an Signature struct from the given 64 bytes.
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_from_bytes">signature_from_bytes</a>(bytes: <a href="">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a> {
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_from_bytes">signature_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a> {
     <b>assert</b>!(std::vector::length(&bytes) == <a href="secp256k1.md#0x1_secp256k1_SIGNATURE_SIZE">SIGNATURE_SIZE</a>, std::error::invalid_argument(<a href="secp256k1.md#0x1_secp256k1_E_WRONG_SIGNATURE_SIZE">E_WRONG_SIGNATURE_SIZE</a>));
     <a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a> { bytes }
 }
@@ -188,14 +188,14 @@ Constructs an Signature struct from the given 64 bytes.
 
 
 
-<a name="0x1_secp256k1_public_key_to_bytes"></a>
+<a id="0x1_secp256k1_public_key_to_bytes"></a>
 
 ## Function `public_key_to_bytes`
 
 Serializes an PublicKey struct to bytes.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_to_bytes">public_key_to_bytes</a>(pk: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>): <a href="">vector</a>&lt;u8&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_to_bytes">public_key_to_bytes</a>(pk: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;
 </code></pre>
 
 
@@ -203,21 +203,21 @@ Serializes an PublicKey struct to bytes.
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_to_bytes">public_key_to_bytes</a>(pk: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a>): <a href="">vector</a>&lt;u8&gt; {
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_to_bytes">public_key_to_bytes</a>(pk: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
     pk.bytes
 }
 </code></pre>
 
 
 
-<a name="0x1_secp256k1_signature_to_bytes"></a>
+<a id="0x1_secp256k1_signature_to_bytes"></a>
 
 ## Function `signature_to_bytes`
 
 Serializes an Signature struct to bytes.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_to_bytes">signature_to_bytes</a>(sig: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): <a href="">vector</a>&lt;u8&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_to_bytes">signature_to_bytes</a>(sig: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;
 </code></pre>
 
 
@@ -225,21 +225,21 @@ Serializes an Signature struct to bytes.
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_to_bytes">signature_to_bytes</a>(sig: &<a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a>): <a href="">vector</a>&lt;u8&gt; {
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_to_bytes">signature_to_bytes</a>(sig: &<a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
     sig.bytes
 }
 </code></pre>
 
 
 
-<a name="0x1_secp256k1_verify"></a>
+<a id="0x1_secp256k1_verify"></a>
 
 ## Function `verify`
 
 Returns <code><b>true</b></code> only the signature can verify the public key on the message
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify">verify</a>(message: <a href="">vector</a>&lt;u8&gt;, public_key: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>, signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): bool
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify">verify</a>(message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, public_key: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>, signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): bool
 </code></pre>
 
 
@@ -248,7 +248,7 @@ Returns <code><b>true</b></code> only the signature can verify the public key on
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify">verify</a>(
-    message: <a href="">vector</a>&lt;u8&gt;,
+    message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
     public_key: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a>,
     signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a>,
 ): bool {
@@ -263,7 +263,7 @@ Returns <code><b>true</b></code> only the signature can verify the public key on
 
 
 
-<a name="0x1_secp256k1_recover_public_key"></a>
+<a id="0x1_secp256k1_recover_public_key"></a>
 
 ## Function `recover_public_key`
 
@@ -275,7 +275,7 @@ incorrect public key. This recovery algorithm can only be used to check validity
 public key (or its hash) is known beforehand.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key">recover_public_key</a>(message: <a href="">vector</a>&lt;u8&gt;, recovery_id: u8, signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): <a href="_Option">option::Option</a>&lt;<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>&gt;
+<pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key">recover_public_key</a>(message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, recovery_id: u8, signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">secp256k1::Signature</a>): <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;<a href="secp256k1.md#0x1_secp256k1_PublicKey">secp256k1::PublicKey</a>&gt;
 </code></pre>
 
 
@@ -284,7 +284,7 @@ public key (or its hash) is known beforehand.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key">recover_public_key</a>(
-    message: <a href="">vector</a>&lt;u8&gt;,
+    message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
     recovery_id: u8,
     signature: &<a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a>,
 ): Option&lt;<a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a>&gt; {

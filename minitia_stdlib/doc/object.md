@@ -1,5 +1,5 @@
 
-<a name="0x1_object"></a>
+<a id="0x1_object"></a>
 
 # Module `0x1::object`
 
@@ -21,8 +21,8 @@ TODO:
 make it so that a reference to a global object can be returned from a function.
 
 
+-  [Resource `Tombstone`](#0x1_object_Tombstone)
 -  [Resource `ObjectCore`](#0x1_object_ObjectCore)
--  [Resource `TombStone`](#0x1_object_TombStone)
 -  [Struct `Object`](#0x1_object_Object)
 -  [Struct `ConstructorRef`](#0x1_object_ConstructorRef)
 -  [Struct `DeleteRef`](#0x1_object_DeleteRef)
@@ -33,7 +33,6 @@ make it so that a reference to a global object can be returned from a function.
 -  [Struct `CreateEvent`](#0x1_object_CreateEvent)
 -  [Struct `TransferEvent`](#0x1_object_TransferEvent)
 -  [Constants](#@Constants_0)
--  [Function `is_burnt`](#0x1_object_is_burnt)
 -  [Function `address_to_object`](#0x1_object_address_to_object)
 -  [Function `is_object`](#0x1_object_is_object)
 -  [Function `create_object_address`](#0x1_object_create_object_address)
@@ -44,7 +43,6 @@ make it so that a reference to a global object can be returned from a function.
 -  [Function `create_named_object`](#0x1_object_create_named_object)
 -  [Function `create_user_derived_object`](#0x1_object_create_user_derived_object)
 -  [Function `create_object`](#0x1_object_create_object)
--  [Function `create_sticky_object`](#0x1_object_create_sticky_object)
 -  [Function `generate_delete_ref`](#0x1_object_generate_delete_ref)
 -  [Function `generate_extend_ref`](#0x1_object_generate_extend_ref)
 -  [Function `generate_transfer_ref`](#0x1_object_generate_transfer_ref)
@@ -66,8 +64,6 @@ make it so that a reference to a global object can be returned from a function.
 -  [Function `transfer`](#0x1_object_transfer)
 -  [Function `transfer_raw`](#0x1_object_transfer_raw)
 -  [Function `transfer_to_object`](#0x1_object_transfer_to_object)
--  [Function `burn`](#0x1_object_burn)
--  [Function `unburn`](#0x1_object_unburn)
 -  [Function `ungated_transfer_allowed`](#0x1_object_ungated_transfer_allowed)
 -  [Function `owner`](#0x1_object_owner)
 -  [Function `is_owner`](#0x1_object_is_owner)
@@ -88,7 +84,32 @@ make it so that a reference to a global object can be returned from a function.
 
 
 
-<a name="0x1_object_ObjectCore"></a>
+<a id="0x1_object_Tombstone"></a>
+
+## Resource `Tombstone`
+
+Tombstone is version store for deleted objects with version
+
+
+<pre><code><b>struct</b> <a href="object.md#0x1_object_Tombstone">Tombstone</a> <b>has</b> key
+</code></pre>
+
+
+
+##### Fields
+
+
+<dl>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
+</dl>
+
+
+<a id="0x1_object_ObjectCore"></a>
 
 ## Resource `ObjectCore`
 
@@ -117,35 +138,16 @@ The core of the object model that defines ownership, transferability, and events
  Object transferring is a common operation, this allows for disabling and enabling
  transfers bypassing the use of a TransferRef.
 </dd>
-</dl>
-
-
-<a name="0x1_object_TombStone"></a>
-
-## Resource `TombStone`
-
-This is added to objects that are burnt (ownership transferred to BURN_ADDRESS).
-
-
-<pre><code><b>struct</b> <a href="object.md#0x1_object_TombStone">TombStone</a> <b>has</b> key
-</code></pre>
-
-
-
-##### Fields
-
-
-<dl>
 <dt>
-<code>original_owner: <b>address</b></code>
+<code>version: u64</code>
 </dt>
 <dd>
- Track the previous owner before the object is burnt so they can reclaim later if so desired.
+ The version is to invalidate the refs, which are generated for previously burnt object.
 </dd>
 </dl>
 
 
-<a name="0x1_object_Object"></a>
+<a id="0x1_object_Object"></a>
 
 ## Struct `Object`
 
@@ -173,7 +175,7 @@ can remove it from storage at any point in time.
 </dl>
 
 
-<a name="0x1_object_ConstructorRef"></a>
+<a id="0x1_object_ConstructorRef"></a>
 
 ## Struct `ConstructorRef`
 
@@ -201,10 +203,16 @@ This is a one time ability given to the creator to configure the object as neces
 <dd>
  True if the object can be deleted. Named objects are not deletable.
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_DeleteRef"></a>
+<a id="0x1_object_DeleteRef"></a>
 
 ## Struct `DeleteRef`
 
@@ -226,10 +234,16 @@ Used to remove an object from storage.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_ExtendRef"></a>
+<a id="0x1_object_ExtendRef"></a>
 
 ## Struct `ExtendRef`
 
@@ -251,10 +265,16 @@ Used to create events or move additional resources into object storage.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_TransferRef"></a>
+<a id="0x1_object_TransferRef"></a>
 
 ## Struct `TransferRef`
 
@@ -276,10 +296,16 @@ Used to create LinearTransferRef, hence ownership transfer.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_LinearTransferRef"></a>
+<a id="0x1_object_LinearTransferRef"></a>
 
 ## Struct `LinearTransferRef`
 
@@ -308,10 +334,16 @@ the current owner.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_DeriveRef"></a>
+<a id="0x1_object_DeriveRef"></a>
 
 ## Struct `DeriveRef`
 
@@ -333,10 +365,16 @@ Used to create derived objects from a given objects.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_CreateEvent"></a>
+<a id="0x1_object_CreateEvent"></a>
 
 ## Struct `CreateEvent`
 
@@ -365,10 +403,16 @@ Emitted at the object creation.
 <dd>
 
 </dd>
+<dt>
+<code>version: u64</code>
+</dt>
+<dd>
+
+</dd>
 </dl>
 
 
-<a name="0x1_object_TransferEvent"></a>
+<a id="0x1_object_TransferEvent"></a>
 
 ## Struct `TransferEvent`
 
@@ -406,22 +450,12 @@ Emitted whenever the object's owner field is changed.
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_object_BURN_ADDRESS"></a>
-
-Address where unwanted objects can be forcefully transferred to.
-
-
-<pre><code><b>const</b> <a href="object.md#0x1_object_BURN_ADDRESS">BURN_ADDRESS</a>: <b>address</b> = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
-</code></pre>
-
-
-
-<a name="0x1_object_ECANNOT_DELETE"></a>
+<a id="0x1_object_ECANNOT_DELETE"></a>
 
 The object does not allow for deletion
 
@@ -431,7 +465,7 @@ The object does not allow for deletion
 
 
 
-<a name="0x1_object_EMAXIMUM_NESTING"></a>
+<a id="0x1_object_EMAXIMUM_NESTING"></a>
 
 Exceeds maximum nesting for an object transfer.
 
@@ -441,7 +475,7 @@ Exceeds maximum nesting for an object transfer.
 
 
 
-<a name="0x1_object_ENOT_OBJECT_OWNER"></a>
+<a id="0x1_object_ENOT_OBJECT_OWNER"></a>
 
 The caller does not have ownership permissions
 
@@ -451,7 +485,7 @@ The caller does not have ownership permissions
 
 
 
-<a name="0x1_object_ENO_UNGATED_TRANSFERS"></a>
+<a id="0x1_object_ENO_UNGATED_TRANSFERS"></a>
 
 The object does not have ungated transfers enabled
 
@@ -461,7 +495,7 @@ The object does not have ungated transfers enabled
 
 
 
-<a name="0x1_object_EOBJECT_DOES_NOT_EXIST"></a>
+<a id="0x1_object_EOBJECT_DOES_NOT_EXIST"></a>
 
 An object does not exist at this address
 
@@ -471,7 +505,7 @@ An object does not exist at this address
 
 
 
-<a name="0x1_object_EOBJECT_EXISTS"></a>
+<a id="0x1_object_EOBJECT_EXISTS"></a>
 
 An object already exists at this address
 
@@ -481,7 +515,7 @@ An object already exists at this address
 
 
 
-<a name="0x1_object_EOBJECT_NOT_BURNT"></a>
+<a id="0x1_object_EOBJECT_NOT_BURNT"></a>
 
 Cannot reclaim objects that weren't burnt.
 
@@ -491,7 +525,7 @@ Cannot reclaim objects that weren't burnt.
 
 
 
-<a name="0x1_object_ERESOURCE_DOES_NOT_EXIST"></a>
+<a id="0x1_object_ERESOURCE_DOES_NOT_EXIST"></a>
 
 The resource is not stored at the specified address.
 
@@ -501,7 +535,17 @@ The resource is not stored at the specified address.
 
 
 
-<a name="0x1_object_MAXIMUM_OBJECT_NESTING"></a>
+<a id="0x1_object_EVERSION_MISMATCH"></a>
+
+The version of ref does not match with object core version.
+
+
+<pre><code><b>const</b> <a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>: u64 = 9;
+</code></pre>
+
+
+
+<a id="0x1_object_MAXIMUM_OBJECT_NESTING"></a>
 
 Maximum nesting from one object to another. That is objects can technically have infinte
 nesting, but any checks such as transfer will only be evaluated this deep.
@@ -512,7 +556,7 @@ nesting, but any checks such as transfer will only be evaluated this deep.
 
 
 
-<a name="0x1_object_OBJECT_DERIVED_SCHEME"></a>
+<a id="0x1_object_OBJECT_DERIVED_SCHEME"></a>
 
 Scheme identifier used to generate an object's address <code>obj_addr</code> as derived from another object.
 The object's address is generated as:
@@ -529,7 +573,7 @@ derivation to produce an object address.
 
 
 
-<a name="0x1_object_OBJECT_FROM_GUID_ADDRESS_SCHEME"></a>
+<a id="0x1_object_OBJECT_FROM_GUID_ADDRESS_SCHEME"></a>
 
 Scheme identifier used to generate an object's address <code>obj_addr</code> via a fresh GUID generated by the creator at
 <code>source_addr</code>. The object's address is generated as:
@@ -547,7 +591,7 @@ derivation to produce an object address.
 
 
 
-<a name="0x1_object_OBJECT_FROM_SEED_ADDRESS_SCHEME"></a>
+<a id="0x1_object_OBJECT_FROM_SEED_ADDRESS_SCHEME"></a>
 
 Scheme identifier used to generate an object's address <code>obj_addr</code> from the creator's <code>source_addr</code> and a <code>seed</code> as:
 obj_addr = sha3_256(source_addr | seed | 0xFE).
@@ -561,29 +605,7 @@ derivation to produce an object address.
 
 
 
-<a name="0x1_object_is_burnt"></a>
-
-## Function `is_burnt`
-
-
-
-<pre><code>#[view]
-<b>public</b> <b>fun</b> <a href="object.md#0x1_object_is_burnt">is_burnt</a>&lt;T: key&gt;(<a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;): bool
-</code></pre>
-
-
-
-##### Implementation
-
-
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_is_burnt">is_burnt</a>&lt;T: key&gt;(<a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">Object</a>&lt;T&gt;): bool {
-    <b>exists</b>&lt;<a href="object.md#0x1_object_TombStone">TombStone</a>&gt;(<a href="object.md#0x1_object">object</a>.inner)
-}
-</code></pre>
-
-
-
-<a name="0x1_object_address_to_object"></a>
+<a id="0x1_object_address_to_object"></a>
 
 ## Function `address_to_object`
 
@@ -607,7 +629,7 @@ Produces an ObjectId from the given address. This is not verified.
 
 
 
-<a name="0x1_object_is_object"></a>
+<a id="0x1_object_is_object"></a>
 
 ## Function `is_object`
 
@@ -629,7 +651,7 @@ Returns true if there exists an object or the remnants of an object.
 
 
 
-<a name="0x1_object_create_object_address"></a>
+<a id="0x1_object_create_object_address"></a>
 
 ## Function `create_object_address`
 
@@ -654,7 +676,7 @@ Derives an object address from source material: sha3_256([creator address | seed
 
 
 
-<a name="0x1_object_create_user_derived_object_address"></a>
+<a id="0x1_object_create_user_derived_object_address"></a>
 
 ## Function `create_user_derived_object_address`
 
@@ -679,7 +701,7 @@ Derives an object address from the source address and an object: sha3_256([sourc
 
 
 
-<a name="0x1_object_create_guid_object_address"></a>
+<a id="0x1_object_create_guid_object_address"></a>
 
 ## Function `create_guid_object_address`
 
@@ -704,7 +726,7 @@ Derives an object from an Account GUID.
 
 
 
-<a name="0x1_object_object_address"></a>
+<a id="0x1_object_object_address"></a>
 
 ## Function `object_address`
 
@@ -726,7 +748,7 @@ Returns the address of within an ObjectId.
 
 
 
-<a name="0x1_object_convert"></a>
+<a id="0x1_object_convert"></a>
 
 ## Function `convert`
 
@@ -748,7 +770,7 @@ Convert Object<X> to Object<Y>.
 
 
 
-<a name="0x1_object_create_named_object"></a>
+<a id="0x1_object_create_named_object"></a>
 
 ## Function `create_named_object`
 
@@ -756,7 +778,7 @@ Create a new named object and return the ConstructorRef. Named objects can be qu
 by knowing the user generated seed used to create them. Named objects cannot be deleted.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_named_object">create_named_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, seed: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
+<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_named_object">create_named_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, seed: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
 </code></pre>
 
 
@@ -764,16 +786,16 @@ by knowing the user generated seed used to create them. Named objects cannot be 
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_named_object">create_named_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, seed: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> {
+<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_named_object">create_named_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, seed: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> <b>acquires</b> <a href="object.md#0x1_object_Tombstone">Tombstone</a> {
     <b>let</b> creator_address = <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(creator);
     <b>let</b> obj_addr = <a href="object.md#0x1_object_create_object_address">create_object_address</a>(creator_address, seed);
-    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(creator_address, obj_addr, <b>false</b>)
+    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(creator_address, obj_addr, can_delete)
 }
 </code></pre>
 
 
 
-<a name="0x1_object_create_user_derived_object"></a>
+<a id="0x1_object_create_user_derived_object"></a>
 
 ## Function `create_user_derived_object`
 
@@ -781,7 +803,7 @@ Create a new object whose address is derived based on the creator account addres
 Derivde objects, similar to named objects, cannot be deleted.
 
 
-<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="object.md#0x1_object_create_user_derived_object">create_user_derived_object</a>(creator_address: <b>address</b>, derive_ref: &<a href="object.md#0x1_object_DeriveRef">object::DeriveRef</a>): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
+<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="object.md#0x1_object_create_user_derived_object">create_user_derived_object</a>(creator_address: <b>address</b>, derive_ref: &<a href="object.md#0x1_object_DeriveRef">object::DeriveRef</a>, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
 </code></pre>
 
 
@@ -789,25 +811,23 @@ Derivde objects, similar to named objects, cannot be deleted.
 ##### Implementation
 
 
-<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="object.md#0x1_object_create_user_derived_object">create_user_derived_object</a>(creator_address: <b>address</b>, derive_ref: &<a href="object.md#0x1_object_DeriveRef">DeriveRef</a>): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> {
+<pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="object.md#0x1_object_create_user_derived_object">create_user_derived_object</a>(creator_address: <b>address</b>, derive_ref: &<a href="object.md#0x1_object_DeriveRef">DeriveRef</a>, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> <b>acquires</b> <a href="object.md#0x1_object_Tombstone">Tombstone</a> {
     <b>let</b> obj_addr = <a href="object.md#0x1_object_create_user_derived_object_address">create_user_derived_object_address</a>(creator_address, derive_ref.self);
-    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(creator_address, obj_addr, <b>false</b>)
+    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(creator_address, obj_addr, can_delete)
 }
 </code></pre>
 
 
 
-<a name="0x1_object_create_object"></a>
+<a id="0x1_object_create_object"></a>
 
 ## Function `create_object`
 
 Create a new object by generating a random unique address based on transaction hash.
 The unique address is computed sha3_256([transaction hash | auid counter | 0xFB]).
-The created object is deletable as we can guarantee the same unique address can
-never be regenerated with future txs.
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_object">create_object</a>(owner_address: <b>address</b>): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
+<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_object">create_object</a>(owner_address: <b>address</b>, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
 </code></pre>
 
 
@@ -815,38 +835,15 @@ never be regenerated with future txs.
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_object">create_object</a>(owner_address: <b>address</b>): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> {
+<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_object">create_object</a>(owner_address: <b>address</b>, can_delete: bool): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> <b>acquires</b> <a href="object.md#0x1_object_Tombstone">Tombstone</a> {
     <b>let</b> unique_address = <a href="transaction_context.md#0x1_transaction_context_generate_unique_address">transaction_context::generate_unique_address</a>();
-    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(owner_address, unique_address, <b>true</b>)
+    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(owner_address, unique_address, can_delete)
 }
 </code></pre>
 
 
 
-<a name="0x1_object_create_sticky_object"></a>
-
-## Function `create_sticky_object`
-
-Same as <code>create_object</code> except the object to be created will be undeletable.
-
-
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_sticky_object">create_sticky_object</a>(owner_address: <b>address</b>): <a href="object.md#0x1_object_ConstructorRef">object::ConstructorRef</a>
-</code></pre>
-
-
-
-##### Implementation
-
-
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_create_sticky_object">create_sticky_object</a>(owner_address: <b>address</b>): <a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a> {
-    <b>let</b> unique_address = <a href="transaction_context.md#0x1_transaction_context_generate_unique_address">transaction_context::generate_unique_address</a>();
-    <a href="object.md#0x1_object_create_object_internal">create_object_internal</a>(owner_address, unique_address, <b>false</b>)
-}
-</code></pre>
-
-
-
-<a name="0x1_object_generate_delete_ref"></a>
+<a id="0x1_object_generate_delete_ref"></a>
 
 ## Function `generate_delete_ref`
 
@@ -863,13 +860,13 @@ Generates the DeleteRef, which can be used to remove ObjectCore from global stor
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_delete_ref">generate_delete_ref</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a>): <a href="object.md#0x1_object_DeleteRef">DeleteRef</a> {
     <b>assert</b>!(ref.can_delete, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_ECANNOT_DELETE">ECANNOT_DELETE</a>));
-    <a href="object.md#0x1_object_DeleteRef">DeleteRef</a> { self: ref.self }
+    <a href="object.md#0x1_object_DeleteRef">DeleteRef</a> { self: ref.self, version: ref.version }
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_extend_ref"></a>
+<a id="0x1_object_generate_extend_ref"></a>
 
 ## Function `generate_extend_ref`
 
@@ -885,13 +882,13 @@ Generates the ExtendRef, which can be used to add new events and resources to th
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_extend_ref">generate_extend_ref</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a>): <a href="object.md#0x1_object_ExtendRef">ExtendRef</a> {
-    <a href="object.md#0x1_object_ExtendRef">ExtendRef</a> { self: ref.self }
+    <a href="object.md#0x1_object_ExtendRef">ExtendRef</a> { self: ref.self, version: ref.version }
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_transfer_ref"></a>
+<a id="0x1_object_generate_transfer_ref"></a>
 
 ## Function `generate_transfer_ref`
 
@@ -907,13 +904,13 @@ Generates the TransferRef, which can be used to manage object transfers.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_transfer_ref">generate_transfer_ref</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a>): <a href="object.md#0x1_object_TransferRef">TransferRef</a> {
-    <a href="object.md#0x1_object_TransferRef">TransferRef</a> { self: ref.self }
+    <a href="object.md#0x1_object_TransferRef">TransferRef</a> { self: ref.self, version: ref.version }
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_derive_ref"></a>
+<a id="0x1_object_generate_derive_ref"></a>
 
 ## Function `generate_derive_ref`
 
@@ -929,13 +926,13 @@ Generates the DeriveRef, which can be used to create determnistic derived object
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_derive_ref">generate_derive_ref</a>(ref: &<a href="object.md#0x1_object_ConstructorRef">ConstructorRef</a>): <a href="object.md#0x1_object_DeriveRef">DeriveRef</a> {
-    <a href="object.md#0x1_object_DeriveRef">DeriveRef</a> { self: ref.self }
+    <a href="object.md#0x1_object_DeriveRef">DeriveRef</a> { self: ref.self, version: ref.version }
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_signer"></a>
+<a id="0x1_object_generate_signer"></a>
 
 ## Function `generate_signer`
 
@@ -957,7 +954,7 @@ Create a signer for the ConstructorRef
 
 
 
-<a name="0x1_object_address_from_constructor_ref"></a>
+<a id="0x1_object_address_from_constructor_ref"></a>
 
 ## Function `address_from_constructor_ref`
 
@@ -979,7 +976,7 @@ Returns the address associated with the constructor
 
 
 
-<a name="0x1_object_object_from_constructor_ref"></a>
+<a id="0x1_object_object_from_constructor_ref"></a>
 
 ## Function `object_from_constructor_ref`
 
@@ -1001,7 +998,7 @@ Returns an Object<T> from within a ConstructorRef
 
 
 
-<a name="0x1_object_can_generate_delete_ref"></a>
+<a id="0x1_object_can_generate_delete_ref"></a>
 
 ## Function `can_generate_delete_ref`
 
@@ -1023,7 +1020,7 @@ Returns whether or not the ConstructorRef can be used to create DeleteRef
 
 
 
-<a name="0x1_object_address_from_delete_ref"></a>
+<a id="0x1_object_address_from_delete_ref"></a>
 
 ## Function `address_from_delete_ref`
 
@@ -1045,7 +1042,7 @@ Returns the address associated with the constructor
 
 
 
-<a name="0x1_object_object_from_delete_ref"></a>
+<a id="0x1_object_object_from_delete_ref"></a>
 
 ## Function `object_from_delete_ref`
 
@@ -1067,7 +1064,7 @@ Returns an Object<T> from within a DeleteRef.
 
 
 
-<a name="0x1_object_delete"></a>
+<a id="0x1_object_delete"></a>
 
 ## Function `delete`
 
@@ -1084,16 +1081,24 @@ Removes from the specified Object from global storage.
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_delete">delete</a>(ref: <a href="object.md#0x1_object_DeleteRef">DeleteRef</a>) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
     <b>let</b> object_core = <b>move_from</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+
     <b>let</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
         owner: _,
         allow_ungated_transfer: _,
+        version,
     } = object_core;
+
+    // set tombstone
+    <b>move_to</b>&lt;<a href="object.md#0x1_object_Tombstone">Tombstone</a>&gt;(&<a href="account.md#0x1_account_create_signer">account::create_signer</a>(ref.self), <a href="object.md#0x1_object_Tombstone">Tombstone</a> {
+        version,
+    });
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_signer_for_extending"></a>
+<a id="0x1_object_generate_signer_for_extending"></a>
 
 ## Function `generate_signer_for_extending`
 
@@ -1108,14 +1113,17 @@ Create a signer for the ExtendRef
 ##### Implementation
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_signer_for_extending">generate_signer_for_extending</a>(ref: &<a href="object.md#0x1_object_ExtendRef">ExtendRef</a>): <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a> {
+<pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_signer_for_extending">generate_signer_for_extending</a>(ref: &<a href="object.md#0x1_object_ExtendRef">ExtendRef</a>): <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a> <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
+    <b>let</b> object_core = <b>borrow_global</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+
     <a href="account.md#0x1_account_create_signer">account::create_signer</a>(ref.self)
 }
 </code></pre>
 
 
 
-<a name="0x1_object_address_from_extend_ref"></a>
+<a id="0x1_object_address_from_extend_ref"></a>
 
 ## Function `address_from_extend_ref`
 
@@ -1137,7 +1145,7 @@ Returns an address from within a ExtendRef.
 
 
 
-<a name="0x1_object_disable_ungated_transfer"></a>
+<a id="0x1_object_disable_ungated_transfer"></a>
 
 ## Function `disable_ungated_transfer`
 
@@ -1153,14 +1161,16 @@ Disable direct transfer, transfers can only be triggered via a TransferRef
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_disable_ungated_transfer">disable_ungated_transfer</a>(ref: &<a href="object.md#0x1_object_TransferRef">TransferRef</a>) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
-    <b>let</b> <a href="object.md#0x1_object">object</a> = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
-    <a href="object.md#0x1_object">object</a>.allow_ungated_transfer = <b>false</b>;
+    <b>let</b> object_core = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+
+    object_core.allow_ungated_transfer = <b>false</b>;
 }
 </code></pre>
 
 
 
-<a name="0x1_object_enable_ungated_transfer"></a>
+<a id="0x1_object_enable_ungated_transfer"></a>
 
 ## Function `enable_ungated_transfer`
 
@@ -1176,14 +1186,16 @@ Enable direct transfer.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_enable_ungated_transfer">enable_ungated_transfer</a>(ref: &<a href="object.md#0x1_object_TransferRef">TransferRef</a>) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
-    <b>let</b> <a href="object.md#0x1_object">object</a> = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
-    <a href="object.md#0x1_object">object</a>.allow_ungated_transfer = <b>true</b>;
+    <b>let</b> object_core = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+
+    object_core.allow_ungated_transfer = <b>true</b>;
 }
 </code></pre>
 
 
 
-<a name="0x1_object_generate_linear_transfer_ref"></a>
+<a id="0x1_object_generate_linear_transfer_ref"></a>
 
 ## Function `generate_linear_transfer_ref`
 
@@ -1200,17 +1212,20 @@ time of generation is the owner at the time of transferring.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_generate_linear_transfer_ref">generate_linear_transfer_ref</a>(ref: &<a href="object.md#0x1_object_TransferRef">TransferRef</a>): <a href="object.md#0x1_object_LinearTransferRef">LinearTransferRef</a> <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
-    <b>let</b> owner = <a href="object.md#0x1_object_owner">owner</a>(<a href="object.md#0x1_object_Object">Object</a>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt; { inner: ref.self });
+    <b>let</b> object_core = <b>borrow_global</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+
     <a href="object.md#0x1_object_LinearTransferRef">LinearTransferRef</a> {
         self: ref.self,
-        owner,
+        owner: object_core.owner,
+        version: object_core.version,
     }
 }
 </code></pre>
 
 
 
-<a name="0x1_object_transfer_with_ref"></a>
+<a id="0x1_object_transfer_with_ref"></a>
 
 ## Function `transfer_with_ref`
 
@@ -1226,25 +1241,25 @@ Transfer to the destination address using a LinearTransferRef.
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="object.md#0x1_object_transfer_with_ref">transfer_with_ref</a>(ref: <a href="object.md#0x1_object_LinearTransferRef">LinearTransferRef</a>, <b>to</b>: <b>address</b>) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
-    <b>let</b> <a href="object.md#0x1_object">object</a> = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
-    <b>assert</b>!(
-        <a href="object.md#0x1_object">object</a>.owner == ref.owner,
-        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_ENOT_OBJECT_OWNER">ENOT_OBJECT_OWNER</a>),
-    );
+    <b>let</b> object_core = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(ref.self);
+    <b>assert</b>!(ref.version == object_core.version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_EVERSION_MISMATCH">EVERSION_MISMATCH</a>));
+    <b>assert</b>!(object_core.owner == ref.owner, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_ENOT_OBJECT_OWNER">ENOT_OBJECT_OWNER</a>));
+
     <a href="event.md#0x1_event_emit">event::emit</a>(
         <a href="object.md#0x1_object_TransferEvent">TransferEvent</a> {
             <a href="object.md#0x1_object">object</a>: ref.self,
-            from: <a href="object.md#0x1_object">object</a>.owner,
+            from: object_core.owner,
             <b>to</b>,
         },
     );
-    <a href="object.md#0x1_object">object</a>.owner = <b>to</b>;
+
+    object_core.owner = <b>to</b>;
 }
 </code></pre>
 
 
 
-<a name="0x1_object_transfer_call"></a>
+<a id="0x1_object_transfer_call"></a>
 
 ## Function `transfer_call`
 
@@ -1270,7 +1285,7 @@ Entry function that can be used to transfer, if allow_ungated_transfer is set tr
 
 
 
-<a name="0x1_object_transfer"></a>
+<a id="0x1_object_transfer"></a>
 
 ## Function `transfer`
 
@@ -1297,7 +1312,7 @@ for Object<T> to the "to" address.
 
 
 
-<a name="0x1_object_transfer_raw"></a>
+<a id="0x1_object_transfer_raw"></a>
 
 ## Function `transfer_raw`
 
@@ -1341,7 +1356,7 @@ hierarchy.
 
 
 
-<a name="0x1_object_transfer_to_object"></a>
+<a id="0x1_object_transfer_to_object"></a>
 
 ## Function `transfer_to_object`
 
@@ -1367,85 +1382,7 @@ Transfer the given object to another object. See <code>transfer</code> for more 
 
 
 
-<a name="0x1_object_burn"></a>
-
-## Function `burn`
-
-Forcefully transfer an unwanted object to BURN_ADDRESS, ignoring whether ungated_transfer is allowed.
-This only works for objects directly owned and for simplicity does not apply to indirectly owned objects.
-Original owners can reclaim burnt objects any time in the future by calling unburn.
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="object.md#0x1_object_burn">burn</a>&lt;T: key&gt;(owner: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;)
-</code></pre>
-
-
-
-##### Implementation
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="object.md#0x1_object_burn">burn</a>&lt;T: key&gt;(owner: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">Object</a>&lt;T&gt;) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a> {
-    <b>let</b> original_owner = <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(owner);
-    <b>assert</b>!(<a href="object.md#0x1_object_owner">owner</a>(<a href="object.md#0x1_object">object</a>) == original_owner, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_ENOT_OBJECT_OWNER">ENOT_OBJECT_OWNER</a>));
-    <b>let</b> object_addr = <a href="object.md#0x1_object">object</a>.inner;
-    <b>move_to</b>(&<a href="account.md#0x1_account_create_signer">account::create_signer</a>(object_addr), <a href="object.md#0x1_object_TombStone">TombStone</a> { original_owner });
-    <b>let</b> <a href="object.md#0x1_object">object</a> = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(object_addr);
-    <a href="object.md#0x1_object">object</a>.owner = <a href="object.md#0x1_object_BURN_ADDRESS">BURN_ADDRESS</a>;
-
-    // Burn should still emit <a href="event.md#0x1_event">event</a> <b>to</b> make sure ownership is upgrade correctly in indexing.
-    <a href="event.md#0x1_event_emit">event::emit</a>(
-        <a href="object.md#0x1_object_TransferEvent">TransferEvent</a> {
-            <a href="object.md#0x1_object">object</a>: object_addr,
-            from: original_owner,
-            <b>to</b>: <a href="object.md#0x1_object_BURN_ADDRESS">BURN_ADDRESS</a>,
-        },
-    );
-}
-</code></pre>
-
-
-
-<a name="0x1_object_unburn"></a>
-
-## Function `unburn`
-
-Allow origin owners to reclaim any objects they previous burnt.
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="object.md#0x1_object_unburn">unburn</a>&lt;T: key&gt;(original_owner: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;)
-</code></pre>
-
-
-
-##### Implementation
-
-
-<pre><code><b>public</b> entry <b>fun</b> <a href="object.md#0x1_object_unburn">unburn</a>&lt;T: key&gt;(
-    original_owner: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
-    <a href="object.md#0x1_object">object</a>: <a href="object.md#0x1_object_Object">Object</a>&lt;T&gt;,
-) <b>acquires</b> <a href="object.md#0x1_object_ObjectCore">ObjectCore</a>, <a href="object.md#0x1_object_TombStone">TombStone</a> {
-    <b>let</b> object_addr = <a href="object.md#0x1_object">object</a>.inner;
-    <b>assert</b>!(<b>exists</b>&lt;<a href="object.md#0x1_object_TombStone">TombStone</a>&gt;(object_addr), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="object.md#0x1_object_EOBJECT_NOT_BURNT">EOBJECT_NOT_BURNT</a>));
-
-    <b>let</b> <a href="object.md#0x1_object_TombStone">TombStone</a> { original_owner: original_owner_addr } = <b>move_from</b>&lt;<a href="object.md#0x1_object_TombStone">TombStone</a>&gt;(object_addr);
-    <b>assert</b>!(original_owner_addr == <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(original_owner), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="object.md#0x1_object_ENOT_OBJECT_OWNER">ENOT_OBJECT_OWNER</a>));
-    <b>let</b> <a href="object.md#0x1_object">object</a> = <b>borrow_global_mut</b>&lt;<a href="object.md#0x1_object_ObjectCore">ObjectCore</a>&gt;(object_addr);
-    <a href="object.md#0x1_object">object</a>.owner = original_owner_addr;
-
-    // Unburn reclaims should still emit <a href="event.md#0x1_event">event</a> <b>to</b> make sure ownership is upgrade correctly in indexing.
-    <a href="event.md#0x1_event_emit">event::emit</a>(
-        <a href="object.md#0x1_object_TransferEvent">TransferEvent</a> {
-            <a href="object.md#0x1_object">object</a>: object_addr,
-            from: <a href="object.md#0x1_object_BURN_ADDRESS">BURN_ADDRESS</a>,
-            <b>to</b>: original_owner_addr,
-        },
-    );
-}
-</code></pre>
-
-
-
-<a name="0x1_object_ungated_transfer_allowed"></a>
+<a id="0x1_object_ungated_transfer_allowed"></a>
 
 ## Function `ungated_transfer_allowed`
 
@@ -1472,7 +1409,7 @@ Return true if ungated transfer is allowed.
 
 
 
-<a name="0x1_object_owner"></a>
+<a id="0x1_object_owner"></a>
 
 ## Function `owner`
 
@@ -1499,7 +1436,7 @@ Return the current owner.
 
 
 
-<a name="0x1_object_is_owner"></a>
+<a id="0x1_object_is_owner"></a>
 
 ## Function `is_owner`
 
@@ -1522,7 +1459,7 @@ Return true if the provided address is the current owner.
 
 
 
-<a name="0x1_object_owns"></a>
+<a id="0x1_object_owns"></a>
 
 ## Function `owns`
 

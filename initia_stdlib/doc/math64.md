@@ -1,5 +1,5 @@
 
-<a name="0x1_math64"></a>
+<a id="0x1_math64"></a>
 
 # Module `0x1::math64`
 
@@ -19,18 +19,18 @@ Standard math utilities missing in the Move Language.
 -  [Function `ceil_div`](#0x1_math64_ceil_div)
 
 
-<pre><code><b>use</b> <a href="">0x1::error</a>;
-<b>use</b> <a href="">0x1::fixed_point32</a>;
+<pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/fixed_point32.md#0x1_fixed_point32">0x1::fixed_point32</a>;
 </code></pre>
 
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_math64_EDIVISION_BY_ZERO"></a>
+<a id="0x1_math64_EDIVISION_BY_ZERO"></a>
 
 
 
@@ -39,7 +39,7 @@ Standard math utilities missing in the Move Language.
 
 
 
-<a name="0x1_math64_EINVALID_ARG_FLOOR_LOG2"></a>
+<a id="0x1_math64_EINVALID_ARG_FLOOR_LOG2"></a>
 
 Abort value when an invalid argument is provided.
 
@@ -49,7 +49,7 @@ Abort value when an invalid argument is provided.
 
 
 
-<a name="0x1_math64_max"></a>
+<a id="0x1_math64_max"></a>
 
 ## Function `max`
 
@@ -71,7 +71,7 @@ Return the largest of two numbers.
 
 
 
-<a name="0x1_math64_min"></a>
+<a id="0x1_math64_min"></a>
 
 ## Function `min`
 
@@ -93,7 +93,7 @@ Return the smallest of two numbers.
 
 
 
-<a name="0x1_math64_average"></a>
+<a id="0x1_math64_average"></a>
 
 ## Function `average`
 
@@ -119,7 +119,7 @@ Return the average of two.
 
 
 
-<a name="0x1_math64_mul_div"></a>
+<a id="0x1_math64_mul_div"></a>
 
 ## Function `mul_div`
 
@@ -141,7 +141,7 @@ Returns a * b / c going through u128 to prevent intermediate overflow
 
 
 
-<a name="0x1_math64_clamp"></a>
+<a id="0x1_math64_clamp"></a>
 
 ## Function `clamp`
 
@@ -163,7 +163,7 @@ Return x clamped to the interval [lower, upper].
 
 
 
-<a name="0x1_math64_pow"></a>
+<a id="0x1_math64_pow"></a>
 
 ## Function `pow`
 
@@ -197,7 +197,7 @@ Return the value of n raised to power e
 
 
 
-<a name="0x1_math64_floor_log2"></a>
+<a id="0x1_math64_floor_log2"></a>
 
 ## Function `floor_log2`
 
@@ -230,13 +230,13 @@ Returns floor(lg2(x))
 
 
 
-<a name="0x1_math64_log2"></a>
+<a id="0x1_math64_log2"></a>
 
 ## Function `log2`
 
 
 
-<pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_log2">log2</a>(x: u64): <a href="_FixedPoint32">fixed_point32::FixedPoint32</a>
+<pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_log2">log2</a>(x: u64): <a href="../../move_nursery/../move_stdlib/doc/fixed_point32.md#0x1_fixed_point32_FixedPoint32">fixed_point32::FixedPoint32</a>
 </code></pre>
 
 
@@ -263,13 +263,13 @@ Returns floor(lg2(x))
         <b>if</b> (y &gt;= (2 &lt;&lt; 32)) { frac = frac + delta; y = y &gt;&gt; 1; };
         delta = delta &gt;&gt; 1;
     };
-    <a href="_create_from_raw_value">fixed_point32::create_from_raw_value</a> (((integer_part <b>as</b> u64) &lt;&lt; 32) + frac)
+    <a href="../../move_nursery/../move_stdlib/doc/fixed_point32.md#0x1_fixed_point32_create_from_raw_value">fixed_point32::create_from_raw_value</a> (((integer_part <b>as</b> u64) &lt;&lt; 32) + frac)
 }
 </code></pre>
 
 
 
-<a name="0x1_math64_sqrt"></a>
+<a id="0x1_math64_sqrt"></a>
 
 ## Function `sqrt`
 
@@ -290,10 +290,10 @@ Returns square root of x, precisely floor(sqrt(x))
     // the half-open interval [2^(n/2), 2^((n+1)/2)&gt;. For even n we can write this <b>as</b> [2^(n/2), <a href="math64.md#0x1_math64_sqrt">sqrt</a>(2) 2^(n/2)&gt;
     // for odd n [2^((n+1)/2)/<a href="math64.md#0x1_math64_sqrt">sqrt</a>(2), 2^((n+1)/2&gt;. For even n the left end point is integer for odd the right
     // end point is integer. If we <b>choose</b> <b>as</b> our first approximation the integer end point we have <b>as</b> maximum
-    // relative <a href="">error</a> either (<a href="math64.md#0x1_math64_sqrt">sqrt</a>(2) - 1) or (1 - 1/<a href="math64.md#0x1_math64_sqrt">sqrt</a>(2)) both are smaller then 1/2.
+    // relative <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">error</a> either (<a href="math64.md#0x1_math64_sqrt">sqrt</a>(2) - 1) or (1 - 1/<a href="math64.md#0x1_math64_sqrt">sqrt</a>(2)) both are smaller then 1/2.
     <b>let</b> res = 1 &lt;&lt; ((<a href="math64.md#0x1_math64_floor_log2">floor_log2</a>(x) + 1) &gt;&gt; 1);
     // We <b>use</b> standard newton-rhapson iteration <b>to</b> improve the initial approximation.
-    // The <a href="">error</a> term evolves <b>as</b> delta_i+1 = delta_i^2 / 2 (quadratic convergence).
+    // The <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">error</a> term evolves <b>as</b> delta_i+1 = delta_i^2 / 2 (quadratic convergence).
     // It turns out that after 4 iterations the delta is smaller than 2^-32 and thus below the treshold.
     res = (res + x / res) &gt;&gt; 1;
     res = (res + x / res) &gt;&gt; 1;
@@ -305,7 +305,7 @@ Returns square root of x, precisely floor(sqrt(x))
 
 
 
-<a name="0x1_math64_ceil_div"></a>
+<a id="0x1_math64_ceil_div"></a>
 
 ## Function `ceil_div`
 

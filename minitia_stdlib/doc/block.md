@@ -1,5 +1,5 @@
 
-<a name="0x1_block"></a>
+<a id="0x1_block"></a>
 
 # Module `0x1::block`
 
@@ -12,7 +12,7 @@
 
 
 
-<a name="0x1_block_get_block_info"></a>
+<a id="0x1_block_get_block_info"></a>
 
 ## Function `get_block_info`
 

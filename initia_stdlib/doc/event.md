@@ -1,5 +1,5 @@
 
-<a name="0x1_event"></a>
+<a id="0x1_event"></a>
 
 # Module `0x1::event`
 
@@ -12,7 +12,7 @@
 
 
 
-<a name="0x1_event_emit"></a>
+<a id="0x1_event_emit"></a>
 
 ## Function `emit`
 

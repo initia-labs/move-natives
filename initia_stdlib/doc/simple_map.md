@@ -1,5 +1,5 @@
 
-<a name="0x1_simple_map"></a>
+<a id="0x1_simple_map"></a>
 
 # Module `0x1::simple_map`
 
@@ -25,13 +25,13 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 <pre><code><b>use</b> <a href="comparator.md#0x1_comparator">0x1::comparator</a>;
-<b>use</b> <a href="">0x1::error</a>;
-<b>use</b> <a href="">0x1::option</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
+<b>use</b> <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option">0x1::option</a>;
 </code></pre>
 
 
 
-<a name="0x1_simple_map_SimpleMap"></a>
+<a id="0x1_simple_map_SimpleMap"></a>
 
 ## Struct `SimpleMap`
 
@@ -47,7 +47,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 <dl>
 <dt>
-<code>data: <a href="">vector</a>&lt;<a href="simple_map.md#0x1_simple_map_Element">simple_map::Element</a>&lt;Key, Value&gt;&gt;</code>
+<code>data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="simple_map.md#0x1_simple_map_Element">simple_map::Element</a>&lt;Key, Value&gt;&gt;</code>
 </dt>
 <dd>
 
@@ -55,7 +55,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 </dl>
 
 
-<a name="0x1_simple_map_Element"></a>
+<a id="0x1_simple_map_Element"></a>
 
 ## Struct `Element`
 
@@ -85,12 +85,12 @@ This module provides a solution for sorted maps, that is it has the properties t
 </dl>
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_simple_map_EKEY_ALREADY_EXISTS"></a>
+<a id="0x1_simple_map_EKEY_ALREADY_EXISTS"></a>
 
 
 
@@ -99,7 +99,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_EKEY_NOT_FOUND"></a>
+<a id="0x1_simple_map_EKEY_NOT_FOUND"></a>
 
 
 
@@ -108,7 +108,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_length"></a>
+<a id="0x1_simple_map_length"></a>
 
 ## Function `length`
 
@@ -123,13 +123,13 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_map.md#0x1_simple_map_length">length</a>&lt;Key: store, Value: store&gt;(map: &<a href="simple_map.md#0x1_simple_map_SimpleMap">SimpleMap</a>&lt;Key, Value&gt;): u64 {
-    <a href="_length">vector::length</a>(&map.data)
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&map.data)
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_create"></a>
+<a id="0x1_simple_map_create"></a>
 
 ## Function `create`
 
@@ -145,14 +145,14 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_map.md#0x1_simple_map_create">create</a>&lt;Key: store, Value: store&gt;(): <a href="simple_map.md#0x1_simple_map_SimpleMap">SimpleMap</a>&lt;Key, Value&gt; {
     <a href="simple_map.md#0x1_simple_map_SimpleMap">SimpleMap</a> {
-        data: <a href="_empty">vector::empty</a>(),
+        data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_empty">vector::empty</a>(),
     }
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_borrow"></a>
+<a id="0x1_simple_map_borrow"></a>
 
 ## Function `borrow`
 
@@ -171,15 +171,15 @@ This module provides a solution for sorted maps, that is it has the properties t
     key: &Key,
 ): &Value {
     <b>let</b> (maybe_idx, _) = <a href="simple_map.md#0x1_simple_map_find">find</a>(map, key);
-    <b>assert</b>!(<a href="_is_some">option::is_some</a>(&maybe_idx), <a href="_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
-    <b>let</b> idx = <a href="_extract">option::extract</a>(&<b>mut</b> maybe_idx);
-    &<a href="_borrow">vector::borrow</a>(&map.data, idx).value
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&maybe_idx), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
+    <b>let</b> idx = <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> maybe_idx);
+    &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&map.data, idx).value
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_borrow_mut"></a>
+<a id="0x1_simple_map_borrow_mut"></a>
 
 ## Function `borrow_mut`
 
@@ -198,15 +198,15 @@ This module provides a solution for sorted maps, that is it has the properties t
     key: &Key,
 ): &<b>mut</b> Value {
     <b>let</b> (maybe_idx, _) = <a href="simple_map.md#0x1_simple_map_find">find</a>(map, key);
-    <b>assert</b>!(<a href="_is_some">option::is_some</a>(&maybe_idx), <a href="_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
-    <b>let</b> idx = <a href="_extract">option::extract</a>(&<b>mut</b> maybe_idx);
-    &<b>mut</b> <a href="_borrow_mut">vector::borrow_mut</a>(&<b>mut</b> map.data, idx).value
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&maybe_idx), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
+    <b>let</b> idx = <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> maybe_idx);
+    &<b>mut</b> <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow_mut">vector::borrow_mut</a>(&<b>mut</b> map.data, idx).value
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_contains_key"></a>
+<a id="0x1_simple_map_contains_key"></a>
 
 ## Function `contains_key`
 
@@ -225,13 +225,13 @@ This module provides a solution for sorted maps, that is it has the properties t
     key: &Key,
 ): bool {
     <b>let</b> (maybe_idx, _) = <a href="simple_map.md#0x1_simple_map_find">find</a>(map, key);
-    <a href="_is_some">option::is_some</a>(&maybe_idx)
+    <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&maybe_idx)
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_destroy_empty"></a>
+<a id="0x1_simple_map_destroy_empty"></a>
 
 ## Function `destroy_empty`
 
@@ -247,13 +247,13 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_map.md#0x1_simple_map_destroy_empty">destroy_empty</a>&lt;Key: store, Value: store&gt;(map: <a href="simple_map.md#0x1_simple_map_SimpleMap">SimpleMap</a>&lt;Key, Value&gt;) {
     <b>let</b> <a href="simple_map.md#0x1_simple_map_SimpleMap">SimpleMap</a> { data } = map;
-    <a href="_destroy_empty">vector::destroy_empty</a>(data);
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_destroy_empty">vector::destroy_empty</a>(data);
 }
 </code></pre>
 
 
 
-<a name="0x1_simple_map_add"></a>
+<a id="0x1_simple_map_add"></a>
 
 ## Function `add`
 
@@ -273,15 +273,15 @@ This module provides a solution for sorted maps, that is it has the properties t
     value: Value,
 ) {
     <b>let</b> (maybe_idx, maybe_placement) = <a href="simple_map.md#0x1_simple_map_find">find</a>(map, &key);
-    <b>assert</b>!(<a href="_is_none">option::is_none</a>(&maybe_idx), <a href="_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_ALREADY_EXISTS">EKEY_ALREADY_EXISTS</a>));
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_none">option::is_none</a>(&maybe_idx), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_ALREADY_EXISTS">EKEY_ALREADY_EXISTS</a>));
 
     // Append <b>to</b> the end and then swap elements until the list is ordered again
-    <a href="_push_back">vector::push_back</a>(&<b>mut</b> map.data, <a href="simple_map.md#0x1_simple_map_Element">Element</a> { key, value });
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_push_back">vector::push_back</a>(&<b>mut</b> map.data, <a href="simple_map.md#0x1_simple_map_Element">Element</a> { key, value });
 
-    <b>let</b> placement = <a href="_extract">option::extract</a>(&<b>mut</b> maybe_placement);
-    <b>let</b> end = <a href="_length">vector::length</a>(&map.data) - 1;
+    <b>let</b> placement = <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> maybe_placement);
+    <b>let</b> end = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&map.data) - 1;
     <b>while</b> (placement &lt; end) {
-        <a href="_swap">vector::swap</a>(&<b>mut</b> map.data, placement, end);
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_swap">vector::swap</a>(&<b>mut</b> map.data, placement, end);
         placement = placement + 1;
     };
 }
@@ -289,7 +289,7 @@ This module provides a solution for sorted maps, that is it has the properties t
 
 
 
-<a name="0x1_simple_map_remove"></a>
+<a id="0x1_simple_map_remove"></a>
 
 ## Function `remove`
 
@@ -308,17 +308,17 @@ This module provides a solution for sorted maps, that is it has the properties t
     key: &Key,
 ): (Key, Value) {
     <b>let</b> (maybe_idx, _) = <a href="simple_map.md#0x1_simple_map_find">find</a>(map, key);
-    <b>assert</b>!(<a href="_is_some">option::is_some</a>(&maybe_idx), <a href="_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&maybe_idx), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="simple_map.md#0x1_simple_map_EKEY_NOT_FOUND">EKEY_NOT_FOUND</a>));
 
-    <b>let</b> placement = <a href="_extract">option::extract</a>(&<b>mut</b> maybe_idx);
-    <b>let</b> end = <a href="_length">vector::length</a>(&map.data) - 1;
+    <b>let</b> placement = <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> maybe_idx);
+    <b>let</b> end = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&map.data) - 1;
 
     <b>while</b> (placement &lt; end) {
-        <a href="_swap">vector::swap</a>(&<b>mut</b> map.data, placement, placement + 1);
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_swap">vector::swap</a>(&<b>mut</b> map.data, placement, placement + 1);
         placement = placement + 1;
     };
 
-    <b>let</b> <a href="simple_map.md#0x1_simple_map_Element">Element</a> { key, value } = <a href="_pop_back">vector::pop_back</a>(&<b>mut</b> map.data);
+    <b>let</b> <a href="simple_map.md#0x1_simple_map_Element">Element</a> { key, value } = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_pop_back">vector::pop_back</a>(&<b>mut</b> map.data);
     (key, value)
 }
 </code></pre>

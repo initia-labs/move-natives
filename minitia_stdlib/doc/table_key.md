@@ -1,5 +1,5 @@
 
-<a name="0x1_table_key"></a>
+<a id="0x1_table_key"></a>
 
 # Module `0x1::table_key`
 
@@ -20,7 +20,7 @@
 
 
 
-<a name="0x1_table_key_encode_u64"></a>
+<a id="0x1_table_key_encode_u64"></a>
 
 ## Function `encode_u64`
 
@@ -45,7 +45,7 @@ return big endian bytes of <code>u64</code>
 
 
 
-<a name="0x1_table_key_decode_u64"></a>
+<a id="0x1_table_key_decode_u64"></a>
 
 ## Function `decode_u64`
 
@@ -68,7 +68,7 @@ return <code>u64</code> from the big endian key bytes
 
 
 
-<a name="0x1_table_key_encode_u128"></a>
+<a id="0x1_table_key_encode_u128"></a>
 
 ## Function `encode_u128`
 
@@ -93,7 +93,7 @@ return big endian bytes of <code>u128</code>
 
 
 
-<a name="0x1_table_key_decode_u128"></a>
+<a id="0x1_table_key_decode_u128"></a>
 
 ## Function `decode_u128`
 
@@ -116,7 +116,7 @@ return <code>u128</code> from the big endian key bytes
 
 
 
-<a name="0x1_table_key_encode_u256"></a>
+<a id="0x1_table_key_encode_u256"></a>
 
 ## Function `encode_u256`
 
@@ -141,7 +141,7 @@ return big endian bytes of <code>u256</code>
 
 
 
-<a name="0x1_table_key_decode_u256"></a>
+<a id="0x1_table_key_decode_u256"></a>
 
 ## Function `decode_u256`
 

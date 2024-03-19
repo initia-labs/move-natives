@@ -1,5 +1,5 @@
 
-<a name="0x1_from_bcs"></a>
+<a id="0x1_from_bcs"></a>
 
 # Module `0x1::from_bcs`
 
@@ -27,6 +27,8 @@ assert!(from_bcs::to_address(bcs::to_bytes(&@0xabcdef)) == @0xabcdef, 0);
 -  [Function `to_u256`](#0x1_from_bcs_to_u256)
 -  [Function `to_address`](#0x1_from_bcs_to_address)
 -  [Function `to_bytes`](#0x1_from_bcs_to_bytes)
+-  [Function `to_vector_bytes`](#0x1_from_bcs_to_vector_bytes)
+-  [Function `to_vector_string`](#0x1_from_bcs_to_vector_string)
 -  [Function `to_string`](#0x1_from_bcs_to_string)
 -  [Function `from_bytes`](#0x1_from_bcs_from_bytes)
 
@@ -36,12 +38,12 @@ assert!(from_bcs::to_address(bcs::to_bytes(&@0xabcdef)) == @0xabcdef, 0);
 
 
 
-<a name="@Constants_0"></a>
+<a id="@Constants_0"></a>
 
 ## Constants
 
 
-<a name="0x1_from_bcs_EINVALID_UTF8"></a>
+<a id="0x1_from_bcs_EINVALID_UTF8"></a>
 
 UTF8 check failed in conversion from bytes to string
 
@@ -51,7 +53,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_bool"></a>
+<a id="0x1_from_bcs_to_bool"></a>
 
 ## Function `to_bool`
 
@@ -72,7 +74,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u8"></a>
+<a id="0x1_from_bcs_to_u8"></a>
 
 ## Function `to_u8`
 
@@ -93,7 +95,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u16"></a>
+<a id="0x1_from_bcs_to_u16"></a>
 
 ## Function `to_u16`
 
@@ -114,7 +116,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u32"></a>
+<a id="0x1_from_bcs_to_u32"></a>
 
 ## Function `to_u32`
 
@@ -135,7 +137,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u64"></a>
+<a id="0x1_from_bcs_to_u64"></a>
 
 ## Function `to_u64`
 
@@ -156,7 +158,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u128"></a>
+<a id="0x1_from_bcs_to_u128"></a>
 
 ## Function `to_u128`
 
@@ -177,7 +179,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_u256"></a>
+<a id="0x1_from_bcs_to_u256"></a>
 
 ## Function `to_u256`
 
@@ -198,7 +200,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_address"></a>
+<a id="0x1_from_bcs_to_address"></a>
 
 ## Function `to_address`
 
@@ -219,7 +221,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_bytes"></a>
+<a id="0x1_from_bcs_to_bytes"></a>
 
 ## Function `to_bytes`
 
@@ -240,7 +242,49 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_to_string"></a>
+<a id="0x1_from_bcs_to_vector_bytes"></a>
+
+## Function `to_vector_bytes`
+
+
+
+<pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_bytes">to_vector_bytes</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_bytes">to_vector_bytes</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt; {
+    <a href="from_bcs.md#0x1_from_bcs_from_bytes">from_bytes</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;&gt;(v)
+}
+</code></pre>
+
+
+
+<a id="0x1_from_bcs_to_vector_string"></a>
+
+## Function `to_vector_string`
+
+
+
+<pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_string">to_vector_string</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;
+</code></pre>
+
+
+
+##### Implementation
+
+
+<pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_string">to_vector_string</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt; {
+    <a href="from_bcs.md#0x1_from_bcs_from_bytes">from_bytes</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;&gt;(v)
+}
+</code></pre>
+
+
+
+<a id="0x1_from_bcs_to_string"></a>
 
 ## Function `to_string`
 
@@ -264,7 +308,7 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-<a name="0x1_from_bcs_from_bytes"></a>
+<a id="0x1_from_bcs_from_bytes"></a>
 
 ## Function `from_bytes`
 
