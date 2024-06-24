@@ -61,7 +61,8 @@ Return the largest of two numbers.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_max">max</a>(a: u64, b: u64): u64 {
@@ -70,6 +71,8 @@ Return the largest of two numbers.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_math64_min"></a>
 
@@ -83,7 +86,8 @@ Return the smallest of two numbers.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <b>min</b>(a: u64, b: u64): u64 {
@@ -92,6 +96,8 @@ Return the smallest of two numbers.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_math64_average"></a>
 
@@ -105,7 +111,8 @@ Return the average of two.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_average">average</a>(a: u64, b: u64): u64 {
@@ -119,6 +126,8 @@ Return the average of two.
 
 
 
+</details>
+
 <a id="0x1_math64_mul_div"></a>
 
 ## Function `mul_div`
@@ -131,7 +140,8 @@ Returns a * b / c going through u128 to prevent intermediate overflow
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_mul_div">mul_div</a>(a: u64, b: u64, c: u64): u64 {
@@ -140,6 +150,8 @@ Returns a * b / c going through u128 to prevent intermediate overflow
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_math64_clamp"></a>
 
@@ -153,7 +165,8 @@ Return x clamped to the interval [lower, upper].
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_clamp">clamp</a>(x: u64, lower: u64, upper: u64): u64 {
@@ -162,6 +175,8 @@ Return x clamped to the interval [lower, upper].
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_math64_pow"></a>
 
@@ -175,7 +190,8 @@ Return the value of n raised to power e
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_pow">pow</a>(n: u64, e: u64): u64 {
@@ -197,6 +213,8 @@ Return the value of n raised to power e
 
 
 
+</details>
+
 <a id="0x1_math64_floor_log2"></a>
 
 ## Function `floor_log2`
@@ -209,7 +227,8 @@ Returns floor(lg2(x))
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_floor_log2">floor_log2</a>(x: u64): u8 {
@@ -230,6 +249,8 @@ Returns floor(lg2(x))
 
 
 
+</details>
+
 <a id="0x1_math64_log2"></a>
 
 ## Function `log2`
@@ -241,7 +262,8 @@ Returns floor(lg2(x))
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_log2">log2</a>(x: u64): FixedPoint32 {
@@ -269,6 +291,8 @@ Returns floor(lg2(x))
 
 
 
+</details>
+
 <a id="0x1_math64_sqrt"></a>
 
 ## Function `sqrt`
@@ -281,7 +305,8 @@ Returns square root of x, precisely floor(sqrt(x))
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_sqrt">sqrt</a>(x: u64): u64 {
@@ -305,6 +330,8 @@ Returns square root of x, precisely floor(sqrt(x))
 
 
 
+</details>
+
 <a id="0x1_math64_ceil_div"></a>
 
 ## Function `ceil_div`
@@ -316,7 +343,8 @@ Returns square root of x, precisely floor(sqrt(x))
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="math64.md#0x1_math64_ceil_div">ceil_div</a>(x: u64, y: u64): u64 {
@@ -329,3 +357,7 @@ Returns square root of x, precisely floor(sqrt(x))
     <b>else</b> (x - 1) / y + 1
 }
 </code></pre>
+
+
+
+</details>

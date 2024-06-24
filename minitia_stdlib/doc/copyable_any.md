@@ -33,7 +33,8 @@ The same as <code><a href="any.md#0x1_any_Any">any::Any</a></code> but with the 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -51,6 +52,8 @@ The same as <code><a href="any.md#0x1_any_Any">any::Any</a></code> but with the 
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -80,7 +83,8 @@ also required from <code>T</code>.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="copyable_any.md#0x1_copyable_any_pack">pack</a>&lt;T: drop + store + <b>copy</b>&gt;(x: T): <a href="copyable_any.md#0x1_copyable_any_Any">Any</a> {
@@ -92,6 +96,8 @@ also required from <code>T</code>.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_copyable_any_unpack"></a>
 
@@ -105,7 +111,8 @@ Unpack a value from the <code><a href="copyable_any.md#0x1_copyable_any_Any">Any
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="copyable_any.md#0x1_copyable_any_unpack">unpack</a>&lt;T&gt;(x: <a href="copyable_any.md#0x1_copyable_any_Any">Any</a>): T {
@@ -115,6 +122,8 @@ Unpack a value from the <code><a href="copyable_any.md#0x1_copyable_any_Any">Any
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_copyable_any_type_name"></a>
 
@@ -128,10 +137,15 @@ Returns the type name of this Any
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="copyable_any.md#0x1_copyable_any_type_name">type_name</a>(x: &<a href="copyable_any.md#0x1_copyable_any_Any">Any</a>): &String {
     &x.type_name
 }
 </code></pre>
+
+
+
+</details>

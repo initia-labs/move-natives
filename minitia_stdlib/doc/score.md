@@ -12,12 +12,16 @@ vip_score is the contract to provide a score for each contracts.
 -  [Struct `DeployerRemovedEvent`](#0x1_vip_score_DeployerRemovedEvent)
 -  [Struct `UpdateScoreEvent`](#0x1_vip_score_UpdateScoreEvent)
 -  [Constants](#@Constants_0)
+-  [Function `init_module`](#0x1_vip_score_init_module)
+-  [Function `check_chain_permission`](#0x1_vip_score_check_chain_permission)
+-  [Function `check_deployer_permission`](#0x1_vip_score_check_deployer_permission)
 -  [Function `get_score`](#0x1_vip_score_get_score)
 -  [Function `get_total_score`](#0x1_vip_score_get_total_score)
 -  [Function `prepare_stage`](#0x1_vip_score_prepare_stage)
 -  [Function `increase_score`](#0x1_vip_score_increase_score)
 -  [Function `decrease_score`](#0x1_vip_score_decrease_score)
 -  [Function `update_score`](#0x1_vip_score_update_score)
+-  [Function `finalize_script`](#0x1_vip_score_finalize_script)
 -  [Function `update_score_script`](#0x1_vip_score_update_score_script)
 -  [Function `add_deployer_script`](#0x1_vip_score_add_deployer_script)
 -  [Function `remove_deployer_script`](#0x1_vip_score_remove_deployer_script)
@@ -43,7 +47,8 @@ vip_score is the contract to provide a score for each contracts.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -62,6 +67,8 @@ vip_score is the contract to provide a score for each contracts.
 </dl>
 
 
+</details>
+
 <a id="0x1_vip_score_Scores"></a>
 
 ## Struct `Scores`
@@ -73,12 +80,19 @@ vip_score is the contract to provide a score for each contracts.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
 <dt>
 <code>total_score: u64</code>
+</dt>
+<dd>
+
+</dd>
+<dt>
+<code>is_finalized: bool</code>
 </dt>
 <dd>
 
@@ -92,6 +106,8 @@ vip_score is the contract to provide a score for each contracts.
 </dl>
 
 
+</details>
+
 <a id="0x1_vip_score_DeployerAddedEvent"></a>
 
 ## Struct `DeployerAddedEvent`
@@ -104,7 +120,8 @@ vip_score is the contract to provide a score for each contracts.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -116,6 +133,8 @@ vip_score is the contract to provide a score for each contracts.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_vip_score_DeployerRemovedEvent"></a>
 
@@ -129,7 +148,8 @@ vip_score is the contract to provide a score for each contracts.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -141,6 +161,8 @@ vip_score is the contract to provide a score for each contracts.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_vip_score_UpdateScoreEvent"></a>
 
@@ -154,7 +176,8 @@ vip_score is the contract to provide a score for each contracts.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -184,6 +207,8 @@ vip_score is the contract to provide a score for each contracts.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -216,6 +241,16 @@ The deployer is not found.
 
 
 <pre><code><b>const</b> <a href="score.md#0x1_vip_score_EDEPLOYER_NOT_FOUND">EDEPLOYER_NOT_FOUND</a>: u64 = 5;
+</code></pre>
+
+
+
+<a id="0x1_vip_score_EFINALIED_STAGE"></a>
+
+The stage is already finalized.
+
+
+<pre><code><b>const</b> <a href="score.md#0x1_vip_score_EFINALIED_STAGE">EFINALIED_STAGE</a>: u64 = 8;
 </code></pre>
 
 
@@ -260,6 +295,84 @@ The length of addrs and scores is not matched.
 
 
 
+<a id="0x1_vip_score_init_module"></a>
+
+## Function `init_module`
+
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>move_to</b>(chain, <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a> {
+        deployers: <a href="simple_map.md#0x1_simple_map_create">simple_map::create</a>&lt;<b>address</b>, bool&gt;(),
+        scores: <a href="table.md#0x1_table_new">table::new</a>&lt;u64, <a href="score.md#0x1_vip_score_Scores">Scores</a>&gt;(),
+    });
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_score_check_chain_permission"></a>
+
+## Function `check_chain_permission`
+
+Check signer is chain
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @minitia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="score.md#0x1_vip_score_EUNAUTHORIZED">EUNAUTHORIZED</a>));
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_score_check_deployer_permission"></a>
+
+## Function `check_deployer_permission`
+
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_check_deployer_permission">check_deployer_permission</a>(deployer: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="score.md#0x1_vip_score_check_deployer_permission">check_deployer_permission</a>(deployer: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) <b>acquires</b> <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a>{
+    <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a>&gt;(@minitia_std);
+    <b>let</b> found = <a href="simple_map.md#0x1_simple_map_contains_key">simple_map::contains_key</a>(&module_store.deployers, &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(deployer));
+    <b>assert</b>!(found, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EUNAUTHORIZED">EUNAUTHORIZED</a>));
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_vip_score_get_score"></a>
 
 ## Function `get_score`
@@ -272,7 +385,8 @@ The length of addrs and scores is not matched.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_get_score">get_score</a>(addr: <b>address</b>, stage: u64): u64 <b>acquires</b> <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a> {
@@ -287,6 +401,8 @@ The length of addrs and scores is not matched.
 
 
 
+</details>
+
 <a id="0x1_vip_score_get_total_score"></a>
 
 ## Function `get_total_score`
@@ -299,7 +415,8 @@ The length of addrs and scores is not matched.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_get_total_score">get_total_score</a>(stage: u64): u64 <b>acquires</b> <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a> {
@@ -314,6 +431,8 @@ The length of addrs and scores is not matched.
 
 
 
+</details>
+
 <a id="0x1_vip_score_prepare_stage"></a>
 
 ## Function `prepare_stage`
@@ -325,7 +444,8 @@ The length of addrs and scores is not matched.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_prepare_stage">prepare_stage</a> (
@@ -338,6 +458,7 @@ The length of addrs and scores is not matched.
     <b>if</b> (!<a href="table.md#0x1_table_contains">table::contains</a>(&module_store.scores, stage)) {
         <a href="table.md#0x1_table_add">table::add</a>(&<b>mut</b> module_store.scores, stage, <a href="score.md#0x1_vip_score_Scores">Scores</a> {
             total_score: 0,
+            is_finalized: <b>false</b>,
             score: <a href="table.md#0x1_table_new">table::new</a>&lt;<b>address</b>, u64&gt;()
         });
     };
@@ -345,6 +466,8 @@ The length of addrs and scores is not matched.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_score_increase_score"></a>
 
@@ -358,7 +481,8 @@ Increase a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_increase_score">increase_score</a> (
@@ -373,7 +497,10 @@ Increase a score of an account.
     <b>assert</b>!(<a href="table.md#0x1_table_contains">table::contains</a>(&module_store.scores, stage), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_STAGE">EINVALID_STAGE</a>));
 
     <b>let</b> scores = <a href="table.md#0x1_table_borrow_mut">table::borrow_mut</a>(&<b>mut</b> module_store.scores, stage);
+    <b>assert</b>!(!scores.is_finalized, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EFINALIED_STAGE">EFINALIED_STAGE</a>));
+
     <b>let</b> score = <a href="table.md#0x1_table_borrow_mut_with_default">table::borrow_mut_with_default</a>(&<b>mut</b> scores.score, addr, 0);
+
     *score = *score + amount;
     scores.total_score = scores.total_score + amount;
 
@@ -390,6 +517,8 @@ Increase a score of an account.
 
 
 
+</details>
+
 <a id="0x1_vip_score_decrease_score"></a>
 
 ## Function `decrease_score`
@@ -402,7 +531,8 @@ Decrease a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_decrease_score">decrease_score</a> (
@@ -417,6 +547,8 @@ Decrease a score of an account.
     <b>assert</b>!(<a href="table.md#0x1_table_contains">table::contains</a>(&module_store.scores, stage), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_STAGE">EINVALID_STAGE</a>));
 
     <b>let</b> scores = <a href="table.md#0x1_table_borrow_mut">table::borrow_mut</a>(&<b>mut</b> module_store.scores, stage);
+    <b>assert</b>!(!scores.is_finalized, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EFINALIED_STAGE">EFINALIED_STAGE</a>));
+
     <b>let</b> score = <a href="table.md#0x1_table_borrow_mut">table::borrow_mut</a>(&<b>mut</b> scores.score, addr);
     <b>assert</b>!(*score &gt;= amount, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINSUFFICIENT_SCORE">EINSUFFICIENT_SCORE</a>));
     *score = *score - amount;
@@ -435,6 +567,8 @@ Decrease a score of an account.
 
 
 
+</details>
+
 <a id="0x1_vip_score_update_score"></a>
 
 ## Function `update_score`
@@ -446,7 +580,8 @@ Decrease a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="score.md#0x1_vip_score_update_score">update_score</a> (
@@ -456,12 +591,14 @@ Decrease a score of an account.
     amount: u64
 ) <b>acquires</b> <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a> {
     <a href="score.md#0x1_vip_score_check_deployer_permission">check_deployer_permission</a>(deployer);
-    <b>assert</b>!(amount &gt; 0, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_SCORE">EINVALID_SCORE</a>));
+    <b>assert</b>!(amount &gt;= 0, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_SCORE">EINVALID_SCORE</a>));
 
     <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a>&gt;(@minitia_std);
     <b>assert</b>!(<a href="table.md#0x1_table_contains">table::contains</a>(&module_store.scores, stage), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_STAGE">EINVALID_STAGE</a>));
 
     <b>let</b> scores = <a href="table.md#0x1_table_borrow_mut">table::borrow_mut</a>(&<b>mut</b> module_store.scores, stage);
+    <b>assert</b>!(!scores.is_finalized, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EFINALIED_STAGE">EFINALIED_STAGE</a>));
+
     <b>let</b> score = <a href="table.md#0x1_table_borrow_mut_with_default">table::borrow_mut_with_default</a>(&<b>mut</b> scores.score, addr, 0);
 
     <b>if</b> (*score &gt; amount) {
@@ -485,6 +622,41 @@ Decrease a score of an account.
 
 
 
+</details>
+
+<a id="0x1_vip_score_finalize_script"></a>
+
+## Function `finalize_script`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="score.md#0x1_vip_score_finalize_script">finalize_script</a>(deployer: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, stage: u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="score.md#0x1_vip_score_finalize_script">finalize_script</a>(
+    deployer: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    stage: u64
+) <b>acquires</b> <a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a> {
+    <a href="score.md#0x1_vip_score_check_deployer_permission">check_deployer_permission</a>(deployer);
+    <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="score.md#0x1_vip_score_ModuleStore">ModuleStore</a>&gt;(@minitia_std);
+    <b>assert</b>!(<a href="table.md#0x1_table_contains">table::contains</a>(&module_store.scores, stage), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EINVALID_STAGE">EINVALID_STAGE</a>));
+
+    <b>let</b> scores = <a href="table.md#0x1_table_borrow_mut">table::borrow_mut</a>(&<b>mut</b> module_store.scores, stage);
+    <b>assert</b>!(!scores.is_finalized, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="score.md#0x1_vip_score_EFINALIED_STAGE">EFINALIED_STAGE</a>));
+    scores.is_finalized = <b>true</b>;
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_vip_score_update_score_script"></a>
 
 ## Function `update_score_script`
@@ -496,7 +668,8 @@ Decrease a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="score.md#0x1_vip_score_update_score_script">update_score_script</a>(
@@ -521,6 +694,8 @@ Decrease a score of an account.
 
 
 
+</details>
+
 <a id="0x1_vip_score_add_deployer_script"></a>
 
 ## Function `add_deployer_script`
@@ -532,7 +707,8 @@ Decrease a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="score.md#0x1_vip_score_add_deployer_script">add_deployer_script</a>(
@@ -554,6 +730,8 @@ Decrease a score of an account.
 
 
 
+</details>
+
 <a id="0x1_vip_score_remove_deployer_script"></a>
 
 ## Function `remove_deployer_script`
@@ -565,7 +743,8 @@ Decrease a score of an account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="score.md#0x1_vip_score_remove_deployer_script">remove_deployer_script</a>(
@@ -584,3 +763,7 @@ Decrease a score of an account.
     )
 }
 </code></pre>
+
+
+
+</details>

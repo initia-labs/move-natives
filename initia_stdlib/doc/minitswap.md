@@ -12,6 +12,7 @@
 -  [Struct `SwapEvent`](#0x1_minitswap_SwapEvent)
 -  [Struct `RebalanceEvent`](#0x1_minitswap_RebalanceEvent)
 -  [Constants](#@Constants_0)
+-  [Function `init_module`](#0x1_minitswap_init_module)
 -  [Function `get_pool_amount`](#0x1_minitswap_get_pool_amount)
 -  [Function `get_pool_amount_by_denom`](#0x1_minitswap_get_pool_amount_by_denom)
 -  [Function `get_peg_keeper_balance`](#0x1_minitswap_get_peg_keeper_balance)
@@ -32,6 +33,25 @@
 -  [Function `withdraw_internal`](#0x1_minitswap_withdraw_internal)
 -  [Function `swap_internal`](#0x1_minitswap_swap_internal)
 -  [Function `rebalance_internal`](#0x1_minitswap_rebalance_internal)
+-  [Function `borrow_all_mut`](#0x1_minitswap_borrow_all_mut)
+-  [Function `borrow_all`](#0x1_minitswap_borrow_all)
+-  [Function `calc_peg_keeper_swap`](#0x1_minitswap_calc_peg_keeper_swap)
+-  [Function `l1_init_metadata`](#0x1_minitswap_l1_init_metadata)
+-  [Function `share_token_metadata`](#0x1_minitswap_share_token_metadata)
+-  [Function `total_share`](#0x1_minitswap_total_share)
+-  [Function `assert_is_chain`](#0x1_minitswap_assert_is_chain)
+-  [Function `mul_div`](#0x1_minitswap_mul_div)
+-  [Function `is_l1_init`](#0x1_minitswap_is_l1_init)
+-  [Function `is_l1_init_metadata`](#0x1_minitswap_is_l1_init_metadata)
+-  [Function `get_d0`](#0x1_minitswap_get_d0)
+-  [Function `get_d`](#0x1_minitswap_get_d)
+-  [Function `get_return_amount`](#0x1_minitswap_get_return_amount)
+-  [Function `get_y`](#0x1_minitswap_get_y)
+-  [Function `get_fully_recovered_ratio`](#0x1_minitswap_get_fully_recovered_ratio)
+-  [Function `get_fully_recovered_pool_amounts`](#0x1_minitswap_get_fully_recovered_pool_amounts)
+-  [Function `decimal128_safe_mul`](#0x1_minitswap_decimal128_safe_mul)
+-  [Function `decimal128_safe_from_ratio`](#0x1_minitswap_decimal128_safe_from_ratio)
+-  [Function `assert_min_amount`](#0x1_minitswap_assert_min_amount)
 
 
 <pre><code><b>use</b> <a href="block.md#0x1_block">0x1::block</a>;
@@ -61,7 +81,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -110,6 +131,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_minitswap_VirtualPool"></a>
 
 ## Resource `VirtualPool`
@@ -121,7 +144,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -200,6 +224,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_minitswap_ProvideEvent"></a>
 
 ## Struct `ProvideEvent`
@@ -213,7 +239,8 @@ Event emitted when provide.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -232,6 +259,8 @@ Event emitted when provide.
 </dl>
 
 
+</details>
+
 <a id="0x1_minitswap_WithdrawEvent"></a>
 
 ## Struct `WithdrawEvent`
@@ -245,7 +274,8 @@ Event emitted when withdraw.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -264,6 +294,8 @@ Event emitted when withdraw.
 </dl>
 
 
+</details>
+
 <a id="0x1_minitswap_SwapEvent"></a>
 
 ## Struct `SwapEvent`
@@ -277,7 +309,8 @@ Event emitted when swap token.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -326,6 +359,8 @@ Event emitted when swap token.
 </dl>
 
 
+</details>
+
 <a id="0x1_minitswap_RebalanceEvent"></a>
 
 ## Struct `RebalanceEvent`
@@ -339,7 +374,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -375,6 +411,8 @@ Event emitted when rebalance peg keeper's balances.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -498,6 +536,51 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+<a id="0x1_minitswap_init_module"></a>
+
+## Function `init_module`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_object">object::create_object</a>(@initia_std, <b>false</b>);
+    <b>let</b> extend_ref = <a href="object.md#0x1_object_generate_extend_ref">object::generate_extend_ref</a>(&constructor_ref);
+
+    <b>let</b> (mint_cap, burn_cap, _) = <a href="coin.md#0x1_coin_initialize">coin::initialize</a>(
+        chain,
+        <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_some">option::some</a>(<a href="minitswap.md#0x1_minitswap_U64_MAX">U64_MAX</a>),
+        <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"<a href="minitswap.md#0x1_minitswap">minitswap</a> liquidity token"),
+        <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(<a href="minitswap.md#0x1_minitswap_SYMBOL">SYMBOL</a>),
+        6,
+        <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b""),
+        <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b""),
+    );
+
+    <b>move_to</b>(chain, <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a> {
+        extend_ref,
+        pools: <a href="table.md#0x1_table_new">table::new</a>(),
+        l1_init_amount: 0,
+        swap_fee_rate: <a href="decimal128.md#0x1_decimal128_from_ratio">decimal128::from_ratio</a>(1, 1000), // 0.1%
+        max_change_rate: <a href="decimal128.md#0x1_decimal128_from_ratio">decimal128::from_ratio</a>(1, 10), // 10%
+        mint_cap,
+        burn_cap,
+    });
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_minitswap_get_pool_amount"></a>
 
 ## Function `get_pool_amount`
@@ -510,7 +593,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_get_pool_amount">get_pool_amount</a>(
@@ -530,6 +614,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_get_pool_amount_by_denom"></a>
 
 ## Function `get_pool_amount_by_denom`
@@ -542,7 +628,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_get_pool_amount_by_denom">get_pool_amount_by_denom</a>(
@@ -556,6 +643,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_get_peg_keeper_balance"></a>
 
 ## Function `get_peg_keeper_balance`
@@ -568,7 +657,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_get_peg_keeper_balance">get_peg_keeper_balance</a>(
@@ -589,6 +679,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_get_peg_keeper_balance_by_denom"></a>
 
 ## Function `get_peg_keeper_balance_by_denom`
@@ -601,7 +693,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_get_peg_keeper_balance_by_denom">get_peg_keeper_balance_by_denom</a>(
@@ -615,6 +708,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_swap_simulation"></a>
 
 ## Function `swap_simulation`
@@ -627,7 +722,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_swap_simulation">swap_simulation</a>(
@@ -672,6 +768,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_swap_simulation_by_denom"></a>
 
 ## Function `swap_simulation_by_denom`
@@ -684,7 +782,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_swap_simulation_by_denom">swap_simulation_by_denom</a>(
@@ -700,6 +799,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_create_pool"></a>
 
 ## Function `create_pool`
@@ -711,7 +812,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_create_pool">create_pool</a>(
@@ -755,6 +857,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_deactivate"></a>
 
 ## Function `deactivate`
@@ -766,7 +870,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_deactivate">deactivate</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, l2_init_metadata: Object&lt;Metadata&gt;) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a> {
@@ -780,6 +885,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_activate"></a>
 
 ## Function `activate`
@@ -791,7 +898,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_activate">activate</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, l2_init_metadata: Object&lt;Metadata&gt;) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a> {
@@ -805,6 +913,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_change_pool_size"></a>
 
 ## Function `change_pool_size`
@@ -816,7 +926,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_change_pool_size">change_pool_size</a>(
@@ -912,6 +1023,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_update_module_params"></a>
 
 ## Function `update_module_params`
@@ -923,7 +1036,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_update_module_params">update_module_params</a>(
@@ -946,6 +1060,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_update_pool_params"></a>
 
 ## Function `update_pool_params`
@@ -957,7 +1073,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_update_pool_params">update_pool_params</a>(
@@ -994,6 +1111,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_provide"></a>
 
 ## Function `provide`
@@ -1005,7 +1124,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_provide">provide</a>(<a href="account.md#0x1_account">account</a>: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, amount: u64, min_return_amount: Option&lt;u64&gt;) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a> {
@@ -1018,6 +1138,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_withdraw"></a>
 
 ## Function `withdraw`
@@ -1029,7 +1151,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_withdraw">withdraw</a>(<a href="account.md#0x1_account">account</a>: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, amount: u64, min_return_amount: Option&lt;u64&gt;) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a> {
@@ -1042,6 +1165,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_swap"></a>
 
 ## Function `swap`
@@ -1053,7 +1178,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_swap">swap</a>(
@@ -1072,6 +1198,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_rebalance"></a>
 
 ## Function `rebalance`
@@ -1083,7 +1211,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="minitswap.md#0x1_minitswap_rebalance">rebalance</a>(
@@ -1101,6 +1230,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_provide_internal"></a>
 
 ## Function `provide_internal`
@@ -1112,7 +1243,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_provide_internal">provide_internal</a>(l1_init: FungibleAsset): FungibleAsset <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a> {
@@ -1142,6 +1274,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_withdraw_internal"></a>
 
 ## Function `withdraw_internal`
@@ -1153,7 +1287,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_withdraw_internal">withdraw_internal</a>(share_token: FungibleAsset): FungibleAsset <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a> {
@@ -1179,6 +1314,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_swap_internal"></a>
 
 ## Function `swap_internal`
@@ -1190,7 +1327,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_swap_internal">swap_internal</a>(
@@ -1260,6 +1398,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
+</details>
+
 <a id="0x1_minitswap_rebalance_internal"></a>
 
 ## Function `rebalance_internal`
@@ -1271,7 +1411,8 @@ Event emitted when rebalance peg keeper's balances.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="minitswap.md#0x1_minitswap_rebalance_internal">rebalance_internal</a>(
@@ -1303,3 +1444,639 @@ Event emitted when rebalance peg keeper's balances.
     <a href="primary_fungible_store.md#0x1_primary_fungible_store_withdraw">primary_fungible_store::withdraw</a>(&pool_signer, l2_init_metadata, return_amount)
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_borrow_all_mut"></a>
+
+## Function `borrow_all_mut`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_borrow_all_mut">borrow_all_mut</a>(metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;): (&<b>mut</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">minitswap::ModuleStore</a>, &<b>mut</b> <a href="minitswap.md#0x1_minitswap_VirtualPool">minitswap::VirtualPool</a>, <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="minitswap.md#0x1_minitswap_borrow_all_mut">borrow_all_mut</a>(metadata: Object&lt;Metadata&gt;): (&<b>mut</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, &<b>mut</b> <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a>, <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a> {
+    <b>let</b> module_store = <b>borrow_global_mut</b>&lt;<a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>&gt;(@initia_std);
+    <b>let</b> module_signer = <a href="object.md#0x1_object_generate_signer_for_extending">object::generate_signer_for_extending</a>(&module_store.extend_ref);
+    <b>let</b> pool_addr = <a href="object.md#0x1_object_object_address">object::object_address</a>(*<a href="table.md#0x1_table_borrow">table::borrow</a>(&module_store.pools, metadata));
+    <b>let</b> pool = <b>borrow_global_mut</b>&lt;<a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a>&gt;(pool_addr);
+    <b>let</b> pool_signer = <a href="object.md#0x1_object_generate_signer_for_extending">object::generate_signer_for_extending</a>(&pool.extend_ref);
+    (module_store, pool, module_signer, pool_signer)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_borrow_all"></a>
+
+## Function `borrow_all`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_borrow_all">borrow_all</a>(metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;): (&<a href="minitswap.md#0x1_minitswap_ModuleStore">minitswap::ModuleStore</a>, &<a href="minitswap.md#0x1_minitswap_VirtualPool">minitswap::VirtualPool</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="minitswap.md#0x1_minitswap_borrow_all">borrow_all</a>(metadata: Object&lt;Metadata&gt;): (&<a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, &<a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a>) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a> {
+    <b>let</b> module_store = <b>borrow_global</b>&lt;<a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>&gt;(@initia_std);
+    <b>let</b> pool_addr = <a href="object.md#0x1_object_object_address">object::object_address</a>(*<a href="table.md#0x1_table_borrow">table::borrow</a>(&module_store.pools, metadata));
+    <b>let</b> pool = <b>borrow_global</b>&lt;<a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a>&gt;(pool_addr);
+    (module_store, pool)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_calc_peg_keeper_swap"></a>
+
+## Function `calc_peg_keeper_swap`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_calc_peg_keeper_swap">calc_peg_keeper_swap</a>(pool: &<a href="minitswap.md#0x1_minitswap_VirtualPool">minitswap::VirtualPool</a>): (u64, u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="minitswap.md#0x1_minitswap_calc_peg_keeper_swap">calc_peg_keeper_swap</a>(pool: &<a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a>): (u64, u64) <b>acquires</b> <a href="minitswap.md#0x1_minitswap_ModuleStore">ModuleStore</a>, <a href="minitswap.md#0x1_minitswap_VirtualPool">VirtualPool</a> {
+    <b>let</b> (_, timestamp) = <a href="block.md#0x1_block_get_block_info">block::get_block_info</a>();
+
+    <b>let</b> imbalance = <a href="decimal128.md#0x1_decimal128_from_ratio_u64">decimal128::from_ratio_u64</a>(
+        pool.virtual_l2_balance + pool.l2_pool_amount - pool.pool_size, // same <b>with</b> real l2 balance
+        pool.pool_size,
+    );
+    // Peg keeper swap
+    <b>let</b> r_fr = <a href="minitswap.md#0x1_minitswap_get_fully_recovered_ratio">get_fully_recovered_ratio</a>(&imbalance, &pool.max_ratio, &pool.recover_param);
+    <b>let</b> current_ratio = <a href="decimal128.md#0x1_decimal128_from_ratio_u64">decimal128::from_ratio_u64</a>(pool.l2_pool_amount, pool.l1_pool_amount + pool.l2_pool_amount);
+    <b>let</b> time_diff = timestamp - pool.last_recovered_timestamp;
+    <b>if</b> (<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&current_ratio) &gt; <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&r_fr) && time_diff != 0) {
+        <b>let</b> (x_fr, _) = <a href="minitswap.md#0x1_minitswap_get_fully_recovered_pool_amounts">get_fully_recovered_pool_amounts</a>(pool.pool_size, &r_fr, pool.ann);
+        <b>let</b> max_recover_amount = <a href="decimal128.md#0x1_decimal128_mul_u64">decimal128::mul_u64</a>(&pool.recover_velocity, time_diff);
+        <b>let</b> swap_amount_to_reach_fr = x_fr - pool.l1_pool_amount;
+        <b>let</b> swap_amount = <b>if</b> (swap_amount_to_reach_fr &lt; max_recover_amount) {
+            swap_amount_to_reach_fr
+        } <b>else</b> {
+            max_recover_amount
+        };
+
+        <b>let</b> return_amount = <a href="minitswap.md#0x1_minitswap_get_return_amount">get_return_amount</a>(swap_amount, pool.l1_pool_amount, pool.l2_pool_amount, pool.pool_size, pool.ann);
+
+        (swap_amount, return_amount)
+    } <b>else</b> {
+        (0, 0)
+    }
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_l1_init_metadata"></a>
+
+## Function `l1_init_metadata`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_l1_init_metadata">l1_init_metadata</a>(): <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_l1_init_metadata">l1_init_metadata</a>(): Object&lt;Metadata&gt; {
+    <b>let</b> addr = <a href="object.md#0x1_object_create_object_address">object::create_object_address</a>(@initia_std, b"uinit");
+    <a href="object.md#0x1_object_address_to_object">object::address_to_object</a>&lt;Metadata&gt;(addr)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_share_token_metadata"></a>
+
+## Function `share_token_metadata`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_share_token_metadata">share_token_metadata</a>(): <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_share_token_metadata">share_token_metadata</a>(): Object&lt;Metadata&gt; {
+    <b>let</b> addr = <a href="object.md#0x1_object_create_object_address">object::create_object_address</a>(@initia_std, <a href="minitswap.md#0x1_minitswap_SYMBOL">SYMBOL</a>);
+    <a href="object.md#0x1_object_address_to_object">object::address_to_object</a>&lt;Metadata&gt;(addr)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_total_share"></a>
+
+## Function `total_share`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_total_share">total_share</a>(): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_total_share">total_share</a>(): u64 {
+    <b>let</b> supply = <a href="fungible_asset.md#0x1_fungible_asset_supply">fungible_asset::supply</a>(<a href="minitswap.md#0x1_minitswap_share_token_metadata">share_token_metadata</a>());
+    (*<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_borrow">option::borrow</a>(&supply) <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_assert_is_chain"></a>
+
+## Function `assert_is_chain`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_assert_is_chain">assert_is_chain</a>(_account: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_assert_is_chain">assert_is_chain</a>(_account: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    // <b>let</b> addr = <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(<a href="account.md#0x1_account">account</a>);
+    // <b>assert</b>!(addr == @initia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="minitswap.md#0x1_minitswap_ENOT_CHAIN">ENOT_CHAIN</a>));
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_mul_div"></a>
+
+## Function `mul_div`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_mul_div">mul_div</a>(a: u64, b: u64, c: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_mul_div">mul_div</a>(a: u64, b: u64, c: u64): u64 {
+    <b>let</b> a = (a <b>as</b> u128);
+    <b>let</b> b = (b <b>as</b> u128);
+    <b>let</b> c = (c <b>as</b> u128);
+    (a * b / c <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_is_l1_init"></a>
+
+## Function `is_l1_init`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_is_l1_init">is_l1_init</a>(l1_init: &<a href="fungible_asset.md#0x1_fungible_asset_FungibleAsset">fungible_asset::FungibleAsset</a>): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_is_l1_init">is_l1_init</a>(l1_init: &FungibleAsset): bool {
+    <b>let</b> fa_metadata = <a href="fungible_asset.md#0x1_fungible_asset_metadata_from_asset">fungible_asset::metadata_from_asset</a>(l1_init);
+    <a href="minitswap.md#0x1_minitswap_is_l1_init_metadata">is_l1_init_metadata</a>(fa_metadata)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_is_l1_init_metadata"></a>
+
+## Function `is_l1_init_metadata`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_is_l1_init_metadata">is_l1_init_metadata</a>(metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_is_l1_init_metadata">is_l1_init_metadata</a>(metadata: Object&lt;Metadata&gt;): bool {
+    metadata == <a href="minitswap.md#0x1_minitswap_l1_init_metadata">l1_init_metadata</a>()
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_d0"></a>
+
+## Function `get_d0`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_d0">get_d0</a>(pool_size: u64, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_d0">get_d0</a>(pool_size: u64, ann: u64): u64 {
+    <a href="minitswap.md#0x1_minitswap_get_d">get_d</a>(pool_size, pool_size, ann)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_d"></a>
+
+## Function `get_d`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_d">get_d</a>(l1_init_amount: u64, l2_init_amount: u64, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_d">get_d</a>(l1_init_amount: u64, l2_init_amount: u64, ann: u64): u64 {
+    <b>let</b> l1_init_amount = (l1_init_amount <b>as</b> u256);
+    <b>let</b> l2_init_amount = (l2_init_amount <b>as</b> u256);
+    <b>let</b> ann = (ann <b>as</b> u256);
+
+    <b>let</b> sum = l1_init_amount + l2_init_amount;
+    <b>if</b> (sum == 0) <b>return</b> 0;
+    <b>let</b> d = sum;
+
+    <b>let</b> i = 0;
+
+    // converge
+    // d = (ann * sum - d_prod) / (ann - 1)
+    <b>while</b> (i &lt; 255) {
+        <b>let</b> d_prev = d;
+        // D ** (n + 1) / (n ** n * prod) in our case, always n = 2
+        <b>let</b> d_prod = d * d * d / 4 / l1_init_amount / l2_init_amount;
+
+        d = (ann * sum / <a href="minitswap.md#0x1_minitswap_A_PRECISION">A_PRECISION</a> + d_prod * 2) * d / ((ann - <a href="minitswap.md#0x1_minitswap_A_PRECISION">A_PRECISION</a>) * d / <a href="minitswap.md#0x1_minitswap_A_PRECISION">A_PRECISION</a> + 3 * d_prod);
+        <b>if</b> (d &gt; d_prev) {
+            <b>if</b> (d - d_prev &lt;= 1) <b>break</b>
+        } <b>else</b> {
+            <b>if</b> (d_prev - d &lt;= 1) <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    <b>return</b> (d <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_return_amount"></a>
+
+## Function `get_return_amount`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_return_amount">get_return_amount</a>(offer_amount: u64, offer_pool_amount: u64, return_pool_amount: u64, pool_size: u64, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_return_amount">get_return_amount</a>(offer_amount: u64, offer_pool_amount: u64, return_pool_amount: u64, pool_size: u64, ann: u64): u64 {
+    <b>let</b> d = <a href="minitswap.md#0x1_minitswap_get_d0">get_d0</a>(pool_size, ann);
+    <b>let</b> offer_pool_amount_after = offer_pool_amount + offer_amount;
+
+    <b>let</b> y = <a href="minitswap.md#0x1_minitswap_get_y">get_y</a>(d, offer_pool_amount_after, ann);
+
+    (return_pool_amount - y <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_y"></a>
+
+## Function `get_y`
+
+get counterparty's amount
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_y">get_y</a>(d: u64, x: u64, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_y">get_y</a>(d: u64, x: u64, ann: u64): u64 {
+    <b>let</b> d = (d <b>as</b> u256);
+    <b>let</b> x = (x <b>as</b> u256);
+    <b>let</b> ann = (ann <b>as</b> u256);
+
+    // Done by solving quadratic equation iteratively.
+    // x_1**2 + x_1 * (sum' - (A*n**n - 1) * D / (A * n**n)) = D ** (n + 1) / (n ** (2 * n) * prod' * A)
+    // y**2 + y * (x - (A * 2**2 - 1) * D / (A * 2**2)) = D ** (2 + 1) / (2 ** (2 * 2) * x * A)
+    // y**2 + b*y = c
+
+    // y = (y**2 + c) / (2*y + b)
+
+    <b>let</b> c = d * d * d * <a href="minitswap.md#0x1_minitswap_A_PRECISION">A_PRECISION</a> / ann / 4 / x; // d ** (2 + 1) / ann / 2 ** 2  / x
+    <b>let</b> b_plus_d = x + d * <a href="minitswap.md#0x1_minitswap_A_PRECISION">A_PRECISION</a> / ann; // need <b>to</b> sub d but sub later due <b>to</b> value must be less than 0
+
+    <b>let</b> y_prev;
+    <b>let</b> y = d;
+
+    <b>let</b> i = 0;
+    // converge
+    <b>while</b> (i &lt; 255) {
+        y_prev = y;
+        y = (y * y + c) / (2 * y + b_plus_d - d); // sub d here
+
+        <b>if</b> (y &gt; y_prev) {
+            <b>if</b> (y - y_prev &lt;= 1) <b>break</b>
+        } <b>else</b> {
+            <b>if</b> (y_prev - y &lt;= 1) <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    (y <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_fully_recovered_ratio"></a>
+
+## Function `get_fully_recovered_ratio`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_fully_recovered_ratio">get_fully_recovered_ratio</a>(imbalance: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>, max_ratio: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>, recover_param: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>): <a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_fully_recovered_ratio">get_fully_recovered_ratio</a>(imbalance: &Decimal128, max_ratio: &Decimal128, recover_param: &Decimal128): Decimal128 {
+    <b>let</b> fi = <a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(recover_param, imbalance);
+    <b>let</b> fi3 = <a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(&fi, &<a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(&fi, &fi));
+    <b>let</b> half = <a href="decimal128.md#0x1_decimal128_from_ratio">decimal128::from_ratio</a>(1, 2); // .5
+    <b>let</b> to_sum = <a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(
+        &<a href="decimal128.md#0x1_decimal128_sub">decimal128::sub</a>(max_ratio, &half), // R_max - 0.5
+        &<a href="minitswap.md#0x1_minitswap_decimal128_safe_from_ratio">decimal128_safe_from_ratio</a>(
+            <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&fi3),
+            <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_add">decimal128::add</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>(), &fi3)),
+        ) // (f * I) ** 3 / (1 + (f * I) ** 3)
+    );
+
+    <a href="decimal128.md#0x1_decimal128_add">decimal128::add</a>(&half, &to_sum)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_get_fully_recovered_pool_amounts"></a>
+
+## Function `get_fully_recovered_pool_amounts`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_fully_recovered_pool_amounts">get_fully_recovered_pool_amounts</a>(pool_size: u64, fully_recovered_ratio: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>, ann: u64): (u64, u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_get_fully_recovered_pool_amounts">get_fully_recovered_pool_amounts</a>(pool_size: u64, fully_recovered_ratio: &Decimal128, ann: u64): (u64, u64) {
+    <b>let</b> denominator = <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>());
+    <b>let</b> fully_recovered_ratio_val = <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(fully_recovered_ratio);
+    <b>let</b> grad = <a href="decimal128.md#0x1_decimal128_from_ratio">decimal128::from_ratio</a>(fully_recovered_ratio_val, denominator - fully_recovered_ratio_val);
+    <b>let</b> grad_val = <a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&grad);
+
+    // Increase the value <b>if</b> you want more accurate values, or decrease the value <b>if</b> you want less calculations.
+    <b>let</b> sim_size = 100000000u128;
+    <b>let</b> sim_size_val = sim_size * denominator;
+
+    // Get first point
+    <b>let</b> d0 = <a href="minitswap.md#0x1_minitswap_get_d0">get_d0</a>((sim_size <b>as</b> u64), ann);
+    <b>let</b> x = 2 * sim_size_val / (grad_val + denominator); // x = 2z / (g + 1)
+    <b>if</b> (x == sim_size) { // fully_recovered_ratio = 0.5
+        <b>return</b> (pool_size, pool_size)
+    };
+    <b>let</b> y = (<a href="minitswap.md#0x1_minitswap_get_y">get_y</a>(d0, (x <b>as</b> u64), ann) <b>as</b> u128);
+
+    <b>let</b> i = 0;
+    <b>let</b> x_prev;
+    // get the cross point of y = grad * x and [(sim_size, sim_size), (x_prev), (y_prev)]
+    // the point is (temp_x, y), get x from y
+    <b>while</b> (i &lt; 255) {
+        x_prev = x;
+        // x = z * (x' - y') / (g * (x'- z) - (y' - z))
+        // x = z * (y' - x') / (g * (z - x') + (y' - z))
+        <b>let</b> temp_x = sim_size * (y - x) * denominator / (grad_val * (sim_size - x) + (y - sim_size) * denominator);
+        <b>let</b> y = <a href="decimal128.md#0x1_decimal128_mul_u128">decimal128::mul_u128</a>(&grad, temp_x);
+        x = (<a href="minitswap.md#0x1_minitswap_get_y">get_y</a>(d0, (y <b>as</b> u64), ann) <b>as</b> u128);
+
+        // when fully recovered rate is too close <b>to</b> 0.5 y can be same <b>with</b> sim_size
+        <b>if</b> (y == sim_size) <b>break</b>;
+
+        // when fully recovered rate is too close <b>to</b> 0.5 x can be slightly higher than sim_size
+        <b>if</b> (x &gt; sim_size) {
+            x = sim_size;
+            <b>break</b>
+        };
+
+        <b>if</b> (x &gt; x_prev) {
+            <b>if</b> (x - x_prev &lt;= 1) <b>break</b>
+        } <b>else</b> {
+            <b>if</b> (x_prev - x &lt;= 1) <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    // scale up/down <b>to</b> real pool size
+    (
+        (x * (pool_size <b>as</b> u128) / sim_size <b>as</b> u64),
+        (y * (pool_size <b>as</b> u128) / sim_size <b>as</b> u64)
+    )
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_decimal128_safe_mul"></a>
+
+## Function `decimal128_safe_mul`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(a: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>, b: &<a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>): <a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_decimal128_safe_mul">decimal128_safe_mul</a>(a: &Decimal128, b: &Decimal128): Decimal128 {
+    <b>let</b> a_val = (<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(a) <b>as</b> u256);
+    <b>let</b> b_val = (<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(b) <b>as</b> u256);
+    <b>let</b> one = (<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>()) <b>as</b> u256);
+    <b>let</b> val = (a_val * b_val / one <b>as</b> u128);
+    <a href="decimal128.md#0x1_decimal128_new">decimal128::new</a>(val)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_decimal128_safe_from_ratio"></a>
+
+## Function `decimal128_safe_from_ratio`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_decimal128_safe_from_ratio">decimal128_safe_from_ratio</a>(a: u128, b: u128): <a href="decimal128.md#0x1_decimal128_Decimal128">decimal128::Decimal128</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_decimal128_safe_from_ratio">decimal128_safe_from_ratio</a>(a: u128, b: u128): Decimal128 {
+    <b>let</b> a = (a <b>as</b> u256);
+    <b>let</b> b = (b <b>as</b> u256);
+    <b>let</b> one = (<a href="decimal128.md#0x1_decimal128_val">decimal128::val</a>(&<a href="decimal128.md#0x1_decimal128_one">decimal128::one</a>()) <b>as</b> u256);
+    <b>let</b> val = (a * one / b <b>as</b> u128);
+    <a href="decimal128.md#0x1_decimal128_new">decimal128::new</a>(val)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_minitswap_assert_min_amount"></a>
+
+## Function `assert_min_amount`
+
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_assert_min_amount">assert_min_amount</a>(fa: &<a href="fungible_asset.md#0x1_fungible_asset_FungibleAsset">fungible_asset::FungibleAsset</a>, min_return: <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_Option">option::Option</a>&lt;u64&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="minitswap.md#0x1_minitswap_assert_min_amount">assert_min_amount</a>(fa: &FungibleAsset, min_return: Option&lt;u64&gt;) {
+    <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&min_return)) {
+        <b>let</b> amount = <a href="fungible_asset.md#0x1_fungible_asset_amount">fungible_asset::amount</a>(fa);
+        <b>assert</b>!(amount &gt;= <a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_extract">option::extract</a>(&<b>mut</b> min_return), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_state">error::invalid_state</a>(<a href="minitswap.md#0x1_minitswap_EMIN_RETURN">EMIN_RETURN</a>))
+    }
+}
+</code></pre>
+
+
+
+</details>

@@ -30,6 +30,20 @@ Type of large-scale storage tables.
 -  [Function `iter_mut`](#0x1_table_iter_mut)
 -  [Function `prepare_mut`](#0x1_table_prepare_mut)
 -  [Function `next_mut`](#0x1_table_next_mut)
+-  [Function `new_table_handle`](#0x1_table_new_table_handle)
+-  [Function `add_box`](#0x1_table_add_box)
+-  [Function `borrow_box`](#0x1_table_borrow_box)
+-  [Function `borrow_box_mut`](#0x1_table_borrow_box_mut)
+-  [Function `contains_box`](#0x1_table_contains_box)
+-  [Function `remove_box`](#0x1_table_remove_box)
+-  [Function `destroy_empty_box`](#0x1_table_destroy_empty_box)
+-  [Function `drop_unchecked_box`](#0x1_table_drop_unchecked_box)
+-  [Function `new_table_iter`](#0x1_table_new_table_iter)
+-  [Function `new_table_iter_mut`](#0x1_table_new_table_iter_mut)
+-  [Function `next_box`](#0x1_table_next_box)
+-  [Function `prepare_box`](#0x1_table_prepare_box)
+-  [Function `next_box_mut`](#0x1_table_next_box_mut)
+-  [Function `prepare_box_mut`](#0x1_table_prepare_box_mut)
 
 
 <pre><code><b>use</b> <a href="account.md#0x1_account">0x1::account</a>;
@@ -52,7 +66,8 @@ Type of tables
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -71,6 +86,8 @@ Type of tables
 </dl>
 
 
+</details>
+
 <a id="0x1_table_TableIter"></a>
 
 ## Struct `TableIter`
@@ -83,7 +100,8 @@ Type of table iterators
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -95,6 +113,8 @@ Type of table iterators
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_table_TableIterMut"></a>
 
@@ -108,7 +128,8 @@ Type of mutable table iterators
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -120,6 +141,8 @@ Type of mutable table iterators
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_table_Box"></a>
 
@@ -133,7 +156,8 @@ Wrapper for values. Required for making values appear as resources in the implem
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -145,6 +169,8 @@ Wrapper for values. Required for making values appear as resources in the implem
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -190,7 +216,8 @@ Create a new Table.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_new">new</a>&lt;K: <b>copy</b> + drop, V: store&gt;(): <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt; {
@@ -205,6 +232,8 @@ Create a new Table.
 
 
 
+</details>
+
 <a id="0x1_table_destroy_empty"></a>
 
 ## Function `destroy_empty`
@@ -217,7 +246,8 @@ Destroy a table. The table must be empty to succeed.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_destroy_empty">destroy_empty</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;) {
@@ -228,6 +258,8 @@ Destroy a table. The table must be empty to succeed.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_handle"></a>
 
@@ -241,7 +273,8 @@ Return a table handle address.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_handle">handle</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;): <b>address</b> {
@@ -250,6 +283,8 @@ Return a table handle address.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_add"></a>
 
@@ -265,7 +300,8 @@ table, and cannot be discovered from it.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_add">add</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K, val: V) {
@@ -275,6 +311,8 @@ table, and cannot be discovered from it.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_borrow"></a>
 
@@ -289,7 +327,8 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_borrow">borrow</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): &V {
@@ -298,6 +337,8 @@ Aborts if there is no entry for <code>key</code>.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_borrow_with_default"></a>
 
@@ -312,7 +353,8 @@ Returns specified default value if there is no entry for <code>key</code>.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_borrow_with_default">borrow_with_default</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K, default: &V): &V {
@@ -325,6 +367,8 @@ Returns specified default value if there is no entry for <code>key</code>.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_borrow_mut"></a>
 
@@ -339,7 +383,8 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_borrow_mut">borrow_mut</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): &<b>mut</b> V {
@@ -348,6 +393,8 @@ Aborts if there is no entry for <code>key</code>.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_length"></a>
 
@@ -361,7 +408,8 @@ Returns the length of the table, i.e. the number of entries.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_length">length</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;): u64 {
@@ -370,6 +418,8 @@ Returns the length of the table, i.e. the number of entries.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_empty"></a>
 
@@ -383,7 +433,8 @@ Returns true if this table is empty.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_empty">empty</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;): bool {
@@ -392,6 +443,8 @@ Returns true if this table is empty.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_borrow_mut_with_default"></a>
 
@@ -406,7 +459,8 @@ Insert the pair (<code>key</code>, <code>default</code>) first if there is no en
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_borrow_mut_with_default">borrow_mut_with_default</a>&lt;K: <b>copy</b> + drop, V: drop&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K, default: V): &<b>mut</b> V {
@@ -418,6 +472,8 @@ Insert the pair (<code>key</code>, <code>default</code>) first if there is no en
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_upsert"></a>
 
@@ -432,7 +488,8 @@ update the value of the entry for <code>key</code> to <code>value</code> otherwi
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_upsert">upsert</a>&lt;K: <b>copy</b> + drop, V: drop&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K, value: V) {
@@ -447,6 +504,8 @@ update the value of the entry for <code>key</code> to <code>value</code> otherwi
 
 
 
+</details>
+
 <a id="0x1_table_remove"></a>
 
 ## Function `remove`
@@ -460,7 +519,8 @@ Aborts if there is no entry for <code>key</code>.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_remove">remove</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): V {
@@ -471,6 +531,8 @@ Aborts if there is no entry for <code>key</code>.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_contains"></a>
 
@@ -484,7 +546,8 @@ Returns true iff <code><a href="table.md#0x1_table">table</a></code> contains an
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_contains">contains</a>&lt;K: <b>copy</b> + drop, V&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): bool {
@@ -493,6 +556,8 @@ Returns true iff <code><a href="table.md#0x1_table">table</a></code> contains an
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_iter"></a>
 
@@ -522,7 +587,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter">iter</a>&lt;K: <b>copy</b> + drop, V&gt;(
@@ -552,6 +618,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
+</details>
+
 <a id="0x1_table_prepare"></a>
 
 ## Function `prepare`
@@ -563,7 +631,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_prepare">prepare</a>&lt;K: <b>copy</b> + drop, V&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">TableIter</a>&lt;K, V&gt;): bool {
@@ -572,6 +641,8 @@ functions to obtain the Big Endian key bytes of a number.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_next"></a>
 
@@ -584,7 +655,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_next">next</a>&lt;K: <b>copy</b> + drop, V&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">TableIter</a>&lt;K, V&gt;): (K, &V) {
@@ -594,6 +666,8 @@ functions to obtain the Big Endian key bytes of a number.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_iter_mut"></a>
 
@@ -623,7 +697,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_iter_mut">iter_mut</a>&lt;K: <b>copy</b> + drop, V&gt;(
@@ -653,6 +728,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
+</details>
+
 <a id="0x1_table_prepare_mut"></a>
 
 ## Function `prepare_mut`
@@ -664,7 +741,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_prepare_mut">prepare_mut</a>&lt;K: <b>copy</b> + drop, V&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">TableIterMut</a>&lt;K, V&gt;): bool {
@@ -673,6 +751,8 @@ functions to obtain the Big Endian key bytes of a number.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_table_next_mut"></a>
 
@@ -685,7 +765,8 @@ functions to obtain the Big Endian key bytes of a number.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="table.md#0x1_table_next_mut">next_mut</a>&lt;K: <b>copy</b> + drop, V&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">TableIterMut</a>&lt;K, V&gt;): (K, &<b>mut</b> V) {
@@ -693,3 +774,325 @@ functions to obtain the Big Endian key bytes of a number.
     (key, &<b>mut</b> box.val)
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_new_table_handle"></a>
+
+## Function `new_table_handle`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_new_table_handle">new_table_handle</a>&lt;K, V&gt;(): <b>address</b>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_new_table_handle">new_table_handle</a>&lt;K, V&gt;(): <b>address</b>;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_add_box"></a>
+
+## Function `add_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_add_box">add_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, key: K, val: <a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_add_box">add_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K, val: <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_borrow_box"></a>
+
+## Function `borrow_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_borrow_box">borrow_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, key: K): &<a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_borrow_box">borrow_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): &<a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_borrow_box_mut"></a>
+
+## Function `borrow_box_mut`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_borrow_box_mut">borrow_box_mut</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, key: K): &<b>mut</b> <a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_borrow_box_mut">borrow_box_mut</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): &<b>mut</b> <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_contains_box"></a>
+
+## Function `contains_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_contains_box">contains_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, key: K): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_contains_box">contains_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): bool;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_remove_box"></a>
+
+## Function `remove_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_remove_box">remove_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, key: K): <a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_remove_box">remove_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;, key: K): <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_destroy_empty_box"></a>
+
+## Function `destroy_empty_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_destroy_empty_box">destroy_empty_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_destroy_empty_box">destroy_empty_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_drop_unchecked_box"></a>
+
+## Function `drop_unchecked_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_drop_unchecked_box">drop_unchecked_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_drop_unchecked_box">drop_unchecked_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_new_table_iter"></a>
+
+## Function `new_table_iter`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_new_table_iter">new_table_iter</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, end: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, order: u8): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_new_table_iter">new_table_iter</a>&lt;K: <b>copy</b> + drop, V, B&gt;(
+    <a href="table.md#0x1_table">table</a>: &<a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;,
+    start: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    end: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    order: u8
+): u64;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_new_table_iter_mut"></a>
+
+## Function `new_table_iter_mut`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_new_table_iter_mut">new_table_iter_mut</a>&lt;K: <b>copy</b>, drop, V, B&gt;(<a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">table::Table</a>&lt;K, V&gt;, start: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, end: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, order: u8): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_new_table_iter_mut">new_table_iter_mut</a>&lt;K: <b>copy</b> + drop, V, B&gt;(
+    <a href="table.md#0x1_table">table</a>: &<b>mut</b> <a href="table.md#0x1_table_Table">Table</a>&lt;K, V&gt;,
+    start: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    end: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    order: u8
+): u64;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_next_box"></a>
+
+## Function `next_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_next_box">next_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">table::TableIter</a>&lt;K, V&gt;): (K, &<b>mut</b> <a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_next_box">next_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">TableIter</a>&lt;K, V&gt;): (K, &<b>mut</b> <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_prepare_box"></a>
+
+## Function `prepare_box`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_prepare_box">prepare_box</a>&lt;K: <b>copy</b>, drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">table::TableIter</a>&lt;K, V&gt;): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_prepare_box">prepare_box</a>&lt;K: <b>copy</b> + drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIter">TableIter</a>&lt;K, V&gt;): bool;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_next_box_mut"></a>
+
+## Function `next_box_mut`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_next_box_mut">next_box_mut</a>&lt;K: <b>copy</b>, drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">table::TableIterMut</a>&lt;K, V&gt;): (K, &<b>mut</b> <a href="table.md#0x1_table_Box">table::Box</a>&lt;V&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_next_box_mut">next_box_mut</a>&lt;K: <b>copy</b> + drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">TableIterMut</a>&lt;K, V&gt;): (K, &<b>mut</b> <a href="table.md#0x1_table_Box">Box</a>&lt;V&gt;);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_table_prepare_box_mut"></a>
+
+## Function `prepare_box_mut`
+
+
+
+<pre><code><b>fun</b> <a href="table.md#0x1_table_prepare_box_mut">prepare_box_mut</a>&lt;K: <b>copy</b>, drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">table::TableIterMut</a>&lt;K, V&gt;): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="table.md#0x1_table_prepare_box_mut">prepare_box_mut</a>&lt;K: <b>copy</b> + drop, V, B&gt;(table_iter: &<b>mut</b> <a href="table.md#0x1_table_TableIterMut">TableIterMut</a>&lt;K, V&gt;): bool;
+</code></pre>
+
+
+
+</details>

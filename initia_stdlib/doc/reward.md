@@ -8,6 +8,8 @@
 -  [Resource `RewardStore`](#0x1_vip_reward_RewardStore)
 -  [Constants](#@Constants_0)
 -  [Function `reward_metadata`](#0x1_vip_reward_reward_metadata)
+-  [Function `generate_reward_store_seed`](#0x1_vip_reward_generate_reward_store_seed)
+-  [Function `create_reward_store_address`](#0x1_vip_reward_create_reward_store_address)
 -  [Function `register_reward_store`](#0x1_vip_reward_register_reward_store)
 -  [Function `add_reward_per_stage`](#0x1_vip_reward_add_reward_per_stage)
 -  [Function `withdraw`](#0x1_vip_reward_withdraw)
@@ -44,7 +46,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -68,6 +71,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -130,7 +135,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="reward.md#0x1_vip_reward_reward_metadata">reward_metadata</a>(): Object&lt;Metadata&gt; {
@@ -139,6 +145,64 @@
 </code></pre>
 
 
+
+</details>
+
+<a id="0x1_vip_reward_generate_reward_store_seed"></a>
+
+## Function `generate_reward_store_seed`
+
+
+
+<pre><code><b>fun</b> <a href="reward.md#0x1_vip_reward_generate_reward_store_seed">generate_reward_store_seed</a>&lt;Vesting: <b>copy</b>, drop, store&gt;(bridge_id: u64): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="reward.md#0x1_vip_reward_generate_reward_store_seed">generate_reward_store_seed</a>&lt;Vesting: <b>copy</b> + drop + store&gt;(bridge_id: u64): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;{
+    <b>let</b> seed = <b>if</b> (<a href="type_info.md#0x1_type_info_type_name">type_info::type_name</a>&lt;Vesting&gt;() == <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(b"<a href="vesting.md#0x1_vip_vesting_OperatorVesting">0x1::vip_vesting::OperatorVesting</a>")) {
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[<a href="reward.md#0x1_vip_reward_OPERATOR_REWARD_PREFIX">OPERATOR_REWARD_PREFIX</a>]
+    } <b>else</b> {
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[<a href="reward.md#0x1_vip_reward_USER_REWARD_PREFIX">USER_REWARD_PREFIX</a>]
+    };
+
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_append">vector::append</a>(&<b>mut</b> seed, <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>(&bridge_id));
+    <b>return</b> seed
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_reward_create_reward_store_address"></a>
+
+## Function `create_reward_store_address`
+
+
+
+<pre><code><b>fun</b> <a href="reward.md#0x1_vip_reward_create_reward_store_address">create_reward_store_address</a>&lt;Vesting: <b>copy</b>, drop, store&gt;(bridge_id: u64): <b>address</b>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="reward.md#0x1_vip_reward_create_reward_store_address">create_reward_store_address</a>&lt;Vesting: <b>copy</b> + drop + store&gt;(bridge_id: u64): <b>address</b> {
+    <b>let</b> seed = <a href="reward.md#0x1_vip_reward_generate_reward_store_seed">generate_reward_store_seed</a>&lt;Vesting&gt;(bridge_id);
+    <a href="object.md#0x1_object_create_object_address">object::create_object_address</a>(@initia_std, seed)
+}
+</code></pre>
+
+
+
+</details>
 
 <a id="0x1_vip_reward_register_reward_store"></a>
 
@@ -151,7 +215,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="reward.md#0x1_vip_reward_register_reward_store">register_reward_store</a>&lt;Vesting: <b>copy</b> + drop + store&gt;(
@@ -179,6 +244,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_reward_add_reward_per_stage"></a>
 
 ## Function `add_reward_per_stage`
@@ -190,7 +257,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="reward.md#0x1_vip_reward_add_reward_per_stage">add_reward_per_stage</a>(
@@ -206,6 +274,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_reward_withdraw"></a>
 
 ## Function `withdraw`
@@ -217,7 +287,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="reward.md#0x1_vip_reward_withdraw">withdraw</a>(
@@ -233,6 +304,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_reward_balance"></a>
 
 ## Function `balance`
@@ -245,7 +318,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="reward.md#0x1_vip_reward_balance">balance</a>(reward_store_addr: <b>address</b>): u64 {
@@ -254,6 +328,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_reward_get_stage_reward"></a>
 
@@ -267,7 +343,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="reward.md#0x1_vip_reward_get_stage_reward">get_stage_reward</a>(reward_store_addr: <b>address</b>, stage: u64): u64 <b>acquires</b> <a href="reward.md#0x1_vip_reward_RewardStore">RewardStore</a> {
@@ -279,6 +356,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_reward_is_reward_store_registered"></a>
 
@@ -292,7 +371,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="reward.md#0x1_vip_reward_is_reward_store_registered">is_reward_store_registered</a>&lt;Vesting: <b>copy</b> + drop + store&gt;(bridge_id: u64): bool {
@@ -301,6 +381,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_reward_get_reward_store_address"></a>
 
@@ -314,7 +396,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="reward.md#0x1_vip_reward_get_reward_store_address">get_reward_store_address</a>&lt;Vesting: <b>copy</b> + drop + store&gt;(bridge_id: u64): <b>address</b> {
@@ -323,3 +406,7 @@
     reward_addr
 }
 </code></pre>
+
+
+
+</details>

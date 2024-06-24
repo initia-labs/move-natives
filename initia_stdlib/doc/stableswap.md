@@ -18,6 +18,7 @@
 -  [Function `get_swap_simulation_by_denom`](#0x1_stableswap_get_swap_simulation_by_denom)
 -  [Function `get_pair`](#0x1_stableswap_get_pair)
 -  [Function `get_all_pairs`](#0x1_stableswap_get_all_pairs)
+-  [Function `init_module`](#0x1_stableswap_init_module)
 -  [Function `unpack_pair_response`](#0x1_stableswap_unpack_pair_response)
 -  [Function `create_pair_script`](#0x1_stableswap_create_pair_script)
 -  [Function `update_swap_fee_rate`](#0x1_stableswap_update_swap_fee_rate)
@@ -30,6 +31,19 @@
 -  [Function `withdraw_liquidity`](#0x1_stableswap_withdraw_liquidity)
 -  [Function `swap`](#0x1_stableswap_swap)
 -  [Function `pool_info`](#0x1_stableswap_pool_info)
+-  [Function `borrow_pool`](#0x1_stableswap_borrow_pool)
+-  [Function `borrow_pool_mut`](#0x1_stableswap_borrow_pool_mut)
+-  [Function `get_current_ann`](#0x1_stableswap_get_current_ann)
+-  [Function `check_coin_metadata`](#0x1_stableswap_check_coin_metadata)
+-  [Function `get_pool_amounts`](#0x1_stableswap_get_pool_amounts)
+-  [Function `get_amounts`](#0x1_stableswap_get_amounts)
+-  [Function `get_coin_addresses`](#0x1_stableswap_get_coin_addresses)
+-  [Function `get_d`](#0x1_stableswap_get_d)
+-  [Function `get_y`](#0x1_stableswap_get_y)
+-  [Function `swap_simulation`](#0x1_stableswap_swap_simulation)
+-  [Function `mul_div_u64`](#0x1_stableswap_mul_div_u64)
+-  [Function `mul_div_u128`](#0x1_stableswap_mul_div_u128)
+-  [Function `check_chain_permission`](#0x1_stableswap_check_chain_permission)
 
 
 <pre><code><b>use</b> <a href="block.md#0x1_block">0x1::block</a>;
@@ -60,7 +74,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -79,6 +94,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_Pool"></a>
 
 ## Resource `Pool`
@@ -90,7 +107,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -139,6 +157,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_CreatePairEvent"></a>
 
 ## Struct `CreatePairEvent`
@@ -151,7 +171,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -182,6 +203,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_ProvideEvent"></a>
 
 ## Struct `ProvideEvent`
@@ -194,7 +217,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -224,6 +248,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_stableswap_WithdrawEvent"></a>
 
@@ -237,7 +263,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -268,6 +295,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_SwapEvent"></a>
 
 ## Struct `SwapEvent`
@@ -280,7 +309,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -323,6 +353,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_Ann"></a>
 
 ## Struct `Ann`
@@ -334,7 +366,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -365,6 +398,8 @@
 </dl>
 
 
+</details>
+
 <a id="0x1_stableswap_PairResponse"></a>
 
 ## Struct `PairResponse`
@@ -376,7 +411,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -412,6 +448,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -616,7 +654,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_get_swap_simulation">get_swap_simulation</a>(
@@ -638,6 +677,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_get_swap_simulation_by_denom"></a>
 
 ## Function `get_swap_simulation_by_denom`
@@ -650,7 +691,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_get_swap_simulation_by_denom">get_swap_simulation_by_denom</a>(
@@ -667,6 +709,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_get_pair"></a>
 
 ## Function `get_pair`
@@ -679,7 +723,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_get_pair">get_pair</a>(
@@ -700,6 +745,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_get_all_pairs"></a>
 
 ## Function `get_all_pairs`
@@ -712,7 +759,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_get_all_pairs">get_all_pairs</a>(
@@ -745,6 +793,32 @@ Return swap simulation result
 
 
 
+</details>
+
+<a id="0x1_stableswap_init_module"></a>
+
+## Function `init_module`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>move_to</b>(chain, <a href="stableswap.md#0x1_stableswap_ModuleStore">ModuleStore</a> { pairs: <a href="table.md#0x1_table_new">table::new</a>(), pair_count: 0 })
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_stableswap_unpack_pair_response"></a>
 
 ## Function `unpack_pair_response`
@@ -756,7 +830,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_unpack_pair_response">unpack_pair_response</a>(pair_response: &<a href="stableswap.md#0x1_stableswap_PairResponse">PairResponse</a>): (<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Object&lt;Metadata&gt;&gt;, <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;, <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, u64, Decimal128) {
@@ -772,6 +847,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_create_pair_script"></a>
 
 ## Function `create_pair_script`
@@ -783,7 +860,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_create_pair_script">create_pair_script</a>(
@@ -812,6 +890,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_update_swap_fee_rate"></a>
 
 ## Function `update_swap_fee_rate`
@@ -823,7 +903,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_update_swap_fee_rate">update_swap_fee_rate</a>(<a href="account.md#0x1_account">account</a>: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;, new_swap_fee_rate: Decimal128) <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -834,6 +915,8 @@ Return swap simulation result
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_stableswap_update_ann"></a>
 
@@ -846,7 +929,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_update_ann">update_ann</a>(<a href="account.md#0x1_account">account</a>: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;, ann_after: u64, timestamp_after: u64) <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -862,6 +946,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_provide_liquidity_script"></a>
 
 ## Function `provide_liquidity_script`
@@ -873,7 +959,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_provide_liquidity_script">provide_liquidity_script</a>(
@@ -901,6 +988,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_withdraw_liquidity_script"></a>
 
 ## Function `withdraw_liquidity_script`
@@ -912,7 +1001,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_withdraw_liquidity_script">withdraw_liquidity_script</a>(<a href="account.md#0x1_account">account</a>: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;, liquidity_amount: u64, min_return_amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Option&lt;u64&gt;&gt;) <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -933,6 +1023,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_swap_script"></a>
 
 ## Function `swap_script`
@@ -944,7 +1036,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="stableswap.md#0x1_stableswap_swap_script">swap_script</a>(
@@ -963,6 +1056,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_create_pair"></a>
 
 ## Function `create_pair`
@@ -974,7 +1069,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_create_pair">create_pair</a>(
@@ -1071,6 +1167,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_provide_liquidity"></a>
 
 ## Function `provide_liquidity`
@@ -1082,7 +1180,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_provide_liquidity">provide_liquidity</a>(pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;, coins: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;FungibleAsset&gt;, min_liquidity: Option&lt;u64&gt;): FungibleAsset <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -1167,6 +1266,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_withdraw_liquidity"></a>
 
 ## Function `withdraw_liquidity`
@@ -1178,7 +1279,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_withdraw_liquidity">withdraw_liquidity</a>(liquidity_token: FungibleAsset, min_return_amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Option&lt;u64&gt;&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;FungibleAsset&gt; <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -1229,6 +1331,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_swap"></a>
 
 ## Function `swap`
@@ -1240,7 +1344,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_swap">swap</a>(pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;, offer_coin: FungibleAsset, return_coin_metadata: Object&lt;Metadata&gt;, min_return_amount: Option&lt;u64&gt;): FungibleAsset <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -1277,6 +1382,8 @@ Return swap simulation result
 
 
 
+</details>
+
 <a id="0x1_stableswap_pool_info"></a>
 
 ## Function `pool_info`
@@ -1288,7 +1395,8 @@ Return swap simulation result
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="stableswap.md#0x1_stableswap_pool_info">pool_info</a>(pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;): (<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Object&lt;Metadata&gt;&gt;, <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, u64, Decimal128) <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
@@ -1306,3 +1414,486 @@ Return swap simulation result
     )
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_borrow_pool"></a>
+
+## Function `borrow_pool`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_borrow_pool">borrow_pool</a>(pair: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="stableswap.md#0x1_stableswap_Pool">stableswap::Pool</a>&gt;): &<a href="stableswap.md#0x1_stableswap_Pool">stableswap::Pool</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="stableswap.md#0x1_stableswap_borrow_pool">borrow_pool</a>(pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;): &<a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
+    <b>borrow_global</b>&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;(<a href="object.md#0x1_object_object_address">object::object_address</a>(pair))
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_borrow_pool_mut"></a>
+
+## Function `borrow_pool_mut`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_borrow_pool_mut">borrow_pool_mut</a>(pair: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="stableswap.md#0x1_stableswap_Pool">stableswap::Pool</a>&gt;): &<b>mut</b> <a href="stableswap.md#0x1_stableswap_Pool">stableswap::Pool</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="stableswap.md#0x1_stableswap_borrow_pool_mut">borrow_pool_mut</a>(pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;): &<b>mut</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
+    <b>borrow_global_mut</b>&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;(<a href="object.md#0x1_object_object_address">object::object_address</a>(pair))
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_current_ann"></a>
+
+## Function `get_current_ann`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_current_ann">get_current_ann</a>(ann: &<a href="stableswap.md#0x1_stableswap_Ann">stableswap::Ann</a>): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_current_ann">get_current_ann</a>(ann: &<a href="stableswap.md#0x1_stableswap_Ann">Ann</a>): u64 {
+    <b>let</b> (_, timestamp) = <a href="block.md#0x1_block_get_block_info">block::get_block_info</a>();
+
+    <b>if</b> (timestamp &gt;= ann.timestamp_after) {
+        <b>return</b> ann.ann_after
+    };
+
+    <b>if</b> (ann.ann_after &gt; ann.ann_before) {
+        <b>return</b> ann.ann_before + (ann.ann_after - ann.ann_before) * (timestamp - ann.timestamp_before) / (ann.timestamp_after - ann.timestamp_before)
+    } <b>else</b> {
+        <b>return</b> ann.ann_before - (ann.ann_before - ann.ann_after) * (timestamp - ann.timestamp_before) / (ann.timestamp_after - ann.timestamp_before)
+    }
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_check_coin_metadata"></a>
+
+## Function `check_coin_metadata`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_check_coin_metadata">check_coin_metadata</a>(coin_metadata: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;&gt;, coins: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_FungibleAsset">fungible_asset::FungibleAsset</a>&gt;): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_check_coin_metadata">check_coin_metadata</a>(coin_metadata: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Object&lt;Metadata&gt;&gt;, coins: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;FungibleAsset&gt;): u64 {
+    <b>let</b> len = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(coin_metadata);
+    <b>assert</b>!(len == <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(coins), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="stableswap.md#0x1_stableswap_EN_COINS">EN_COINS</a>));
+
+    <b>let</b> i = 0;
+    <b>while</b> (i &lt; len) {
+        <b>let</b> metadata = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(coin_metadata, i);
+        <b>let</b> metadata_ = <a href="fungible_asset.md#0x1_fungible_asset_metadata_from_asset">fungible_asset::metadata_from_asset</a>(<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(coins, i));
+        <b>assert</b>!(*metadata == metadata_, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="stableswap.md#0x1_stableswap_ECOIN_TYPE">ECOIN_TYPE</a>));
+        i = i + 1;
+    };
+
+    <b>return</b> len
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_pool_amounts"></a>
+
+## Function `get_pool_amounts`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_pool_amounts">get_pool_amounts</a>(pair_addr: <b>address</b>, coin_metadata: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_pool_amounts">get_pool_amounts</a>(pair_addr: <b>address</b>, coin_metadata: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Object&lt;Metadata&gt;&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt; {
+    <b>let</b> amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt; = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[];
+    <b>let</b> len = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&coin_metadata);
+    <b>let</b> i = 0;
+    <b>while</b>(i &lt; len) {
+        <b>let</b> metadata = *<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&coin_metadata, i);
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_push_back">vector::push_back</a>(&<b>mut</b> amounts, <a href="primary_fungible_store.md#0x1_primary_fungible_store_balance">primary_fungible_store::balance</a>(pair_addr, metadata));
+        i = i + 1;
+    };
+
+    <b>return</b> amounts
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_amounts"></a>
+
+## Function `get_amounts`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_amounts">get_amounts</a>(coins: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_FungibleAsset">fungible_asset::FungibleAsset</a>&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_amounts">get_amounts</a>(coins: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;FungibleAsset&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt; {
+    <b>let</b> amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt; = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[];
+    <b>let</b> len = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(coins);
+    <b>let</b> i = 0;
+    <b>while</b>(i &lt; len) {
+        <b>let</b> amount = <a href="fungible_asset.md#0x1_fungible_asset_amount">fungible_asset::amount</a>(<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(coins, i));
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_push_back">vector::push_back</a>(&<b>mut</b> amounts, amount);
+        i = i + 1;
+    };
+
+    <b>return</b> amounts
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_coin_addresses"></a>
+
+## Function `get_coin_addresses`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_coin_addresses">get_coin_addresses</a>(coin_metadata: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_coin_addresses">get_coin_addresses</a>(coin_metadata: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;Object&lt;Metadata&gt;&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt; {
+    <b>let</b> addresses: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt; = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[];
+    <b>let</b> len = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&coin_metadata);
+    <b>let</b> i = 0;
+    <b>while</b>(i &lt; len) {
+        <b>let</b> addr = <a href="object.md#0x1_object_object_address">object::object_address</a>(*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&coin_metadata, i));
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_push_back">vector::push_back</a>(&<b>mut</b> addresses, addr);
+        i = i + 1;
+    };
+
+    <b>return</b> addresses
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_d"></a>
+
+## Function `get_d`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_d">get_d</a>(amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_d">get_d</a>(amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, ann: u64): u64 {
+    <b>let</b> ann = (ann <b>as</b> u256);
+
+    <b>let</b> sum: u256 = 0;
+    <b>let</b> n = (<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&amounts) <b>as</b> u256);
+    <b>let</b> i = 0;
+    <b>while</b> (i &lt; (n <b>as</b> u64)) {
+        sum = sum + (*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&amounts, i) <b>as</b> u256);
+        i = i + 1;
+    };
+    <b>if</b> (sum == 0) <b>return</b> 0;
+    <b>let</b> d = sum;
+
+    <b>let</b> i = 0;
+
+    // converge
+    // d = (ann * sum - d_prod) / (ann - 1)
+    <b>while</b> (i &lt; 255) {
+        <b>let</b> d_prev = d;
+        // D ** (n + 1) / (n ** n * prod)
+        <b>let</b> d_prod = d;
+        <b>let</b> j = 0;
+        <b>while</b> (j &lt; (n <b>as</b> u64)) {
+            d_prod = d_prod * d / (n <b>as</b> u256) / (*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&amounts, j) <b>as</b> u256);
+            j = j + 1;
+        };
+
+        d = (ann * sum / <a href="stableswap.md#0x1_stableswap_A_PRECISION">A_PRECISION</a> + d_prod * n) * d / ((ann - <a href="stableswap.md#0x1_stableswap_A_PRECISION">A_PRECISION</a>) * d / <a href="stableswap.md#0x1_stableswap_A_PRECISION">A_PRECISION</a> + (n + 1) * d_prod);
+        <b>if</b> (d &gt; d_prev) {
+            <b>if</b> (d - d_prev &lt;= 1) <b>break</b>
+        } <b>else</b> {
+            <b>if</b> (d_prev - d &lt;= 1) <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    <b>return</b> (d <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_get_y"></a>
+
+## Function `get_y`
+
+get counterparty's amount
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_y">get_y</a>(offer_index: u64, return_index: u64, offer_amount: u64, pool_amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, ann: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_get_y">get_y</a>(offer_index: u64, return_index: u64, offer_amount: u64, pool_amounts: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u64&gt;, ann: u64): u64 {
+    <b>let</b> d = (<a href="stableswap.md#0x1_stableswap_get_d">get_d</a>(pool_amounts, ann) <b>as</b> u256);
+
+    <b>let</b> ann = (ann <b>as</b> u256);
+    // Done by solving quadratic equation iteratively.
+    // x_1**2 + x_1 * (sum' - (A*n**n - 1) * D / (A * n**n)) = D ** (n + 1) / (n ** (2 * n) * prod' * A)
+    // y**2 + b*y = c
+
+    // y = (y**2 + c) / (2*y + b)
+    <b>let</b> n = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&pool_amounts);
+    <b>let</b> i = 0;
+    <b>let</b> sum = 0; // sum'
+    <b>let</b> c = d;
+    <b>while</b> (i &lt; n) {
+        <b>if</b> (i == return_index) {
+            i = i + 1;
+            <b>continue</b>
+        };
+
+        <b>let</b> pool_amount = <b>if</b> (i == offer_index) {
+            (*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&pool_amounts, i) + offer_amount <b>as</b> u256)
+        } <b>else</b> {
+            (*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&pool_amounts, i) <b>as</b> u256)
+        };
+
+        sum = sum + pool_amount;
+        c = c * d / (pool_amount * (n <b>as</b> u256));
+        i = i + 1;
+    };
+
+    c = c * d * <a href="stableswap.md#0x1_stableswap_A_PRECISION">A_PRECISION</a> / ann / (n <b>as</b> u256);
+    <b>let</b> b_plus_d = sum + d * <a href="stableswap.md#0x1_stableswap_A_PRECISION">A_PRECISION</a> / ann; // need <b>to</b> sub d but sub later due <b>to</b> value must be less than 0
+
+    <b>let</b> y_prev;
+    <b>let</b> y = d;
+
+    <b>let</b> i = 0;
+    // converge
+    <b>while</b> (i &lt; 255) {
+        y_prev = y;
+        y = (y * y + c) / (2 * y + b_plus_d - d); // sub d here
+
+        <b>if</b> (y &gt; y_prev) {
+            <b>if</b> (y - y_prev &lt;= 1) <b>break</b>
+        } <b>else</b> {
+            <b>if</b> (y_prev - y &lt;= 1) <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    (y <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_swap_simulation"></a>
+
+## Function `swap_simulation`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_swap_simulation">swap_simulation</a>(pair: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="stableswap.md#0x1_stableswap_Pool">stableswap::Pool</a>&gt;, offer_coin_metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, return_coin_metadata: <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, offer_amount: u64): (u64, u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_swap_simulation">swap_simulation</a>(
+    pair: Object&lt;<a href="stableswap.md#0x1_stableswap_Pool">Pool</a>&gt;,
+    offer_coin_metadata: Object&lt;Metadata&gt;,
+    return_coin_metadata: Object&lt;Metadata&gt;,
+    offer_amount: u64,
+): (u64, u64) <b>acquires</b> <a href="stableswap.md#0x1_stableswap_Pool">Pool</a> {
+    <b>let</b> pool = <a href="stableswap.md#0x1_stableswap_borrow_pool">borrow_pool</a>(pair);
+    <b>let</b> pair_addr = <a href="object.md#0x1_object_object_address">object::object_address</a>(pair);
+    <b>let</b> n = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_length">vector::length</a>(&pool.coin_metadata);
+
+    <b>let</b> ann = <a href="stableswap.md#0x1_stableswap_get_current_ann">get_current_ann</a>(&pool.ann);
+    <b>let</b> pool_amounts = <a href="stableswap.md#0x1_stableswap_get_pool_amounts">get_pool_amounts</a>(pair_addr, pool.coin_metadata);
+    <b>let</b> offer_index = n;
+    <b>let</b> return_index = n;
+    <b>let</b> i = 0;
+    <b>while</b> (i &lt; n) {
+        <b>let</b> metadata = *<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&pool.coin_metadata, i);
+        <b>if</b> (metadata == offer_coin_metadata){
+            offer_index = i
+        };
+        <b>if</b> (metadata == return_coin_metadata){
+            return_index = i
+        };
+        <b>if</b> (offer_index != n && return_index != n) {
+            <b>break</b>
+        };
+        i = i + 1;
+    };
+
+    <b>assert</b>!(offer_index != n && return_index != n, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="stableswap.md#0x1_stableswap_ECOIN_TYPE">ECOIN_TYPE</a>));
+
+    <b>let</b> y = <a href="stableswap.md#0x1_stableswap_get_y">get_y</a>(offer_index, return_index, offer_amount, pool_amounts, ann);
+    <b>let</b> return_amount = *<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&pool_amounts, return_index) - y - 1; // sub 1 just in case
+    <b>let</b> fee_amount = <a href="decimal128.md#0x1_decimal128_mul_u64">decimal128::mul_u64</a>(&pool.swap_fee_rate, return_amount);
+    (return_amount, fee_amount)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_mul_div_u64"></a>
+
+## Function `mul_div_u64`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_mul_div_u64">mul_div_u64</a>(a: u64, b: u64, c: u64): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_mul_div_u64">mul_div_u64</a>(a: u64, b: u64, c: u64): u64 {
+    <b>return</b> ((a <b>as</b> u128) * (b <b>as</b> u128) / (c <b>as</b> u128) <b>as</b> u64)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_mul_div_u128"></a>
+
+## Function `mul_div_u128`
+
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_mul_div_u128">mul_div_u128</a>(a: u128, b: u128, c: u128): u128
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_mul_div_u128">mul_div_u128</a>(a: u128, b: u128, c: u128): u128 {
+    <b>return</b> ((a <b>as</b> u256) * (b <b>as</b> u256) / (c <b>as</b> u256) <b>as</b> u128)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_stableswap_check_chain_permission"></a>
+
+## Function `check_chain_permission`
+
+Check signer is chain
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="stableswap.md#0x1_stableswap_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @initia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="stableswap.md#0x1_stableswap_EUNAUTHORIZED">EUNAUTHORIZED</a>));
+}
+</code></pre>
+
+
+
+</details>

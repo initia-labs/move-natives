@@ -17,6 +17,7 @@
 -  [Function `is_object_account`](#0x1_account_is_object_account)
 -  [Function `is_table_account`](#0x1_account_is_table_account)
 -  [Function `is_module_account`](#0x1_account_is_module_account)
+-  [Function `request_create_account`](#0x1_account_request_create_account)
 -  [Function `get_account_info`](#0x1_account_get_account_info)
 -  [Function `create_address`](#0x1_account_create_address)
 -  [Function `create_signer`](#0x1_account_create_signer)
@@ -99,7 +100,8 @@ This error type is used in native function.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="account.md#0x1_account_create_account_script">create_account_script</a>(addr: <b>address</b>) {
@@ -108,6 +110,8 @@ This error type is used in native function.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_create_account"></a>
 
@@ -120,7 +124,8 @@ This error type is used in native function.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_create_account">create_account</a>(addr: <b>address</b>): u64 {
@@ -132,6 +137,8 @@ This error type is used in native function.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_create_table_account"></a>
 
@@ -146,7 +153,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_table_account">create_table_account</a>(addr: <b>address</b>): u64 {
@@ -158,6 +166,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_create_object_account"></a>
 
@@ -172,7 +182,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_object_account">create_object_account</a>(addr: <b>address</b>): u64 {
@@ -196,6 +207,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
+</details>
+
 <a id="0x1_account_exists_at"></a>
 
 ## Function `exists_at`
@@ -208,7 +221,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_exists_at">exists_at</a>(addr: <b>address</b>): bool {
@@ -218,6 +232,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_get_account_number"></a>
 
@@ -231,7 +247,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_get_account_number">get_account_number</a>(addr: <b>address</b>): u64 {
@@ -243,6 +260,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_get_sequence_number"></a>
 
@@ -256,7 +275,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_get_sequence_number">get_sequence_number</a>(addr: <b>address</b>): u64 {
@@ -268,6 +288,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_is_base_account"></a>
 
@@ -281,7 +303,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_base_account">is_base_account</a>(addr: <b>address</b>): bool {
@@ -293,6 +316,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_is_object_account"></a>
 
@@ -306,7 +331,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_object_account">is_object_account</a>(addr: <b>address</b>): bool {
@@ -318,6 +344,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_is_table_account"></a>
 
@@ -331,7 +359,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_table_account">is_table_account</a>(addr: <b>address</b>): bool {
@@ -343,6 +372,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_is_module_account"></a>
 
@@ -356,7 +387,8 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="account.md#0x1_account_is_module_account">is_module_account</a>(addr: <b>address</b>): bool {
@@ -369,6 +401,30 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
+</details>
+
+<a id="0x1_account_request_create_account"></a>
+
+## Function `request_create_account`
+
+
+
+<pre><code><b>fun</b> <a href="account.md#0x1_account_request_create_account">request_create_account</a>(addr: <b>address</b>, account_type: u8): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="account.md#0x1_account_request_create_account">request_create_account</a>(addr: <b>address</b>, account_type: u8): u64;
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_account_get_account_info"></a>
 
 ## Function `get_account_info`
@@ -380,13 +436,16 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b> <b>fun</b> <a href="account.md#0x1_account_get_account_info">get_account_info</a>(addr: <b>address</b>): (bool /* found */, u64 /* account_number */, u64 /* sequence_number */, u8 /* account_type */);
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_create_address"></a>
 
@@ -399,13 +458,16 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_address">create_address</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <b>address</b>;
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_account_create_signer"></a>
 
@@ -418,8 +480,13 @@ as both cannot have a pubkey, there is no way to use the account externally.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b>(<b>friend</b>) <b>fun</b> <a href="account.md#0x1_account_create_signer">create_signer</a>(addr: <b>address</b>): <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>;
 </code></pre>
+
+
+
+</details>

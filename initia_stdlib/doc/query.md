@@ -31,7 +31,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="query.md#0x1_query_get_proposal">get_proposal</a>(proposal_id: u64): (u64, String, String, String) {
@@ -62,6 +63,8 @@
 
 
 
+</details>
+
 <a id="0x1_query_get_proposal_status"></a>
 
 ## Function `get_proposal_status`
@@ -74,7 +77,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="query.md#0x1_query_get_proposal_status">get_proposal_status</a>(proposal_id: u64): (u64, String, String, bool) {
@@ -110,6 +114,8 @@
 
 
 
+</details>
+
 <a id="0x1_query_query_custom"></a>
 
 ## Function `query_custom`
@@ -122,13 +128,16 @@ query_custom examples are in initia_stdlib::address module
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b> <b>fun</b> <a href="query.md#0x1_query_query_custom">query_custom</a>(name: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;;
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_query_query_stargate"></a>
 
@@ -141,8 +150,13 @@ query_custom examples are in initia_stdlib::address module
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b> <b>fun</b> <a href="query.md#0x1_query_query_stargate">query_stargate</a>(path: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;;
 </code></pre>
+
+
+
+</details>

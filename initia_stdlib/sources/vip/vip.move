@@ -45,6 +45,8 @@ module initia_std::vip {
     const ESNAPSHOT_ALREADY_EXISTS: u64 = 16;
     const EINVALID_BATCH_ARGUMENT: u64 = 17;
     const EINVALID_TOTAL_REWARD: u64 = 18;
+    const ESNAPSHOT_NOT_EXISTS: u64 = 19;
+    const EALREADY_RELEASED: u64 = 20;
     
     //
     //  Constants
@@ -132,6 +134,11 @@ module initia_std::vip {
         operator_vesting_period: u64,
         minimum_tvl: u64,
         maximum_tvl: u64,
+    }
+
+    struct SnapshotResponse has drop {
+        merkle_root: vector<u8>,
+        total_l2_score: u64
     }
 
     struct StageDataResponse has drop {
@@ -758,6 +765,28 @@ module initia_std::vip {
         });
     }
 
+    public entry fun update_snapshot(
+        agent: &signer,
+        bridge_id: u64,
+        stage: u64,
+        merkle_root: vector<u8>,
+        total_l2_score: u64,
+    )  acquires ModuleStore {
+        check_agent_permission(agent);
+        let module_store = borrow_global_mut<ModuleStore>(@initia_std);
+        assert!(table::contains(&module_store.stage_data, table_key::encode_u64(stage)), error::not_found(ESTAGE_DATA_NOT_FOUND));
+        let stage_data = table::borrow_mut(&mut module_store.stage_data, table_key::encode_u64(stage));
+
+        let (_, block_time) = block::get_block_info();
+        assert!(block_time < stage_data.user_vesting_release_time, error::unavailable(EALREADY_RELEASED));
+        assert!(block_time < stage_data.operator_vesting_release_time, error::unavailable(EALREADY_RELEASED));
+        assert!(table::contains(&stage_data.snapshots, table_key::encode_u64(bridge_id)), error::not_found(ESNAPSHOT_NOT_EXISTS));
+
+        let snapshot = table::borrow_mut(&mut stage_data.snapshots, table_key::encode_u64(bridge_id));
+        snapshot.merkle_root = merkle_root;
+        snapshot.total_l2_score = total_l2_score;
+    }
+
     public entry fun claim_operator_reward_script(
         operator: &signer,
         bridge_id: u64,
@@ -973,6 +1002,21 @@ module initia_std::vip {
     //
     // View Functions
     //
+
+    #[view]
+    public fun get_snapshot(bridge_id: u64, stage: u64): SnapshotResponse acquires ModuleStore {
+        let module_store = borrow_global<ModuleStore>(@initia_std);
+
+        assert!(table::contains(&module_store.stage_data, table_key::encode_u64(stage)), error::not_found(ESTAGE_DATA_NOT_FOUND));
+        let snapshots = table::borrow(&module_store.stage_data, table_key::encode_u64(stage));
+        assert!(table::contains(&snapshots.snapshots, table_key::encode_u64(bridge_id)), error::not_found(ESNAPSHOT_NOT_EXISTS));
+        let snapshot = table::borrow(&snapshots.snapshots, table_key::encode_u64(bridge_id));
+
+        SnapshotResponse {
+            merkle_root: snapshot.merkle_root,
+            total_l2_score: snapshot.total_l2_score,
+        }
+    }
     
     #[view]
     public fun get_expected_reward(bridge_id: u64, fund_reward_amount: u64): u64 acquires ModuleStore {
@@ -1062,6 +1106,65 @@ module initia_std::vip {
             maximum_tvl: module_store.maximum_tvl,
         }
     }
+
+    #[view]
+    public fun batch_simulate_user_claim_reward(
+        initial_reward: vector<u64>,
+        minimum_score: vector<u64>,
+        vesting_period: vector<u64>,
+        l2_scores: vector<vector<u64>>
+    ): (vector<u64>, vector<u64>) {
+        let batch_length = vector::length(&initial_reward);
+        assert!(vector::length(&minimum_score) == batch_length, error::invalid_argument(EINVALID_BATCH_ARGUMENT));
+        assert!(vector::length(&vesting_period) == batch_length, error::invalid_argument(EINVALID_BATCH_ARGUMENT));
+        assert!(vector::length(&l2_scores) == batch_length, error::invalid_argument(EINVALID_BATCH_ARGUMENT));
+        assert!(batch_length > 0, error::invalid_argument(EINVALID_BATCH_ARGUMENT));
+
+        let claimable_list = vector::empty<u64>();
+        let remaining_list = vector::empty<u64>();
+        vector::enumerate_ref(&initial_reward, |i, reward| {
+            let (claimed_reward, remaining_reward) = simulate_user_claim_reward(
+                *reward,
+                *vector::borrow(&minimum_score, i),
+                *vector::borrow(&vesting_period, i),
+                *vector::borrow(&l2_scores, i),
+            );
+            vector::push_back(&mut claimable_list, claimed_reward);
+            vector::push_back(&mut remaining_list, remaining_reward);
+        });
+
+        (claimable_list, remaining_list)
+    }
+
+    #[view]
+    public fun simulate_user_claim_reward(
+        initial_reward: u64,
+        minimum_score: u64,
+        vesting_period: u64,
+        l2_scores: vector<u64>
+    ): (u64, u64) {
+        let total_claimed_reward = 0;
+        let remaining_reward = initial_reward;
+        vector::enumerate_ref(&l2_scores, |_i, l2_score| {
+            let score_ratio = if (*l2_score >= minimum_score) {
+                decimal256::one()
+            } else {
+                decimal256::from_ratio_u64(*l2_score, minimum_score)
+            }; 
+
+            let max_ratio = decimal256::div_u64(&decimal256::one(), vesting_period);
+            let vest_ratio = decimal256::mul(&max_ratio, &score_ratio);
+            let vest_amount = decimal256::mul_u64(&vest_ratio, initial_reward);
+
+            if (vest_amount > remaining_reward) {
+                vest_amount = remaining_reward;
+            };
+            remaining_reward = remaining_reward - vest_amount;
+            total_claimed_reward = total_claimed_reward + vest_amount;
+        });
+        (total_claimed_reward, remaining_reward)
+    }
+
     
     //
     // Test Functions
@@ -1449,6 +1552,7 @@ module initia_std::vip {
         );
         
         let total_reward_per_stage = 100_000_000_000;
+        assert!(vip_vault::reward_per_stage() == total_reward_per_stage, 0);
         let portion = 10;
         let reward_per_stage = total_reward_per_stage/portion;
         let vesting_period = 10;
@@ -1889,6 +1993,35 @@ module initia_std::vip {
             + reward_per_stage/vesting_period + reward_per_stage/vesting_period // stage 3
             + reward_per_stage/vesting_period // stage 4
         ), 6);
+        
+
+        let proportion = decimal256::from_string(&string::utf8(DEFAULT_PROPORTION_RATIO_FOR_TEST));
+        let (claimable_list, _) = batch_simulate_user_claim_reward(
+            vector[reward_per_stage, reward_per_stage],
+            vector[
+                decimal256::mul_u64(&proportion, *simple_map::borrow(&score_map, &1)),
+                decimal256::mul_u64(&proportion, *simple_map::borrow(&score_map, &2)),
+            ],
+            vector[vesting_period, vesting_period],
+            vector[
+                vector[
+                    *simple_map::borrow(&score_map, &2),
+                    *simple_map::borrow(&score_map, &3),
+                    *simple_map::borrow(&score_map, &4),
+                    *simple_map::borrow(&score_map, &5)
+                ],
+                vector[
+                    *simple_map::borrow(&score_map, &3),
+                    *simple_map::borrow(&score_map, &4),
+                    *simple_map::borrow(&score_map, &5)
+                ],
+            ]
+        );
+
+        let claimable_v1 = *vector::borrow(&claimable_list, 0);
+        let claimable_v2 = *vector::borrow(&claimable_list, 1);
+        assert!(claimable_v1 == (reward_per_stage/vesting_period + reward_per_stage/(vesting_period*2) + reward_per_stage/(vesting_period*2) + reward_per_stage/vesting_period), 0);
+        assert!(claimable_v2 == (reward_per_stage/(vesting_period*2) + reward_per_stage/(vesting_period*2) + reward_per_stage/vesting_period), 0);
 
         let user_reward_store_addr = vip_vesting::get_user_reward_store_address(bridge_id);
         let operator_reward_store_addr = vip_vesting::get_operator_reward_store_address(bridge_id);
@@ -1991,7 +2124,54 @@ module initia_std::vip {
         assert!(vip_vesting::get_operator_unlocked_reward(signer::address_of(operator), bridge_id, 5) == (
             decimal256::mul_u64(&commission_rate, total_reward_per_stage/operator_vesting_period)
         ), 0);
+
+        let user_claimed_stages = vip_vesting::get_user_claimed_stages(signer::address_of(receiver), bridge_id);
+        let operator_claimed_stages = vip_vesting::get_operator_claimed_stages(signer::address_of(operator), bridge_id);
+        
+        assert!(user_claimed_stages == vector[1, 2, 3, 4, 5], 0);
+        assert!(operator_claimed_stages == vector[4, 5], 0);
     }
+
+    #[test(chain=@0x1, operator=@0x111)]
+    fun test_update_snapshot(chain: &signer, operator: &signer) 
+        acquires ModuleStore {
+        let bridge_id = test_setup(
+            chain,
+            operator,
+            1,
+            @0x1111,
+            10000000000000000,
+        );
+        let release_time = 1000;
+        fund_reward_script(chain, 1, release_time, release_time);
+        submit_snapshot(chain, bridge_id, 1, x"8888888888888888888888888888888888888888888888888888888888888888", 0);
+        let snapshot = get_snapshot(bridge_id, 1);
+        assert!(snapshot.merkle_root == x"8888888888888888888888888888888888888888888888888888888888888888", 0);
+        assert!(snapshot.total_l2_score == 0, 0);
+
+        update_snapshot(chain, bridge_id, 1, x"7777777777777777777777777777777777777777777777777777777777777777", 100);
+        let snapshot = get_snapshot(bridge_id, 1);
+        assert!(snapshot.merkle_root == x"7777777777777777777777777777777777777777777777777777777777777777", 100);
+        assert!(snapshot.total_l2_score == 100, 0);
+    }
+
+    #[test(chain=@0x1, operator=@0x111)]
+    #[expected_failure(abort_code = 0xD0014, location = Self)]
+    fun failed_update_snapshot(chain: &signer, operator: &signer) 
+        acquires ModuleStore {
+        let bridge_id = test_setup(
+            chain,
+            operator,
+            1,
+            @0x1111,
+            10000000000000000,
+        );
+        let release_time = 0;
+        fund_reward_script(chain, 1, release_time, release_time);
+        submit_snapshot(chain, bridge_id, 1, x"8888888888888888888888888888888888888888888888888888888888888888", 0);
+        update_snapshot(chain, bridge_id, 1, x"7777777777777777777777777777777777777777777777777777777777777777", 100);
+    }
+
 
     #[test(chain=@0x1, operator=@0x111, operator2=@0x222)]
     fun test_get_next_stage(chain: &signer, operator: &signer, operator2: &signer) 

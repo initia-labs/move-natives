@@ -31,7 +31,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -43,6 +44,8 @@ Provides a framework for comparing two elements
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -87,7 +90,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="comparator.md#0x1_comparator_is_equal">is_equal</a>(result: &<a href="comparator.md#0x1_comparator_Result">Result</a>): bool {
@@ -96,6 +100,8 @@ Provides a framework for comparing two elements
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_comparator_is_smaller_than"></a>
 
@@ -108,7 +114,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="comparator.md#0x1_comparator_is_smaller_than">is_smaller_than</a>(result: &<a href="comparator.md#0x1_comparator_Result">Result</a>): bool {
@@ -117,6 +124,8 @@ Provides a framework for comparing two elements
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_comparator_is_greater_than"></a>
 
@@ -129,7 +138,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="comparator.md#0x1_comparator_is_greater_than">is_greater_than</a>(result: &<a href="comparator.md#0x1_comparator_Result">Result</a>): bool {
@@ -138,6 +148,8 @@ Provides a framework for comparing two elements
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_comparator_compare"></a>
 
@@ -150,7 +162,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="comparator.md#0x1_comparator_compare">compare</a>&lt;T&gt;(left: &T, right: &T): <a href="comparator.md#0x1_comparator_Result">Result</a> {
@@ -163,6 +176,8 @@ Provides a framework for comparing two elements
 
 
 
+</details>
+
 <a id="0x1_comparator_compare_u8_vector"></a>
 
 ## Function `compare_u8_vector`
@@ -174,7 +189,8 @@ Provides a framework for comparing two elements
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="comparator.md#0x1_comparator_compare_u8_vector">compare_u8_vector</a>(left: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, right: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="comparator.md#0x1_comparator_Result">Result</a> {
@@ -204,3 +220,7 @@ Provides a framework for comparing two elements
     }
 }
 </code></pre>
+
+
+
+</details>

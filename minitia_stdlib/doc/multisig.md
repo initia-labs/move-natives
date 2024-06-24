@@ -24,6 +24,13 @@
 -  [Function `vote_proposal`](#0x1_multisig_vote_proposal)
 -  [Function `execute_proposal`](#0x1_multisig_execute_proposal)
 -  [Function `update_config`](#0x1_multisig_update_config)
+-  [Function `is_proposal_expired`](#0x1_multisig_is_proposal_expired)
+-  [Function `vote`](#0x1_multisig_vote)
+-  [Function `yes_vote_count`](#0x1_multisig_yes_vote_count)
+-  [Function `proposal_to_proposal_response`](#0x1_multisig_proposal_to_proposal_response)
+-  [Function `assert_member`](#0x1_multisig_assert_member)
+-  [Function `assert_config_version`](#0x1_multisig_assert_config_version)
+-  [Function `assert_proposal`](#0x1_multisig_assert_proposal)
 
 
 <pre><code><b>use</b> <a href="block.md#0x1_block">0x1::block</a>;
@@ -55,7 +62,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -74,6 +82,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_MultisigWallet"></a>
 
 ## Resource `MultisigWallet`
@@ -85,7 +95,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -128,6 +139,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_Proposal"></a>
 
 ## Struct `Proposal`
@@ -139,7 +152,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -206,6 +220,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_CreateMultisigAccountEvent"></a>
 
 ## Struct `CreateMultisigAccountEvent`
@@ -218,7 +234,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -249,6 +266,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_CreateProposalEvent"></a>
 
 ## Struct `CreateProposalEvent`
@@ -261,7 +280,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -316,6 +336,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_VoteProposalEvent"></a>
 
 ## Struct `VoteProposalEvent`
@@ -328,7 +350,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -359,6 +382,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_ExecuteProposalEvent"></a>
 
 ## Struct `ExecuteProposalEvent`
@@ -371,7 +396,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -396,6 +422,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_UpdateConfigEvent"></a>
 
 ## Struct `UpdateConfigEvent`
@@ -408,7 +436,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -439,6 +468,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_ProposalResponse"></a>
 
 ## Struct `ProposalResponse`
@@ -450,7 +481,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -529,6 +561,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dl>
 
 
+</details>
+
 <a id="0x1_multisig_ConfigResponse"></a>
 
 ## Struct `ConfigResponse`
@@ -540,7 +574,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -576,6 +611,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -693,7 +730,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="multisig.md#0x1_multisig_get_proposal">get_proposal</a>(multisig_addr: <b>address</b>, proposal_id: u64): <a href="multisig.md#0x1_multisig_ProposalResponse">ProposalResponse</a> <b>acquires</b> <a href="multisig.md#0x1_multisig_MultisigWallet">MultisigWallet</a> {
@@ -704,6 +742,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_multisig_get_proposals"></a>
 
@@ -717,7 +757,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="multisig.md#0x1_multisig_get_proposals">get_proposals</a>(multisig_addr: <b>address</b>, start_after: Option&lt;u64&gt;, limit: u8): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="multisig.md#0x1_multisig_ProposalResponse">ProposalResponse</a>&gt; <b>acquires</b> <a href="multisig.md#0x1_multisig_MultisigWallet">MultisigWallet</a> {
@@ -737,6 +778,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
+</details>
+
 <a id="0x1_multisig_get_config"></a>
 
 ## Function `get_config`
@@ -749,7 +792,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="multisig.md#0x1_multisig_get_config">get_config</a>(multisig_addr: <b>address</b>): <a href="multisig.md#0x1_multisig_ConfigResponse">ConfigResponse</a> <b>acquires</b> <a href="multisig.md#0x1_multisig_MultisigWallet">MultisigWallet</a> {
@@ -767,6 +811,8 @@ If both <code>height</code> and <code>timestamp</code> are set, and only one of 
 
 
 
+</details>
+
 <a id="0x1_multisig_create_multisig_account"></a>
 
 ## Function `create_multisig_account`
@@ -779,7 +825,8 @@ Create new multisig account
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="multisig.md#0x1_multisig_create_multisig_account">create_multisig_account</a>(
@@ -825,6 +872,8 @@ Create new multisig account
 
 
 
+</details>
+
 <a id="0x1_multisig_create_proposal"></a>
 
 ## Function `create_proposal`
@@ -837,7 +886,8 @@ Create new proposal
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="multisig.md#0x1_multisig_create_proposal">create_proposal</a>(
@@ -889,6 +939,8 @@ Create new proposal
 
 
 
+</details>
+
 <a id="0x1_multisig_vote_proposal"></a>
 
 ## Function `vote_proposal`
@@ -901,7 +953,8 @@ Vote proposal
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="multisig.md#0x1_multisig_vote_proposal">vote_proposal</a>(
@@ -935,6 +988,8 @@ Vote proposal
 
 
 
+</details>
+
 <a id="0x1_multisig_execute_proposal"></a>
 
 ## Function `execute_proposal`
@@ -947,7 +1002,8 @@ Execute proposal
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="multisig.md#0x1_multisig_execute_proposal">execute_proposal</a>(
@@ -995,6 +1051,8 @@ Execute proposal
 
 
 
+</details>
+
 <a id="0x1_multisig_update_config"></a>
 
 ## Function `update_config`
@@ -1007,7 +1065,8 @@ Update config. Only execute by multisig wallet itself
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="multisig.md#0x1_multisig_update_config">update_config</a>(
@@ -1043,3 +1102,235 @@ Update config. Only execute by multisig wallet itself
     )
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_is_proposal_expired"></a>
+
+## Function `is_proposal_expired`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_is_proposal_expired">is_proposal_expired</a>(max_period: &<a href="multisig.md#0x1_multisig_Period">multisig::Period</a>, proposal_height: u64, proposal_timestamp: u64): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_is_proposal_expired">is_proposal_expired</a>(max_period: &<a href="multisig.md#0x1_multisig_Period">Period</a>, proposal_height: u64, proposal_timestamp: u64): bool {
+    <b>let</b> (height, timestamp) = get_block_info();
+    <b>let</b> expired_height = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&max_period.height)) {
+        <b>let</b> max_voting_period_height = *<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_borrow">option::borrow</a>(&max_period.height);
+        (max_voting_period_height + proposal_height) &gt;= height
+    } <b>else</b> {
+        <b>false</b>
+    };
+
+    <b>let</b> expired_timestamp = <b>if</b> (<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_is_some">option::is_some</a>(&max_period.timestamp)) {
+        <b>let</b> max_voting_period_timestamp = *<a href="../../move_nursery/../move_stdlib/doc/option.md#0x1_option_borrow">option::borrow</a>(&max_period.timestamp);
+        (max_voting_period_timestamp + proposal_timestamp) &gt;= timestamp
+    } <b>else</b> {
+        <b>false</b>
+    };
+
+    expired_height || expired_timestamp
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_vote"></a>
+
+## Function `vote`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_vote">vote</a>(votes: &<b>mut</b> <a href="simple_map.md#0x1_simple_map_SimpleMap">simple_map::SimpleMap</a>&lt;<b>address</b>, bool&gt;, voter: <b>address</b>, vote_yes: bool)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_vote">vote</a>(votes: &<b>mut</b> SimpleMap&lt;<b>address</b>, bool&gt;, voter: <b>address</b>, vote_yes: bool) {
+    <b>if</b> (<a href="simple_map.md#0x1_simple_map_contains_key">simple_map::contains_key</a>(votes, &voter)) {
+        <b>let</b> vote = <a href="simple_map.md#0x1_simple_map_borrow_mut">simple_map::borrow_mut</a>(votes, &voter);
+        *vote = vote_yes;
+    } <b>else</b> {
+        <a href="simple_map.md#0x1_simple_map_add">simple_map::add</a>(votes, voter, vote_yes);
+    };
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_yes_vote_count"></a>
+
+## Function `yes_vote_count`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_yes_vote_count">yes_vote_count</a>(votes: &<a href="simple_map.md#0x1_simple_map_SimpleMap">simple_map::SimpleMap</a>&lt;<b>address</b>, bool&gt;, members: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;): u64
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_yes_vote_count">yes_vote_count</a>(votes: &SimpleMap&lt;<b>address</b>, bool&gt;, members: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;): u64 {
+    <b>let</b> yes_count = 0;
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_for_each_ref">vector::for_each_ref</a>(members, |member| {
+        <b>if</b> (<a href="simple_map.md#0x1_simple_map_contains_key">simple_map::contains_key</a>(votes, member) && *<a href="simple_map.md#0x1_simple_map_borrow">simple_map::borrow</a>(votes, member)) {
+            yes_count = yes_count + 1;
+        }
+    });
+
+    yes_count
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_proposal_to_proposal_response"></a>
+
+## Function `proposal_to_proposal_response`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_proposal_to_proposal_response">proposal_to_proposal_response</a>(multisig_wallet: &<a href="multisig.md#0x1_multisig_MultisigWallet">multisig::MultisigWallet</a>, multisig_addr: <b>address</b>, proposal_id: u64, proposal: &<a href="multisig.md#0x1_multisig_Proposal">multisig::Proposal</a>): <a href="multisig.md#0x1_multisig_ProposalResponse">multisig::ProposalResponse</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_proposal_to_proposal_response">proposal_to_proposal_response</a>(
+    multisig_wallet: &<a href="multisig.md#0x1_multisig_MultisigWallet">MultisigWallet</a>,
+    multisig_addr: <b>address</b>,
+    proposal_id: u64,
+    proposal: &<a href="multisig.md#0x1_multisig_Proposal">Proposal</a>,
+): <a href="multisig.md#0x1_multisig_ProposalResponse">ProposalResponse</a> {
+    <b>let</b> status_index = proposal.status;
+    <b>let</b> is_expired = <a href="multisig.md#0x1_multisig_is_proposal_expired">is_proposal_expired</a>(&multisig_wallet.max_voting_period, proposal.proposal_height, proposal.proposal_timestamp);
+    <b>let</b> yes_vote_count = <a href="multisig.md#0x1_multisig_yes_vote_count">yes_vote_count</a>(&proposal.votes, &multisig_wallet.members);
+    <b>if</b> (status_index == 0 && is_expired) {
+        status_index = 2
+    };
+
+    <a href="multisig.md#0x1_multisig_ProposalResponse">ProposalResponse</a> {
+        multisig_addr,
+        proposal_id,
+        module_address: proposal.module_address,
+        module_name: proposal.module_name,
+        function_name: proposal.function_name,
+        type_args: proposal.type_args,
+        args: proposal.args,
+        proposal_height: proposal.proposal_height,
+        proposal_timestamp: proposal.proposal_timestamp,
+        config_version: proposal.config_version,
+        yes_vote_count,
+        status: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_utf8">string::utf8</a>(*<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_borrow">vector::borrow</a>(&<a href="multisig.md#0x1_multisig_STATUS">STATUS</a>, (status_index <b>as</b> u64))),
+    }
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_assert_member"></a>
+
+## Function `assert_member`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_assert_member">assert_member</a>(members: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;, member: &<b>address</b>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="multisig.md#0x1_multisig_assert_member">assert_member</a>(members: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<b>address</b>&gt;, member: &<b>address</b>) {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_contains">vector::contains</a>(members, member), <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="multisig.md#0x1_multisig_ENOT_MEMBER">ENOT_MEMBER</a>))
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_assert_config_version"></a>
+
+## Function `assert_config_version`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_assert_config_version">assert_config_version</a>(multisig_wallet_config_version: u64, execute_proposal: &<a href="multisig.md#0x1_multisig_Proposal">multisig::Proposal</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="multisig.md#0x1_multisig_assert_config_version">assert_config_version</a>(multisig_wallet_config_version: u64, execute_proposal: &<a href="multisig.md#0x1_multisig_Proposal">Proposal</a>) {
+    <b>assert</b>!(multisig_wallet_config_version == execute_proposal.config_version, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_state">error::invalid_state</a>(<a href="multisig.md#0x1_multisig_EOLD_CONFIG_VERSION">EOLD_CONFIG_VERSION</a>))
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_multisig_assert_proposal"></a>
+
+## Function `assert_proposal`
+
+
+
+<pre><code><b>fun</b> <a href="multisig.md#0x1_multisig_assert_proposal">assert_proposal</a>(max_voting_period: &<a href="multisig.md#0x1_multisig_Period">multisig::Period</a>, proposal: &<a href="multisig.md#0x1_multisig_Proposal">multisig::Proposal</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="multisig.md#0x1_multisig_assert_proposal">assert_proposal</a>(max_voting_period: &<a href="multisig.md#0x1_multisig_Period">Period</a>, proposal: &<a href="multisig.md#0x1_multisig_Proposal">Proposal</a>) {
+    <b>assert</b>!(proposal.status == 0, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_state">error::invalid_state</a>(<a href="multisig.md#0x1_multisig_EINVALID_PROPOSAL_STATUS">EINVALID_PROPOSAL_STATUS</a>));
+    <b>assert</b>!(
+        !<a href="multisig.md#0x1_multisig_is_proposal_expired">is_proposal_expired</a>(
+            max_voting_period,
+            proposal.proposal_height,
+            proposal.proposal_timestamp,
+        ),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_state">error::invalid_state</a>(<a href="multisig.md#0x1_multisig_EPROPOSAL_EXPIRED">EPROPOSAL_EXPIRED</a>),
+    );
+}
+</code></pre>
+
+
+
+</details>

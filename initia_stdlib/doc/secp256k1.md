@@ -15,6 +15,8 @@ This module implements ECDSA signatures based on the prime-order secp256k1 ellpt
 -  [Function `signature_to_bytes`](#0x1_secp256k1_signature_to_bytes)
 -  [Function `verify`](#0x1_secp256k1_verify)
 -  [Function `recover_public_key`](#0x1_secp256k1_recover_public_key)
+-  [Function `verify_internal`](#0x1_secp256k1_verify_internal)
+-  [Function `recover_public_key_internal`](#0x1_secp256k1_recover_public_key_internal)
 
 
 <pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
@@ -36,7 +38,8 @@ It can be raw or compressed public key.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -48,6 +51,8 @@ It can be raw or compressed public key.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_secp256k1_Signature"></a>
 
@@ -61,7 +66,8 @@ A secp256k1-based ECDSA signature.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -73,6 +79,8 @@ A secp256k1-based ECDSA signature.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -151,7 +159,8 @@ Constructs an PublicKey struct, given 33-byte representation.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_from_bytes">public_key_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a> {
@@ -165,6 +174,8 @@ Constructs an PublicKey struct, given 33-byte representation.
 
 
 
+</details>
+
 <a id="0x1_secp256k1_signature_from_bytes"></a>
 
 ## Function `signature_from_bytes`
@@ -177,7 +188,8 @@ Constructs an Signature struct from the given 64 bytes.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_from_bytes">signature_from_bytes</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a> {
@@ -187,6 +199,8 @@ Constructs an Signature struct from the given 64 bytes.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_secp256k1_public_key_to_bytes"></a>
 
@@ -200,7 +214,8 @@ Serializes an PublicKey struct to bytes.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_public_key_to_bytes">public_key_to_bytes</a>(pk: &<a href="secp256k1.md#0x1_secp256k1_PublicKey">PublicKey</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
@@ -209,6 +224,8 @@ Serializes an PublicKey struct to bytes.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_secp256k1_signature_to_bytes"></a>
 
@@ -222,7 +239,8 @@ Serializes an Signature struct to bytes.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_signature_to_bytes">signature_to_bytes</a>(sig: &<a href="secp256k1.md#0x1_secp256k1_Signature">Signature</a>): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
@@ -231,6 +249,8 @@ Serializes an Signature struct to bytes.
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_secp256k1_verify"></a>
 
@@ -244,7 +264,8 @@ Returns <code><b>true</b></code> only the signature can verify the public key on
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify">verify</a>(
@@ -263,6 +284,8 @@ Returns <code><b>true</b></code> only the signature can verify the public key on
 
 
 
+</details>
+
 <a id="0x1_secp256k1_recover_public_key"></a>
 
 ## Function `recover_public_key`
@@ -280,7 +303,8 @@ public key (or its hash) is known beforehand.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key">recover_public_key</a>(
@@ -301,3 +325,63 @@ public key (or its hash) is known beforehand.
     }
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_secp256k1_verify_internal"></a>
+
+## Function `verify_internal`
+
+Returns <code><b>true</b></code> if <code>signature</code> verifies on <code>public_key</code> and <code>message</code>
+and returns <code><b>false</b></code> otherwise.
+
+
+<pre><code><b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify_internal">verify_internal</a>(message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, public_key: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, signature: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): bool
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_verify_internal">verify_internal</a>(
+    message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    public_key: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    signature: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+): bool;
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_secp256k1_recover_public_key_internal"></a>
+
+## Function `recover_public_key_internal`
+
+Returns <code>(public_key, <b>true</b>)</code> if <code>signature</code> verifies on <code>message</code> under the recovered <code>public_key</code>
+and returns <code>([], <b>false</b>)</code> otherwise.
+
+
+<pre><code><b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key_internal">recover_public_key_internal</a>(recovery_id: u8, message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, signature: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): (<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, bool)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="secp256k1.md#0x1_secp256k1_recover_public_key_internal">recover_public_key_internal</a>(
+    recovery_id: u8,
+    message: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    signature: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+): (<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, bool);
+</code></pre>
+
+
+
+</details>

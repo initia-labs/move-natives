@@ -39,7 +39,8 @@ The resource is stored on the account that initialized coin <code>CoinType</code
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -63,6 +64,8 @@ The resource is stored on the account that initialized coin <code>CoinType</code
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -102,7 +105,8 @@ Mint and Burn Capabilities will be stored under <code>metadata</code> in <code><
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="managed_coin.md#0x1_managed_coin_initialize">initialize</a>(
@@ -135,6 +139,8 @@ Mint and Burn Capabilities will be stored under <code>metadata</code> in <code><
 
 
 
+</details>
+
 <a id="0x1_managed_coin_burn"></a>
 
 ## Function `burn`
@@ -147,7 +153,8 @@ Withdraw an <code>amount</code> of metadata coin from <code><a href="account.md#
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="managed_coin.md#0x1_managed_coin_burn">burn</a>(
@@ -177,6 +184,8 @@ Withdraw an <code>amount</code> of metadata coin from <code><a href="account.md#
 
 
 
+</details>
+
 <a id="0x1_managed_coin_mint"></a>
 
 ## Function `mint`
@@ -189,7 +198,8 @@ Create new metadata coins and deposit them into dst_addr's account.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="managed_coin.md#0x1_managed_coin_mint">mint</a>(
@@ -215,3 +225,7 @@ Create new metadata coins and deposit them into dst_addr's account.
     <a href="coin.md#0x1_coin_mint_to">coin::mint_to</a>(&capabilities.mint_cap, dst_addr, amount);
 }
 </code></pre>
+
+
+
+</details>

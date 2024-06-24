@@ -27,7 +27,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="base64.md#0x1_base64_to_string">to_string</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): String {
@@ -36,6 +37,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_base64_from_string"></a>
 
@@ -48,7 +51,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="base64.md#0x1_base64_from_string">from_string</a>(str: String): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
@@ -57,6 +61,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_base64_encode"></a>
 
@@ -69,13 +75,16 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>native</b> <b>fun</b> <a href="base64.md#0x1_base64_encode">encode</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;;
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_base64_decode"></a>
 
@@ -88,8 +97,13 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>native</b> <b>fun</b> <a href="base64.md#0x1_base64_decode">decode</a>(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;;
 </code></pre>
+
+
+
+</details>

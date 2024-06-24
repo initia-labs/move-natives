@@ -31,7 +31,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="address.md#0x1_address_from_sdk">from_sdk</a>(sdk_addr: String): <b>address</b> {
@@ -54,6 +55,8 @@
 
 
 
+</details>
+
 <a id="0x1_address_to_sdk"></a>
 
 ## Function `to_sdk`
@@ -65,7 +68,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="address.md#0x1_address_to_sdk">to_sdk</a>(vm_addr: <b>address</b>): String {
@@ -88,6 +92,8 @@
 
 
 
+</details>
+
 <a id="0x1_address_to_string"></a>
 
 ## Function `to_string`
@@ -99,13 +105,16 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>native</b> <b>fun</b> <a href="address.md#0x1_address_to_string">to_string</a>(addr: <b>address</b>): String;
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_address_from_string"></a>
 
@@ -118,8 +127,13 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>native</b> <b>fun</b> <a href="address.md#0x1_address_from_string">from_string</a>(addr_str: String): <b>address</b>;
 </code></pre>
+
+
+
+</details>

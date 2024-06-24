@@ -9,8 +9,13 @@
 -  [Struct `OperatorStoreResponse`](#0x1_vip_operator_OperatorStoreResponse)
 -  [Struct `UpdateCommissionEvent`](#0x1_vip_operator_UpdateCommissionEvent)
 -  [Constants](#@Constants_0)
+-  [Function `check_chain_permission`](#0x1_vip_operator_check_chain_permission)
+-  [Function `check_valid_rate`](#0x1_vip_operator_check_valid_rate)
+-  [Function `is_valid_commission_rates`](#0x1_vip_operator_is_valid_commission_rates)
 -  [Function `register_operator_store`](#0x1_vip_operator_register_operator_store)
 -  [Function `update_operator_commission`](#0x1_vip_operator_update_operator_commission)
+-  [Function `generate_operator_store_seed`](#0x1_vip_operator_generate_operator_store_seed)
+-  [Function `create_operator_store_address`](#0x1_vip_operator_create_operator_store_address)
 -  [Function `is_operator_store_registered`](#0x1_vip_operator_is_operator_store_registered)
 -  [Function `get_operator_store_address`](#0x1_vip_operator_get_operator_store_address)
 -  [Function `get_operator_store`](#0x1_vip_operator_get_operator_store)
@@ -39,7 +44,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -69,6 +75,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_vip_operator_OperatorStoreResponse"></a>
 
@@ -81,7 +89,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -111,6 +120,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_vip_operator_UpdateCommissionEvent"></a>
 
@@ -124,7 +135,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -154,6 +166,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -232,6 +246,91 @@
 
 
 
+<a id="0x1_vip_operator_check_chain_permission"></a>
+
+## Function `check_chain_permission`
+
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @initia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="operator.md#0x1_vip_operator_EUNAUTHORIZED">EUNAUTHORIZED</a>));
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_operator_check_valid_rate"></a>
+
+## Function `check_valid_rate`
+
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_check_valid_rate">check_valid_rate</a>(rate: &<a href="decimal256.md#0x1_decimal256_Decimal256">decimal256::Decimal256</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_check_valid_rate">check_valid_rate</a>(rate: &Decimal256) {
+    <b>assert</b>!(
+        <a href="decimal256.md#0x1_decimal256_val">decimal256::val</a>(rate) &lt;= <a href="decimal256.md#0x1_decimal256_val">decimal256::val</a>(&<a href="decimal256.md#0x1_decimal256_one">decimal256::one</a>()),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="operator.md#0x1_vip_operator_EINVALID_COMMISSION_RATE">EINVALID_COMMISSION_RATE</a>)
+    );
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_operator_is_valid_commission_rates"></a>
+
+## Function `is_valid_commission_rates`
+
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_is_valid_commission_rates">is_valid_commission_rates</a>(commission_max_rate: &<a href="decimal256.md#0x1_decimal256_Decimal256">decimal256::Decimal256</a>, commission_max_change_rate: &<a href="decimal256.md#0x1_decimal256_Decimal256">decimal256::Decimal256</a>, commission_rate: &<a href="decimal256.md#0x1_decimal256_Decimal256">decimal256::Decimal256</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_is_valid_commission_rates">is_valid_commission_rates</a>(
+    commission_max_rate: &Decimal256,
+    commission_max_change_rate: &Decimal256,
+    commission_rate: &Decimal256
+) {
+    <a href="operator.md#0x1_vip_operator_check_valid_rate">check_valid_rate</a>(commission_max_rate);
+    <a href="operator.md#0x1_vip_operator_check_valid_rate">check_valid_rate</a>(commission_max_change_rate);
+    <a href="operator.md#0x1_vip_operator_check_valid_rate">check_valid_rate</a>(commission_rate);
+    <b>assert</b>!(
+        <a href="decimal256.md#0x1_decimal256_val">decimal256::val</a>(commission_rate) &lt;= <a href="decimal256.md#0x1_decimal256_val">decimal256::val</a>(commission_max_rate),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_invalid_argument">error::invalid_argument</a>(<a href="operator.md#0x1_vip_operator_EOVER_MAX_COMMISSION_RATE">EOVER_MAX_COMMISSION_RATE</a>)
+    );
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_vip_operator_register_operator_store"></a>
 
 ## Function `register_operator_store`
@@ -243,7 +342,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="operator.md#0x1_vip_operator_register_operator_store">register_operator_store</a>(
@@ -279,6 +379,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_operator_update_operator_commission"></a>
 
 ## Function `update_operator_commission`
@@ -290,7 +392,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="operator.md#0x1_vip_operator_update_operator_commission">update_operator_commission</a>(
@@ -337,6 +440,60 @@
 
 
 
+</details>
+
+<a id="0x1_vip_operator_generate_operator_store_seed"></a>
+
+## Function `generate_operator_store_seed`
+
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_generate_operator_store_seed">generate_operator_store_seed</a>(operator: <b>address</b>, bridge_id: u64): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_generate_operator_store_seed">generate_operator_store_seed</a>(operator:<b>address</b>, bridge_id: u64) : <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
+    <b>let</b> seed = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[<a href="operator.md#0x1_vip_operator_OPERATOR_STORE_PREFIX">OPERATOR_STORE_PREFIX</a>];
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_append">vector::append</a>(&<b>mut</b> seed, <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>(&operator));
+    <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_append">vector::append</a>(&<b>mut</b> seed, <a href="../../move_nursery/../move_stdlib/doc/bcs.md#0x1_bcs_to_bytes">bcs::to_bytes</a>(&bridge_id));
+    <b>return</b> seed
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_operator_create_operator_store_address"></a>
+
+## Function `create_operator_store_address`
+
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_create_operator_store_address">create_operator_store_address</a>(operator_addr: <b>address</b>, bridge_id: u64): <b>address</b>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="operator.md#0x1_vip_operator_create_operator_store_address">create_operator_store_address</a>(operator_addr: <b>address</b>, bridge_id: u64): <b>address</b> {
+    <b>let</b> seed = <a href="operator.md#0x1_vip_operator_generate_operator_store_seed">generate_operator_store_seed</a>(operator_addr, bridge_id);
+    <a href="object.md#0x1_object_create_object_address">object::create_object_address</a>(@initia_std, seed)
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_vip_operator_is_operator_store_registered"></a>
 
 ## Function `is_operator_store_registered`
@@ -349,7 +506,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="operator.md#0x1_vip_operator_is_operator_store_registered">is_operator_store_registered</a>(operator_addr: <b>address</b>, bridge_id: u64): bool {
@@ -358,6 +516,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_operator_get_operator_store_address"></a>
 
@@ -371,7 +531,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="operator.md#0x1_vip_operator_get_operator_store_address">get_operator_store_address</a>(operator_addr: <b>address</b>, bridge_id: u64): <b>address</b> {
@@ -382,6 +543,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_operator_get_operator_store"></a>
 
@@ -395,7 +558,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="operator.md#0x1_vip_operator_get_operator_store">get_operator_store</a>(
@@ -415,6 +579,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_operator_get_operator_commission"></a>
 
 ## Function `get_operator_commission`
@@ -427,7 +593,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="operator.md#0x1_vip_operator_get_operator_commission">get_operator_commission</a>(
@@ -439,3 +606,7 @@
     operator_store.commission_rate
 }
 </code></pre>
+
+
+
+</details>

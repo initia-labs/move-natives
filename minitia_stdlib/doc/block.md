@@ -23,8 +23,13 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>native</b> <b>public</b> <b>fun</b> <a href="block.md#0x1_block_get_block_info">get_block_info</a>(): (u64, u64);
 </code></pre>
+
+
+
+</details>

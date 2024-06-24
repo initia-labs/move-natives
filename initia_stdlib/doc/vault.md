@@ -7,6 +7,9 @@
 
 -  [Resource `ModuleStore`](#0x1_vip_vault_ModuleStore)
 -  [Constants](#@Constants_0)
+-  [Function `init_module`](#0x1_vip_vault_init_module)
+-  [Function `check_chain_permission`](#0x1_vip_vault_check_chain_permission)
+-  [Function `generate_vault_store_seed`](#0x1_vip_vault_generate_vault_store_seed)
 -  [Function `get_vault_store_address`](#0x1_vip_vault_get_vault_store_address)
 -  [Function `claim`](#0x1_vip_vault_claim)
 -  [Function `deposit`](#0x1_vip_vault_deposit)
@@ -36,7 +39,8 @@
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -66,6 +70,8 @@
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -126,6 +132,90 @@
 
 
 
+<a id="0x1_vip_vault_init_module"></a>
+
+## Function `init_module`
+
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_init_module">init_module</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>let</b> seed = <a href="vault.md#0x1_vip_vault_generate_vault_store_seed">generate_vault_store_seed</a>();
+    <b>let</b> vault_store_addr = <a href="object.md#0x1_object_create_object_address">object::create_object_address</a>(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain), seed);
+
+    <b>let</b> constructor_ref = <a href="object.md#0x1_object_create_named_object">object::create_named_object</a>(chain, seed, <b>false</b>);
+    <b>let</b> extend_ref = <a href="object.md#0x1_object_generate_extend_ref">object::generate_extend_ref</a>(&constructor_ref);
+
+    <b>move_to</b>(chain, <a href="vault.md#0x1_vip_vault_ModuleStore">ModuleStore</a> {
+        extend_ref,
+        claimable_stage: 1,
+        reward_per_stage: 0, // set zero for safety
+        vault_store_addr
+    });
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_vault_check_chain_permission"></a>
+
+## Function `check_chain_permission`
+
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_check_chain_permission">check_chain_permission</a>(chain: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>) {
+    <b>assert</b>!(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(chain) == @initia_std, <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="vault.md#0x1_vip_vault_EUNAUTHORIZED">EUNAUTHORIZED</a>));
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_vip_vault_generate_vault_store_seed"></a>
+
+## Function `generate_vault_store_seed`
+
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_generate_vault_store_seed">generate_vault_store_seed</a>(): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="vault.md#0x1_vip_vault_generate_vault_store_seed">generate_vault_store_seed</a>(): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
+    <b>let</b> seed = <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>[<a href="vault.md#0x1_vip_vault_VAULT_PREFIX">VAULT_PREFIX</a>];
+    <b>return</b> seed
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_vip_vault_get_vault_store_address"></a>
 
 ## Function `get_vault_store_address`
@@ -137,7 +227,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="vault.md#0x1_vip_vault_get_vault_store_address">get_vault_store_address</a>(): <b>address</b> <b>acquires</b> <a href="vault.md#0x1_vip_vault_ModuleStore">ModuleStore</a>{
@@ -146,6 +237,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_vault_claim"></a>
 
@@ -158,7 +251,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>fun</b> <a href="vault.md#0x1_vip_vault_claim">claim</a>(
@@ -177,6 +271,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_vault_deposit"></a>
 
 ## Function `deposit`
@@ -188,7 +284,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="vault.md#0x1_vip_vault_deposit">deposit</a>(
@@ -203,6 +300,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_vault_update_reward_per_stage"></a>
 
 ## Function `update_reward_per_stage`
@@ -214,7 +313,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="vault.md#0x1_vip_vault_update_reward_per_stage">update_reward_per_stage</a>(
@@ -231,6 +331,8 @@
 
 
 
+</details>
+
 <a id="0x1_vip_vault_balance"></a>
 
 ## Function `balance`
@@ -243,7 +345,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="vault.md#0x1_vip_vault_balance">balance</a>(): u64 <b>acquires</b> <a href="vault.md#0x1_vip_vault_ModuleStore">ModuleStore</a>  {
@@ -253,6 +356,8 @@
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_vip_vault_reward_per_stage"></a>
 
@@ -266,11 +371,16 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="vault.md#0x1_vip_vault_reward_per_stage">reward_per_stage</a>(): u64 <b>acquires</b> <a href="vault.md#0x1_vip_vault_ModuleStore">ModuleStore</a> {
-    <b>let</b> vault_store_addr = <a href="vault.md#0x1_vip_vault_get_vault_store_address">get_vault_store_address</a>();
-    <a href="primary_fungible_store.md#0x1_primary_fungible_store_balance">primary_fungible_store::balance</a>(vault_store_addr, <a href="reward.md#0x1_vip_reward_reward_metadata">vip_reward::reward_metadata</a>())
+    <b>let</b> vault_store = <b>borrow_global</b>&lt;<a href="vault.md#0x1_vip_vault_ModuleStore">ModuleStore</a>&gt;(@initia_std);
+    vault_store.reward_per_stage
 }
 </code></pre>
+
+
+
+</details>

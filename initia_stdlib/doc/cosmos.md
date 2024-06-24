@@ -10,12 +10,22 @@ execution after the move execution finished.
 -  [Function `stargate_vote`](#0x1_cosmos_stargate_vote)
 -  [Function `stargate`](#0x1_cosmos_stargate)
 -  [Function `move_execute`](#0x1_cosmos_move_execute)
+-  [Function `move_execute_with_json`](#0x1_cosmos_move_execute_with_json)
 -  [Function `move_script`](#0x1_cosmos_move_script)
+-  [Function `move_script_with_json`](#0x1_cosmos_move_script_with_json)
 -  [Function `delegate`](#0x1_cosmos_delegate)
 -  [Function `fund_community_pool`](#0x1_cosmos_fund_community_pool)
 -  [Function `transfer`](#0x1_cosmos_transfer)
 -  [Function `nft_transfer`](#0x1_cosmos_nft_transfer)
 -  [Function `pay_fee`](#0x1_cosmos_pay_fee)
+-  [Function `stargate_internal`](#0x1_cosmos_stargate_internal)
+-  [Function `move_execute_internal`](#0x1_cosmos_move_execute_internal)
+-  [Function `move_script_internal`](#0x1_cosmos_move_script_internal)
+-  [Function `delegate_internal`](#0x1_cosmos_delegate_internal)
+-  [Function `fund_community_pool_internal`](#0x1_cosmos_fund_community_pool_internal)
+-  [Function `transfer_internal`](#0x1_cosmos_transfer_internal)
+-  [Function `nft_transfer_internal`](#0x1_cosmos_nft_transfer_internal)
+-  [Function `pay_fee_internal`](#0x1_cosmos_pay_fee_internal)
 
 
 <pre><code><b>use</b> <a href="collection.md#0x1_collection">0x1::collection</a>;
@@ -41,7 +51,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate_vote">stargate_vote</a>(
@@ -67,6 +78,8 @@ execution after the move execution finished.
 
 
 
+</details>
+
 <a id="0x1_cosmos_stargate"></a>
 
 ## Function `stargate`
@@ -78,7 +91,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate">stargate</a> (
@@ -94,6 +108,8 @@ execution after the move execution finished.
 
 
 
+</details>
+
 <a id="0x1_cosmos_move_execute"></a>
 
 ## Function `move_execute`
@@ -105,7 +121,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute">move_execute</a> (
@@ -123,11 +140,53 @@ execution after the move execution finished.
         *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&function_name),
         <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
         args,
+        <b>false</b>,
     )
 }
 </code></pre>
 
 
+
+</details>
+
+<a id="0x1_cosmos_move_execute_with_json"></a>
+
+## Function `move_execute_with_json`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute_with_json">move_execute_with_json</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, module_address: <b>address</b>, module_name: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>, function_name: <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute_with_json">move_execute_with_json</a> (
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    module_address: <b>address</b>,
+    module_name: String,
+    function_name: String,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+) {
+    <a href="cosmos.md#0x1_cosmos_move_execute_internal">move_execute_internal</a>(
+        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
+        module_address,
+        *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&module_name),
+        *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(&function_name),
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        <b>true</b>,
+    )
+}
+</code></pre>
+
+
+
+</details>
 
 <a id="0x1_cosmos_move_script"></a>
 
@@ -140,7 +199,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script">move_script</a> (
@@ -154,11 +214,49 @@ execution after the move execution finished.
         code_bytes,
         <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
         args,
+        <b>false</b>,
     )
 }
 </code></pre>
 
 
+
+</details>
+
+<a id="0x1_cosmos_move_script_with_json"></a>
+
+## Function `move_script_with_json`
+
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script_with_json">move_script_with_json</a>(sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script_with_json">move_script_with_json</a> (
+    sender: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>,
+    code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt;,
+) {
+    <a href="cosmos.md#0x1_cosmos_move_script_internal">move_script_internal</a>(
+        <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(sender),
+        code_bytes,
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&type_args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector_map_ref">vector::map_ref</a>(&args, |v| *<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_bytes">string::bytes</a>(v)),
+        <b>true</b>,
+    )
+}
+</code></pre>
+
+
+
+</details>
 
 <a id="0x1_cosmos_delegate"></a>
 
@@ -171,7 +269,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_delegate">delegate</a> (
@@ -191,6 +290,8 @@ execution after the move execution finished.
 
 
 
+</details>
+
 <a id="0x1_cosmos_fund_community_pool"></a>
 
 ## Function `fund_community_pool`
@@ -202,7 +303,8 @@ execution after the move execution finished.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_fund_community_pool">fund_community_pool</a> (
@@ -220,6 +322,8 @@ execution after the move execution finished.
 
 
 
+</details>
+
 <a id="0x1_cosmos_transfer"></a>
 
 ## Function `transfer`
@@ -233,7 +337,8 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-020-fungible-token-transfer
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_transfer">transfer</a> (
@@ -265,6 +370,8 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-020-fungible-token-transfer
 
 
 
+</details>
+
 <a id="0x1_cosmos_nft_transfer"></a>
 
 ## Function `nft_transfer`
@@ -278,7 +385,8 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-721-nft-transfer
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_nft_transfer">nft_transfer</a> (
@@ -310,6 +418,8 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-721-nft-transfer
 
 
 
+</details>
+
 <a id="0x1_cosmos_pay_fee"></a>
 
 ## Function `pay_fee`
@@ -323,7 +433,8 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-029-fee-payment
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="cosmos.md#0x1_cosmos_pay_fee">pay_fee</a> (
@@ -350,3 +461,241 @@ https://github.com/cosmos/ibc/tree/main/spec/app/ics-029-fee-payment
     )
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_stargate_internal"></a>
+
+## Function `stargate_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate_internal">stargate_internal</a>(sender: <b>address</b>, data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_stargate_internal">stargate_internal</a> (
+    sender: <b>address</b>,
+    data: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_move_execute_internal"></a>
+
+## Function `move_execute_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute_internal">move_execute_internal</a>(sender: <b>address</b>, module_address: <b>address</b>, module_name: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, function_name: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;, is_json: bool)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_execute_internal">move_execute_internal</a> (
+    sender: <b>address</b>,
+    module_address: <b>address</b>,
+    module_name: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    function_name: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+    is_json: bool,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_move_script_internal"></a>
+
+## Function `move_script_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script_internal">move_script_internal</a>(sender: <b>address</b>, code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;, args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;, is_json: bool)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_move_script_internal">move_script_internal</a> (
+    sender: <b>address</b>,
+    code_bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    type_args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+    args: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+    is_json: bool,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_delegate_internal"></a>
+
+## Function `delegate_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_delegate_internal">delegate_internal</a>(delegator: <b>address</b>, validator: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, amount: u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_delegate_internal">delegate_internal</a> (
+    delegator: <b>address</b>,
+    validator: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    metadata: &Object&lt;Metadata&gt;,
+    amount: u64,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_fund_community_pool_internal"></a>
+
+## Function `fund_community_pool_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_fund_community_pool_internal">fund_community_pool_internal</a>(sender: <b>address</b>, metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, amount: u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_fund_community_pool_internal">fund_community_pool_internal</a> (
+    sender: <b>address</b>,
+    metadata: &Object&lt;Metadata&gt;,
+    amount: u64,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_transfer_internal"></a>
+
+## Function `transfer_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_transfer_internal">transfer_internal</a>(sender: <b>address</b>, receiver: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, token_amount: u64, source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, revision_number: u64, revision_height: u64, timeout_timestamp: u64, memo: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_transfer_internal">transfer_internal</a> (
+    sender: <b>address</b>,
+    receiver: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    metadata: &Object&lt;Metadata&gt;,
+    token_amount: u64,
+    source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    revision_number: u64,
+    revision_height: u64,
+    timeout_timestamp: u64,
+    memo: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_nft_transfer_internal"></a>
+
+## Function `nft_transfer_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_nft_transfer_internal">nft_transfer_internal</a>(sender: <b>address</b>, receiver: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, <a href="collection.md#0x1_collection">collection</a>: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="collection.md#0x1_collection_Collection">collection::Collection</a>&gt;, token_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;, source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, revision_number: u64, revision_height: u64, timeout_timestamp: u64, memo: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_nft_transfer_internal">nft_transfer_internal</a> (
+    sender: <b>address</b>,
+    receiver: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    <a href="collection.md#0x1_collection">collection</a>: &Object&lt;Collection&gt;,
+    token_ids: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt;,
+    source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    revision_number: u64,
+    revision_height: u64,
+    timeout_timestamp: u64,
+    memo: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+);
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_cosmos_pay_fee_internal"></a>
+
+## Function `pay_fee_internal`
+
+
+
+<pre><code><b>fun</b> <a href="cosmos.md#0x1_cosmos_pay_fee_internal">pay_fee_internal</a>(sender: <b>address</b>, source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;, recv_fee_metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, recv_fee_amount: u64, ack_fee_metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, ack_fee_amount: u64, timeout_fee_metadata: &<a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="fungible_asset.md#0x1_fungible_asset_Metadata">fungible_asset::Metadata</a>&gt;, timeout_fee_amount: u64)
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>native</b> <b>fun</b> <a href="cosmos.md#0x1_cosmos_pay_fee_internal">pay_fee_internal</a> (
+    sender: <b>address</b>,
+    source_port: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    source_channel: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;,
+    recv_fee_metadata: &Object&lt;Metadata&gt;,
+    recv_fee_amount: u64,
+    ack_fee_metadata: &Object&lt;Metadata&gt;,
+    ack_fee_amount: u64,
+    timeout_fee_metadata: &Object&lt;Metadata&gt;,
+    timeout_fee_amount: u64,
+);
+</code></pre>
+
+
+
+</details>

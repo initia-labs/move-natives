@@ -23,6 +23,7 @@
 -  [Function `val`](#0x1_decimal128_val)
 -  [Function `is_same`](#0x1_decimal128_is_same)
 -  [Function `from_string`](#0x1_decimal128_from_string)
+-  [Function `pow`](#0x1_decimal128_pow)
 
 
 <pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error">0x1::error</a>;
@@ -43,7 +44,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -55,6 +57,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -126,7 +130,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_new">new</a>(val: u128): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -135,6 +140,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_new_u64"></a>
 
@@ -147,7 +154,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_new_u64">new_u64</a>(val: u64): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -156,6 +164,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_one"></a>
 
@@ -168,7 +178,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_one">one</a>(): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -177,6 +188,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_zero"></a>
 
@@ -189,7 +202,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_zero">zero</a>(): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -198,6 +212,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_from_ratio_u64"></a>
 
@@ -210,7 +226,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_from_ratio_u64">from_ratio_u64</a>(numerator: u64, denominator: u64): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -221,6 +238,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_from_ratio"></a>
 
@@ -233,7 +252,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_from_ratio">from_ratio</a>(numerator: u128, denominator: u128): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -244,6 +264,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_add"></a>
 
@@ -256,7 +278,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_add">add</a>(left: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, right: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -265,6 +288,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_sub"></a>
 
@@ -277,7 +302,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_sub">sub</a>(left: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, right: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -286,6 +312,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_mul_u64"></a>
 
@@ -298,7 +326,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_mul_u64">mul_u64</a>(decimal: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, val: u64): u64 {
@@ -307,6 +336,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_mul_u128"></a>
 
@@ -319,7 +350,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_mul_u128">mul_u128</a>(decimal: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, val: u128): u128 {
@@ -328,6 +360,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_mul"></a>
 
@@ -340,7 +374,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_mul">mul</a>(a: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, b: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -349,6 +384,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_div_u64"></a>
 
@@ -361,7 +398,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_div_u64">div_u64</a>(decimal: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, val: u64): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -370,6 +408,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_div"></a>
 
@@ -382,7 +422,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_div">div</a>(decimal: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, val: u128): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -391,6 +432,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_val"></a>
 
@@ -403,7 +446,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_val">val</a>(decimal: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>): u128 {
@@ -412,6 +456,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_is_same"></a>
 
@@ -424,7 +470,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_is_same">is_same</a>(left: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>, right: &<a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a>): bool {
@@ -433,6 +480,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_decimal128_from_string"></a>
 
@@ -445,7 +494,8 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="decimal128.md#0x1_decimal128_from_string">from_string</a>(num: &String): <a href="decimal128.md#0x1_decimal128_Decimal128">Decimal128</a> {
@@ -492,3 +542,38 @@ A fixed-point decimal value with 18 fractional digits, i.e. Decimal128{ val: 1_0
     <a href="decimal128.md#0x1_decimal128_new">new</a>(val)
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_decimal128_pow"></a>
+
+## Function `pow`
+
+
+
+<pre><code><b>fun</b> <a href="decimal128.md#0x1_decimal128_pow">pow</a>(num: u128, pow_amount: u64): u128
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="decimal128.md#0x1_decimal128_pow">pow</a>(num: u128, pow_amount: u64): u128 {
+    <b>let</b> index = 0;
+    <b>let</b> val = 1;
+    <b>while</b> (index &lt; pow_amount) {
+        val = val * num;
+        index = index + 1;
+    };
+
+    val
+}
+</code></pre>
+
+
+
+</details>

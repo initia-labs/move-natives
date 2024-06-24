@@ -13,7 +13,9 @@ Sample of nft extension including metadata property type by using 0x1::initia_nf
 -  [Function `create_collection_object`](#0x1_simple_nft_create_collection_object)
 -  [Function `mint`](#0x1_simple_nft_mint)
 -  [Function `mint_nft_object`](#0x1_simple_nft_mint_nft_object)
+-  [Function `borrow`](#0x1_simple_nft_borrow)
 -  [Function `are_properties_mutable`](#0x1_simple_nft_are_properties_mutable)
+-  [Function `authorized_borrow`](#0x1_simple_nft_authorized_borrow)
 -  [Function `burn`](#0x1_simple_nft_burn)
 -  [Function `set_description`](#0x1_simple_nft_set_description)
 -  [Function `set_uri`](#0x1_simple_nft_set_uri)
@@ -22,12 +24,15 @@ Sample of nft extension including metadata property type by using 0x1::initia_nf
 -  [Function `remove_property`](#0x1_simple_nft_remove_property)
 -  [Function `update_property`](#0x1_simple_nft_update_property)
 -  [Function `update_typed_property`](#0x1_simple_nft_update_typed_property)
+-  [Function `collection_object`](#0x1_simple_nft_collection_object)
+-  [Function `borrow_collection`](#0x1_simple_nft_borrow_collection)
 -  [Function `is_mutable_collection_description`](#0x1_simple_nft_is_mutable_collection_description)
 -  [Function `is_mutable_collection_royalty`](#0x1_simple_nft_is_mutable_collection_royalty)
 -  [Function `is_mutable_collection_uri`](#0x1_simple_nft_is_mutable_collection_uri)
 -  [Function `is_mutable_collection_nft_description`](#0x1_simple_nft_is_mutable_collection_nft_description)
 -  [Function `is_mutable_collection_nft_uri`](#0x1_simple_nft_is_mutable_collection_nft_uri)
 -  [Function `is_mutable_collection_nft_properties`](#0x1_simple_nft_is_mutable_collection_nft_properties)
+-  [Function `authorized_borrow_collection`](#0x1_simple_nft_authorized_borrow_collection)
 -  [Function `set_collection_description`](#0x1_simple_nft_set_collection_description)
 -  [Function `set_collection_royalties`](#0x1_simple_nft_set_collection_royalties)
 -  [Function `set_collection_royalties_call`](#0x1_simple_nft_set_collection_royalties_call)
@@ -61,7 +66,8 @@ Storage state for managing the no-code Collection.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -73,6 +79,8 @@ Storage state for managing the no-code Collection.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="0x1_simple_nft_SimpleNft"></a>
 
@@ -86,7 +94,8 @@ Storage state for managing the no-code Nft.
 
 
 
-##### Fields
+<details>
+<summary>Fields</summary>
 
 
 <dl>
@@ -98,6 +107,8 @@ Storage state for managing the no-code Nft.
 </dd>
 </dl>
 
+
+</details>
 
 <a id="@Constants_0"></a>
 
@@ -166,7 +177,8 @@ Create a new collection
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_create_collection">create_collection</a>(
@@ -202,6 +214,8 @@ Create a new collection
 
 
 
+</details>
+
 <a id="0x1_simple_nft_create_collection_object"></a>
 
 ## Function `create_collection_object`
@@ -213,7 +227,8 @@ Create a new collection
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_create_collection_object">create_collection_object</a>(
@@ -256,6 +271,8 @@ Create a new collection
 
 
 
+</details>
+
 <a id="0x1_simple_nft_mint"></a>
 
 ## Function `mint`
@@ -268,7 +285,8 @@ With an existing collection, directly mint a viable nft into the creators accoun
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_mint">mint</a>(
@@ -294,6 +312,8 @@ With an existing collection, directly mint a viable nft into the creators accoun
 
 
 
+</details>
+
 <a id="0x1_simple_nft_mint_nft_object"></a>
 
 ## Function `mint_nft_object`
@@ -306,7 +326,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_mint_nft_object">mint_nft_object</a>(
@@ -343,6 +364,37 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
+<a id="0x1_simple_nft_borrow"></a>
+
+## Function `borrow`
+
+
+
+<pre><code><b>fun</b> <a href="simple_nft.md#0x1_simple_nft_borrow">borrow</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;): &<a href="simple_nft.md#0x1_simple_nft_SimpleNft">simple_nft::SimpleNft</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_borrow">borrow</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: Object&lt;T&gt;): &<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a> {
+    <b>let</b> nft_address = <a href="object.md#0x1_object_object_address">object::object_address</a>(<a href="nft.md#0x1_nft">nft</a>);
+    <b>assert</b>!(
+        <b>exists</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a>&gt;(nft_address),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="simple_nft.md#0x1_simple_nft_ENFT_DOES_NOT_EXIST">ENFT_DOES_NOT_EXIST</a>),
+    );
+    <b>borrow_global</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a>&gt;(nft_address)
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_simple_nft_are_properties_mutable"></a>
 
 ## Function `are_properties_mutable`
@@ -355,7 +407,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_are_properties_mutable">are_properties_mutable</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: Object&lt;T&gt;): bool <b>acquires</b> <a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a> {
@@ -365,6 +418,42 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
+
+<a id="0x1_simple_nft_authorized_borrow"></a>
+
+## Function `authorized_borrow`
+
+
+
+<pre><code><b>fun</b> <a href="simple_nft.md#0x1_simple_nft_authorized_borrow">authorized_borrow</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;, creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): &<a href="simple_nft.md#0x1_simple_nft_SimpleNft">simple_nft::SimpleNft</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_authorized_borrow">authorized_borrow</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: Object&lt;T&gt;, creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): &<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a> {
+    <b>let</b> nft_address = <a href="object.md#0x1_object_object_address">object::object_address</a>(<a href="nft.md#0x1_nft">nft</a>);
+    <b>assert</b>!(
+        <b>exists</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a>&gt;(nft_address),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="simple_nft.md#0x1_simple_nft_ENFT_DOES_NOT_EXIST">ENFT_DOES_NOT_EXIST</a>),
+    );
+
+    <b>assert</b>!(
+        <a href="nft.md#0x1_nft_creator">nft::creator</a>(<a href="nft.md#0x1_nft">nft</a>) == <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(creator),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="simple_nft.md#0x1_simple_nft_ENOT_CREATOR">ENOT_CREATOR</a>),
+    );
+    <b>borrow_global</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a>&gt;(nft_address)
+}
+</code></pre>
+
+
+
+</details>
 
 <a id="0x1_simple_nft_burn"></a>
 
@@ -377,7 +466,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_burn">burn</a>&lt;T: key&gt;(owner: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, <a href="nft.md#0x1_nft">nft</a>: Object&lt;T&gt;) <b>acquires</b> <a href="simple_nft.md#0x1_simple_nft_SimpleNft">SimpleNft</a> {
@@ -400,6 +490,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_set_description"></a>
 
 ## Function `set_description`
@@ -411,7 +503,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_description">set_description</a>&lt;T: key&gt;(
@@ -425,6 +518,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_set_uri"></a>
 
 ## Function `set_uri`
@@ -436,7 +531,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_uri">set_uri</a>&lt;T: key&gt;(
@@ -450,6 +546,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_add_property"></a>
 
 ## Function `add_property`
@@ -461,7 +559,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_add_property">add_property</a>&lt;T: key&gt;(
@@ -483,6 +582,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_add_typed_property"></a>
 
 ## Function `add_typed_property`
@@ -494,7 +595,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_add_typed_property">add_typed_property</a>&lt;T: key, V: drop&gt;(
@@ -515,6 +617,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_remove_property"></a>
 
 ## Function `remove_property`
@@ -526,7 +630,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_remove_property">remove_property</a>&lt;T: key&gt;(
@@ -546,6 +651,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_update_property"></a>
 
 ## Function `update_property`
@@ -557,7 +664,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_update_property">update_property</a>&lt;T: key&gt;(
@@ -579,6 +687,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_update_typed_property"></a>
 
 ## Function `update_typed_property`
@@ -590,7 +700,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_update_typed_property">update_typed_property</a>&lt;T: key, V: drop&gt;(
@@ -611,6 +722,62 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
+<a id="0x1_simple_nft_collection_object"></a>
+
+## Function `collection_object`
+
+
+
+<pre><code><b>fun</b> <a href="simple_nft.md#0x1_simple_nft_collection_object">collection_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, name: &<a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string_String">string::String</a>): <a href="object.md#0x1_object_Object">object::Object</a>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">simple_nft::SimpleNftCollection</a>&gt;
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_collection_object">collection_object</a>(creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>, name: &String): Object&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt; {
+    <b>let</b> collection_addr = <a href="collection.md#0x1_collection_create_collection_address">collection::create_collection_address</a>(<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(creator), name);
+    <a href="object.md#0x1_object_address_to_object">object::address_to_object</a>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt;(collection_addr)
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_simple_nft_borrow_collection"></a>
+
+## Function `borrow_collection`
+
+
+
+<pre><code><b>fun</b> <a href="simple_nft.md#0x1_simple_nft_borrow_collection">borrow_collection</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;): &<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">simple_nft::SimpleNftCollection</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_borrow_collection">borrow_collection</a>&lt;T: key&gt;(<a href="nft.md#0x1_nft">nft</a>: Object&lt;T&gt;): &<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a> {
+    <b>let</b> collection_address = <a href="object.md#0x1_object_object_address">object::object_address</a>(<a href="nft.md#0x1_nft">nft</a>);
+    <b>assert</b>!(
+        <b>exists</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt;(collection_address),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="simple_nft.md#0x1_simple_nft_ECOLLECTION_DOES_NOT_EXIST">ECOLLECTION_DOES_NOT_EXIST</a>),
+    );
+    <b>borrow_global</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt;(collection_address)
+}
+</code></pre>
+
+
+
+</details>
+
 <a id="0x1_simple_nft_is_mutable_collection_description"></a>
 
 ## Function `is_mutable_collection_description`
@@ -622,7 +789,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_description">is_mutable_collection_description</a>&lt;T: key&gt;(
@@ -633,6 +801,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_simple_nft_is_mutable_collection_royalty"></a>
 
@@ -645,7 +815,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_royalty">is_mutable_collection_royalty</a>&lt;T: key&gt;(
@@ -656,6 +827,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_simple_nft_is_mutable_collection_uri"></a>
 
@@ -668,7 +841,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_uri">is_mutable_collection_uri</a>&lt;T: key&gt;(
@@ -679,6 +853,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_simple_nft_is_mutable_collection_nft_description"></a>
 
@@ -691,7 +867,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_nft_description">is_mutable_collection_nft_description</a>&lt;T: key&gt;(
@@ -702,6 +879,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_simple_nft_is_mutable_collection_nft_uri"></a>
 
@@ -714,7 +893,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_nft_uri">is_mutable_collection_nft_uri</a>&lt;T: key&gt;(
@@ -725,6 +905,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_simple_nft_is_mutable_collection_nft_properties"></a>
 
@@ -737,7 +919,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_is_mutable_collection_nft_properties">is_mutable_collection_nft_properties</a>&lt;T: key&gt;(
@@ -748,6 +931,41 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 </code></pre>
 
 
+
+</details>
+
+<a id="0x1_simple_nft_authorized_borrow_collection"></a>
+
+## Function `authorized_borrow_collection`
+
+
+
+<pre><code><b>fun</b> <a href="simple_nft.md#0x1_simple_nft_authorized_borrow_collection">authorized_borrow_collection</a>&lt;T: key&gt;(<a href="collection.md#0x1_collection">collection</a>: <a href="object.md#0x1_object_Object">object::Object</a>&lt;T&gt;, creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): &<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">simple_nft::SimpleNftCollection</a>
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code>inline <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_authorized_borrow_collection">authorized_borrow_collection</a>&lt;T: key&gt;(<a href="collection.md#0x1_collection">collection</a>: Object&lt;T&gt;, creator: &<a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer">signer</a>): &<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a> {
+    <b>let</b> collection_address = <a href="object.md#0x1_object_object_address">object::object_address</a>(<a href="collection.md#0x1_collection">collection</a>);
+    <b>assert</b>!(
+        <b>exists</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt;(collection_address),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_not_found">error::not_found</a>(<a href="simple_nft.md#0x1_simple_nft_ECOLLECTION_DOES_NOT_EXIST">ECOLLECTION_DOES_NOT_EXIST</a>),
+    );
+    <b>assert</b>!(
+        <a href="collection.md#0x1_collection_creator">collection::creator</a>(<a href="collection.md#0x1_collection">collection</a>) == <a href="../../move_nursery/../move_stdlib/doc/signer.md#0x1_signer_address_of">signer::address_of</a>(creator),
+        <a href="../../move_nursery/../move_stdlib/doc/error.md#0x1_error_permission_denied">error::permission_denied</a>(<a href="simple_nft.md#0x1_simple_nft_ENOT_CREATOR">ENOT_CREATOR</a>),
+    );
+    <b>borrow_global</b>&lt;<a href="simple_nft.md#0x1_simple_nft_SimpleNftCollection">SimpleNftCollection</a>&gt;(collection_address)
+}
+</code></pre>
+
+
+
+</details>
 
 <a id="0x1_simple_nft_set_collection_description"></a>
 
@@ -760,7 +978,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_collection_description">set_collection_description</a>&lt;T: key&gt;(
@@ -774,6 +993,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_set_collection_royalties"></a>
 
 ## Function `set_collection_royalties`
@@ -785,7 +1006,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_collection_royalties">set_collection_royalties</a>&lt;T: key&gt;(
@@ -799,6 +1021,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_set_collection_royalties_call"></a>
 
 ## Function `set_collection_royalties_call`
@@ -810,7 +1034,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code>entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_collection_royalties_call">set_collection_royalties_call</a>&lt;T: key&gt;(
@@ -826,6 +1051,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
+</details>
+
 <a id="0x1_simple_nft_set_collection_uri"></a>
 
 ## Function `set_collection_uri`
@@ -837,7 +1064,8 @@ Mint a nft into an existing collection, and retrieve the object / address of the
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> entry <b>fun</b> <a href="simple_nft.md#0x1_simple_nft_set_collection_uri">set_collection_uri</a>&lt;T: key&gt;(
@@ -848,3 +1076,7 @@ Mint a nft into an existing collection, and retrieve the object / address of the
     <a href="initia_nft.md#0x1_initia_nft_set_collection_uri">initia_nft::set_collection_uri</a>(creator, <a href="collection.md#0x1_collection">collection</a>, uri);
 }
 </code></pre>
+
+
+
+</details>

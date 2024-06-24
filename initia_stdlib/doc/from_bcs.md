@@ -64,7 +64,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_bool">to_bool</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): bool {
@@ -73,6 +74,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u8"></a>
 
@@ -85,7 +88,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u8">to_u8</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u8 {
@@ -94,6 +98,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u16"></a>
 
@@ -106,7 +112,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u16">to_u16</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u16 {
@@ -115,6 +122,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u32"></a>
 
@@ -127,7 +136,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u32">to_u32</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u32 {
@@ -136,6 +146,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u64"></a>
 
@@ -148,7 +160,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u64">to_u64</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u64 {
@@ -157,6 +170,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u128"></a>
 
@@ -169,7 +184,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u128">to_u128</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u128 {
@@ -178,6 +194,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_u256"></a>
 
@@ -190,7 +208,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_u256">to_u256</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): u256 {
@@ -199,6 +218,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_address"></a>
 
@@ -211,7 +232,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_address">to_address</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <b>address</b> {
@@ -220,6 +242,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_bytes"></a>
 
@@ -232,7 +256,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_bytes">to_bytes</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
@@ -241,6 +266,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_vector_bytes"></a>
 
@@ -253,7 +280,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_bytes">to_vector_bytes</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;&gt; {
@@ -262,6 +290,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_vector_string"></a>
 
@@ -274,7 +304,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_vector_string">to_vector_string</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;String&gt; {
@@ -283,6 +314,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_to_string"></a>
 
@@ -295,7 +328,8 @@ UTF8 check failed in conversion from bytes to string
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_to_string">to_string</a>(v: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): String {
@@ -307,6 +341,8 @@ UTF8 check failed in conversion from bytes to string
 </code></pre>
 
 
+
+</details>
 
 <a id="0x1_from_bcs_from_bytes"></a>
 
@@ -324,8 +360,13 @@ owned.
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b>(<b>friend</b>) <b>native</b> <b>fun</b> <a href="from_bcs.md#0x1_from_bcs_from_bytes">from_bytes</a>&lt;T&gt;(bytes: <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): T;
 </code></pre>
+
+
+
+</details>

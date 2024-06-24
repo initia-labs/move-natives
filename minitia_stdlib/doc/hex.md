@@ -7,6 +7,8 @@
 
 -  [Function `encode_to_string`](#0x1_hex_encode_to_string)
 -  [Function `decode_string`](#0x1_hex_decode_string)
+-  [Function `encode_to_char`](#0x1_hex_encode_to_char)
+-  [Function `decode_char`](#0x1_hex_decode_char)
 
 
 <pre><code><b>use</b> <a href="../../move_nursery/../move_stdlib/doc/string.md#0x1_string">0x1::string</a>;
@@ -25,7 +27,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="hex.md#0x1_hex_encode_to_string">encode_to_string</a>(bz: &<a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt;): String {
@@ -47,6 +50,8 @@
 
 
 
+</details>
+
 <a id="0x1_hex_decode_string"></a>
 
 ## Function `decode_string`
@@ -58,7 +63,8 @@
 
 
 
-##### Implementation
+<details>
+<summary>Implementation</summary>
 
 
 <pre><code><b>public</b> <b>fun</b> <a href="hex.md#0x1_hex_decode_string">decode_string</a>(str: &String): <a href="../../move_nursery/../move_stdlib/doc/vector.md#0x1_vector">vector</a>&lt;u8&gt; {
@@ -91,3 +97,63 @@
     vec
 }
 </code></pre>
+
+
+
+</details>
+
+<a id="0x1_hex_encode_to_char"></a>
+
+## Function `encode_to_char`
+
+
+
+<pre><code><b>fun</b> <a href="hex.md#0x1_hex_encode_to_char">encode_to_char</a>(num: u8): u8
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="hex.md#0x1_hex_encode_to_char">encode_to_char</a>(num: u8): u8 {
+    <b>if</b> (num &lt; 10) {
+        0x30 + num
+    } <b>else</b> {
+        0x57 + num
+    }
+}
+</code></pre>
+
+
+
+</details>
+
+<a id="0x1_hex_decode_char"></a>
+
+## Function `decode_char`
+
+
+
+<pre><code><b>fun</b> <a href="hex.md#0x1_hex_decode_char">decode_char</a>(num: u8): u8
+</code></pre>
+
+
+
+<details>
+<summary>Implementation</summary>
+
+
+<pre><code><b>fun</b> <a href="hex.md#0x1_hex_decode_char">decode_char</a>(num: u8): u8 {
+    <b>if</b> (num &lt; 0x3a) {
+        num - 0x30
+    } <b>else</b> {
+        num - 0x57
+    }
+}
+</code></pre>
+
+
+
+</details>

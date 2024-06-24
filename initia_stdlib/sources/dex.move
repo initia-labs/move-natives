@@ -52,6 +52,14 @@ module initia_std::dex {
         swap_fee_rate: Decimal128,
     }
 
+    struct PairByDenomResponse has copy, drop, store {
+        coin_a: String,
+        coin_b: String,
+        liquidity_token: String,
+        weights: Weights,
+        swap_fee_rate: Decimal128,
+    }
+
     /// Coin capabilities
     struct CoinCapabilities has key {
         burn_cap: coin::BurnCapability,
@@ -196,7 +204,11 @@ module initia_std::dex {
     /// All start_after must be provided or not
     const ESTART_AFTER: u64 = 17;
 
+    // Cannot create pair with the same coin type
     const ESAME_COIN_TYPE: u64 = 19;
+
+    /// Zero amount in the swap simulation is not allowed
+    const EZERO_AMOUNT_IN: u64 = 20;
 
     // Constants
     const MAX_LIMIT: u8 = 30;
@@ -263,11 +275,12 @@ module initia_std::dex {
 
     #[view]
     public fun get_spot_price_by_denom(
-        pair: Object<Config>,
+        pair_denom: String,
         base_coin: String,
     ): Decimal128 acquires Config, Pool {
-        let base_coin = coin::denom_to_metadata(base_coin);
-        get_spot_price(pair, base_coin)
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
+        let base_metadata = coin::denom_to_metadata(base_coin);
+        get_spot_price(object::convert(pair_metadata), base_metadata)
     }
 
     #[view]
@@ -304,12 +317,13 @@ module initia_std::dex {
 
     #[view]
     public fun get_swap_simulation_by_denom(
-        pair: Object<Config>,
+        pair_denom: String,
         offer_denom: String,
         offer_amount: u64,
     ): u64 acquires Config, Pool {
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
         let offer_metadata = coin::denom_to_metadata(offer_denom);
-        get_swap_simulation(pair, offer_metadata, offer_amount)
+        get_swap_simulation(object::convert(pair_metadata), offer_metadata, offer_amount)
     }
 
     #[view]
@@ -346,12 +360,13 @@ module initia_std::dex {
 
     #[view]
     public fun get_swap_simulation_given_out_by_denom(
-        pair: Object<Config>,
+        pair_denom: String,
         offer_denom: String,
         return_amount: u64,
     ): u64 acquires Config, Pool {
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
         let offer_metadata = coin::denom_to_metadata(offer_denom);
-        get_swap_simulation_given_out(pair, offer_metadata, return_amount)
+        get_swap_simulation_given_out(object::convert(pair_metadata), offer_metadata, return_amount)
     }
 
     #[view]
@@ -367,6 +382,13 @@ module initia_std::dex {
     }
 
     #[view]
+    /// get pool info
+    public fun get_pool_info_by_denom(pair_denom: String): PoolInfoResponse acquires Pool {
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
+        get_pool_info(object::convert(pair_metadata))
+    }
+
+    #[view]
     /// get config
     public fun get_config(pair: Object<Config>): ConfigResponse acquires Config {
         let pair_addr = object::object_address(pair);
@@ -379,6 +401,13 @@ module initia_std::dex {
     }
 
     #[view]
+    /// get config
+    public fun get_config_by_denom(pair_denom: String): ConfigResponse acquires Config {
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
+        get_config(object::convert(pair_metadata))
+    }
+
+    #[view]
     public fun get_current_weight(pair: Object<Config>): CurrentWeightResponse acquires Config {
         let pair_addr = object::object_address(pair);
         let config = borrow_global<Config>(pair_addr);
@@ -387,6 +416,12 @@ module initia_std::dex {
             coin_a_weight,
             coin_b_weight,
         }
+    }
+
+    #[view]
+    public fun get_current_weight_by_denom(pair_denom: String): CurrentWeightResponse acquires Config {
+        let pair_metadata = coin::denom_to_metadata(pair_denom);
+        get_current_weight(object::convert(pair_metadata))
     }
 
     #[view]
@@ -436,6 +471,68 @@ module initia_std::dex {
             let (key, value) = table::next<PairKey, PairResponse>(&mut pairs_iter);
             if (&key != option::borrow(&start_after)) {
                 vector::push_back(&mut res, *value)
+            }
+        };
+
+        res
+    }
+
+    #[view]
+    // get all kinds of pair
+    // return vector of PairResponse
+    public fun get_all_pairs_by_denom(
+        coin_a_start_after: Option<String>,
+        coin_b_start_after: Option<String>,
+        liquidity_token_start_after: Option<String>,
+        limit: u8,
+    ): vector<PairByDenomResponse> acquires ModuleStore {
+        if (limit > MAX_LIMIT) {
+            limit = MAX_LIMIT;
+        };
+
+        assert!(
+            option::is_some(&coin_a_start_after) == option::is_some(&coin_b_start_after)
+                && option::is_some(&coin_b_start_after) == option::is_some(&liquidity_token_start_after),
+            ESTART_AFTER
+        );
+
+        let module_store = borrow_global<ModuleStore>(@initia_std);
+
+        let start_after = if (option::is_some(&coin_a_start_after)) {
+            let coin_a_start_after = coin::denom_to_metadata(option::extract(&mut coin_a_start_after));
+            let coin_b_start_after = coin::denom_to_metadata(option::extract(&mut coin_b_start_after));
+            let liquidity_token_start_after = coin::denom_to_metadata(option::extract(&mut liquidity_token_start_after));
+            option::some(PairKey {
+                coin_a: object::object_address(coin_a_start_after),
+                coin_b: object::object_address(coin_b_start_after),
+                liquidity_token: object::object_address(liquidity_token_start_after),
+            })
+        } else {
+            option::some(PairKey {
+                coin_a: @0x0,
+                coin_b: @0x0,
+                liquidity_token: @0x0,
+            })
+        };
+
+        let res = vector[];
+        let pairs_iter = table::iter(
+            &module_store.pairs,
+            start_after,
+            option::none(),
+            1,
+        );
+
+        while (vector::length(&res) < (limit as u64) && table::prepare<PairKey, PairResponse>(&mut pairs_iter)) {
+            let (key, value) = table::next<PairKey, PairResponse>(&mut pairs_iter);
+            if (&key != option::borrow(&start_after)) {
+                vector::push_back(&mut res, PairByDenomResponse {
+                    coin_a: coin::metadata_to_denom(object::address_to_object(value.coin_a)),
+                    coin_b: coin::metadata_to_denom(object::address_to_object(value.coin_b)),
+                    liquidity_token: coin::metadata_to_denom(object::address_to_object(value.liquidity_token)),
+                    weights: value.weights,
+                    swap_fee_rate: value.swap_fee_rate,
+                })
             }
         };
 
@@ -1209,13 +1306,17 @@ module initia_std::dex {
             let time_diff_before = (timestamp - weights.weights_before.timestamp as u128);
 
             // when timestamp_before < timestamp < timestamp_after
-            // weight = a * timestamp + b
-            // m = (a * timestamp_before + b) * (timestamp_after - timestamp)
-            //   = a * t_b * t_a - a * t_b * t + b * t_a - b * t
-            // n = (a * timestamp_after + b) * (timestamp - timestamp_before)
-            //   = a * t_a * t - a * t_a * t_b + b * t - b * t_b
-            // l = m + n = a * t * (t_a - t_b) + b * (t_a - t_b)
-            // weight = l / (t_a - t_b)
+            // weight is linearly change from before to after
+            //
+            // weight = g * timestamp + c
+            // where g is gradient of line and c is the weight-intercept (weight value when timestamp is 0)
+            //
+            // n = (g * timestamp_before + c) * (timestamp_after - timestamp)
+            //   = g * t_b * t_a - g * t_b * t + c * t_a - c * t
+            // m = (g * timestamp_after + c) * (timestamp - timestamp_before)
+            //   = g * t_a * t - g * t_a * t_b + c * t - c * t_b
+            // l = m + n = g * t * (t_a - t_b) + c * (t_a - t_b)
+            // weight = l / (t_a - t_b) = g * t + c
             let coin_a_m = decimal128::new(decimal128::val(&weights.weights_after.coin_a_weight) * time_diff_before);
             let coin_a_n = decimal128::new(decimal128::val(&weights.weights_before.coin_a_weight) * time_diff_after);
             let coin_a_l = decimal128::add(&coin_a_m, &coin_a_n);
@@ -1262,9 +1363,17 @@ module initia_std::dex {
         amount_in: u64,
         swap_fee_rate: Decimal128,
     ): (u64, u64) {
+        assert!(amount_in > 0, error::invalid_argument(EZERO_AMOUNT_IN));
+
         let one = decimal128::one();
         let exp = decimal128::from_ratio(decimal128::val(&weight_in), decimal128::val(&weight_out));
+
+        // avoid zero fee amount to prevent fee bypass attack
         let fee_amount = decimal128::mul_u64(&swap_fee_rate, amount_in);
+        if (fee_amount == 0) {
+            fee_amount = 1;
+        };
+
         let adjusted_amount_in = amount_in - fee_amount;
         let base = decimal128::from_ratio_u64(pool_amount_in, pool_amount_in + adjusted_amount_in);
         let sub_amount = pow(&base, &exp);

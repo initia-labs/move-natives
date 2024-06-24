@@ -1,12 +1,12 @@
 module initia_std::vip_zapping {
     use std::error;
     use std::signer;
-    use std::vector;
-    use std::option::{Self, Option};
+    use std::option::Option;
     use std::event;
     use std::string::String;
     use std::table;
     use std::block;
+    use std::vector;
     
     use initia_std::staking::{Self, Delegation, DelegationResponse};
     use initia_std::coin;
@@ -177,6 +177,24 @@ module initia_std::vip_zapping {
     // Entry Functions
     //
 
+    public entry fun batch_claim_zapping_script(
+        account: &signer,
+        zids: vector<u64>,
+    ) acquires ModuleStore, LSStore {
+        vector::enumerate_ref(&zids, |_i, zid| {
+            claim_zapping_script(account, *zid);
+        });
+    }
+
+    public entry fun batch_claim_reward_script(
+        account: &signer,
+        zids: vector<u64>,
+    ) acquires ModuleStore, LSStore {
+        vector::enumerate_ref(&zids, |_i, zid| {
+            claim_reward_script(account, *zid);
+        });
+    }
+
     // deposit zapping delegation to user's staking
     public entry fun claim_zapping_script(
         account: &signer,
@@ -255,14 +273,15 @@ module initia_std::vip_zapping {
         let stakelisted_amount = fungible_asset::amount(&stakelisted);
         let stakelisted_metadata = fungible_asset::asset_metadata(&stakelisted);
 
-        let esinit_metadata_address = object::object_address(esinit_metadata);
-        let stakelisted_metadata_address = object::object_address(stakelisted_metadata);
-        let pair_responses = dex::get_pairs(esinit_metadata_address, stakelisted_metadata_address, option::none(), 1); 
-        let (coin_a, coin_b) = if (vector::length(&pair_responses) == 1) {
+        let (coin_a_metadata, _) = dex::pool_metadata(pair);
+
+        // if pair is reversed, swap coin_a and coin_b
+        let (coin_a, coin_b) = if (coin_a_metadata == esinit_metadata){
             (esinit, stakelisted)
         } else {
             (stakelisted, esinit)
         };
+       
 
         let zid = provide_lock_stake(
             account,
@@ -558,6 +577,9 @@ module initia_std::vip_zapping {
     use std::decimal128;
 
     #[test_only]
+    use std::option;
+
+    #[test_only]
     use std::string;
 
     #[test_only]
@@ -598,10 +620,10 @@ module initia_std::vip_zapping {
         init_module_for_test(chain);
 
         let (_burn_cap, _freeze_cap, mint_cap) = initialize_coin(chain,string::utf8(b"INIT"));
-        coin::mint_to(&mint_cap, signer::address_of(chain), esinit_amount);
+        coin::mint_to(&mint_cap, signer::address_of(chain), esinit_amount * 2);
         coin::mint_to(&mint_cap, signer::address_of(account), esinit_amount);
         let (_burn_cap, _freeze_cap, mint_cap) = initialize_coin(chain,string::utf8(b"USDC"));
-        coin::mint_to(&mint_cap, signer::address_of(chain), stakelisted_amount);
+        coin::mint_to(&mint_cap, signer::address_of(chain), stakelisted_amount * 2);
         coin::mint_to(&mint_cap, signer::address_of(account), stakelisted_amount);
         
         let esinit_metadata = coin::metadata(signer::address_of(chain), string::utf8(b"INIT"));
@@ -618,8 +640,21 @@ module initia_std::vip_zapping {
             stakelisted_metadata,
             esinit_metadata,
             stakelisted_amount,
-            esinit_amount
-            
+            esinit_amount  
+        );
+
+        // check reversed pair
+        dex::create_pair_script(
+            chain,
+            string::utf8(b"pair"),
+            string::utf8(b"USDC-INIT"),
+            decimal128::from_ratio(3, 1000),
+            decimal128::from_ratio(5, 10),
+            decimal128::from_ratio(5, 10),
+            esinit_metadata,
+            stakelisted_metadata,
+            esinit_amount,
+            stakelisted_amount,
         );
 
         let lp_metadata = coin::metadata(signer::address_of(chain), string::utf8(b"INIT-USDC"));
@@ -758,8 +793,8 @@ module initia_std::vip_zapping {
         staking::deposit_reward_for_chain(chain, l_m, vector[val], vector[validator_reward]);
         let zapping_reward = get_delegation_info(0).unclaimed_reward;
         assert!(validator_reward == zapping_reward, 0);
-
-        claim_reward_script(account, 0);
+        
+        batch_claim_reward_script(account, vector[0]);
         assert!(primary_fungible_store::balance(signer::address_of(account), vip_reward::reward_metadata()) == zapping_reward, 0);
     }
 
@@ -823,7 +858,7 @@ module initia_std::vip_zapping {
         
         let validator_reward = 1_000_000; 
         staking::deposit_reward_for_chain(chain, l_m, vector[val], vector[validator_reward]);
-        claim_zapping_script(user_a, 0);
+        batch_claim_zapping_script(user_a, vector[0]);
         assert!(primary_fungible_store::balance(signer::address_of(user_a), vip_reward::reward_metadata()) == (validator_reward*2)/3, 3);   
     }
 
