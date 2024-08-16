@@ -80,25 +80,24 @@ module minitia_std::simple_nft {
         mutable_nft_uri: bool,
         royalty: Decimal128,
     ): Object<SimpleNftCollection> {
-        let (_, extend_ref) = initia_nft::create_collection_object(
-            creator,
-            description,
-            max_supply,
-            name,
-            uri,
-            mutable_description,
-            mutable_royalty,
-            mutable_uri,
-            mutable_nft_description,
-            mutable_nft_uri,
-            royalty,
-        );
+        let (_, extend_ref) =
+            initia_nft::create_collection_object(
+                creator,
+                description,
+                max_supply,
+                name,
+                uri,
+                mutable_description,
+                mutable_royalty,
+                mutable_uri,
+                mutable_nft_description,
+                mutable_nft_uri,
+                royalty,
+            );
 
         let object_signer = object::generate_signer_for_extending(&extend_ref);
 
-        let simple_nft_collection = SimpleNftCollection {
-            mutable_nft_properties,
-        };
+        let simple_nft_collection = SimpleNftCollection { mutable_nft_properties, };
         move_to(&object_signer, simple_nft_collection);
         object::address_to_object<SimpleNftCollection>(signer::address_of(&object_signer))
     }
@@ -115,12 +114,23 @@ module minitia_std::simple_nft {
         property_values: vector<vector<u8>>,
         to: Option<address>,
     ) {
-        let nft_object = mint_nft_object(
-            creator, collection, description, 
-            token_id, uri, property_keys, property_types, property_values,
-        );
+        let nft_object =
+            mint_nft_object(
+                creator,
+                collection,
+                description,
+                token_id,
+                uri,
+                property_keys,
+                property_types,
+                property_values,
+            );
         if (option::is_some(&to)) {
-            object::transfer(creator, nft_object, option::extract(&mut to));
+            object::transfer(
+                creator,
+                nft_object,
+                option::extract(&mut to),
+            );
         }
     }
 
@@ -135,17 +145,23 @@ module minitia_std::simple_nft {
         property_types: vector<String>,
         property_values: vector<vector<u8>>,
     ): Object<SimpleNft> {
-        let (object, extend_ref) = initia_nft::mint_nft_object(
-            creator,
-            collection,
-            description,
-            token_id,
-            uri,
-            true,
-        );
+        let (object, extend_ref) =
+            initia_nft::mint_nft_object(
+                creator,
+                collection,
+                description,
+                token_id,
+                uri,
+                true,
+            );
         let s = object::generate_signer_for_extending(&extend_ref);
 
-        let properties = property_map::prepare_input(property_keys, property_types, property_values);
+        let properties =
+            property_map::prepare_input(
+                property_keys,
+                property_types,
+                property_values,
+            );
         property_map::init(&s, properties);
 
         let simple_nft = SimpleNft {
@@ -159,7 +175,7 @@ module minitia_std::simple_nft {
     // Nft accessors
 
     inline fun borrow<T: key>(nft: Object<T>): &SimpleNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<SimpleNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -176,7 +192,7 @@ module minitia_std::simple_nft {
     // Nft mutators
 
     inline fun authorized_borrow<T: key>(nft: Object<T>, creator: &signer): &SimpleNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<SimpleNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -190,7 +206,7 @@ module minitia_std::simple_nft {
     }
 
     public entry fun burn<T: key>(owner: &signer, nft: Object<T>) acquires SimpleNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<SimpleNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -200,7 +216,7 @@ module minitia_std::simple_nft {
             error::permission_denied(ENOT_OWNER),
         );
 
-        let simple_nft = move_from<SimpleNft>(object::object_address(nft));
+        let simple_nft = move_from<SimpleNft>(object::object_address(&nft));
         let SimpleNft { property_mutator_ref } = simple_nft;
         property_map::burn(property_mutator_ref);
         initia_nft::burn(owner, nft);
@@ -235,7 +251,12 @@ module minitia_std::simple_nft {
             error::permission_denied(EPROPERTIES_NOT_MUTABLE),
         );
 
-        property_map::add(&simple_nft.property_mutator_ref, key, type, value);
+        property_map::add(
+            &simple_nft.property_mutator_ref,
+            key,
+            type,
+            value,
+        );
     }
 
     public entry fun add_typed_property<T: key, V: drop>(
@@ -280,7 +301,12 @@ module minitia_std::simple_nft {
             error::permission_denied(EPROPERTIES_NOT_MUTABLE),
         );
 
-        property_map::update(&simple_nft.property_mutator_ref, &key, type, value);
+        property_map::update(
+            &simple_nft.property_mutator_ref,
+            &key,
+            type,
+            value,
+        );
     }
 
     public entry fun update_typed_property<T: key, V: drop>(
@@ -295,18 +321,23 @@ module minitia_std::simple_nft {
             error::permission_denied(EPROPERTIES_NOT_MUTABLE),
         );
 
-        property_map::update_typed(&simple_nft.property_mutator_ref, &key, value);
+        property_map::update_typed(
+            &simple_nft.property_mutator_ref,
+            &key,
+            value,
+        );
     }
 
     // Collection accessors
 
     inline fun collection_object(creator: &signer, name: &String): Object<SimpleNftCollection> {
-        let collection_addr = collection::create_collection_address(signer::address_of(creator), name);
+        let collection_addr =
+            collection::create_collection_address(signer::address_of(creator), name);
         object::address_to_object<SimpleNftCollection>(collection_addr)
     }
 
     inline fun borrow_collection<T: key>(nft: Object<T>): &SimpleNftCollection {
-        let collection_address = object::object_address(nft);
+        let collection_address = object::object_address(&nft);
         assert!(
             exists<SimpleNftCollection>(collection_address),
             error::not_found(ECOLLECTION_DOES_NOT_EXIST),
@@ -326,9 +357,7 @@ module minitia_std::simple_nft {
         initia_nft::is_mutable_collection_royalty(collection)
     }
 
-    public fun is_mutable_collection_uri<T: key>(
-        collection: Object<T>,
-    ): bool {
+    public fun is_mutable_collection_uri<T: key>(collection: Object<T>,): bool {
         initia_nft::is_mutable_collection_uri(collection)
     }
 
@@ -352,8 +381,10 @@ module minitia_std::simple_nft {
 
     // Collection mutators
 
-    inline fun authorized_borrow_collection<T: key>(collection: Object<T>, creator: &signer): &SimpleNftCollection {
-        let collection_address = object::object_address(collection);
+    inline fun authorized_borrow_collection<T: key>(
+        collection: Object<T>, creator: &signer
+    ): &SimpleNftCollection {
+        let collection_address = object::object_address(&collection);
         assert!(
             exists<SimpleNftCollection>(collection_address),
             error::not_found(ECOLLECTION_DOES_NOT_EXIST),
@@ -415,7 +446,10 @@ module minitia_std::simple_nft {
         create_collection_helper(creator, collection_name, true);
         let nft = mint_helper(creator, collection_name, token_id);
 
-        assert!(object::owner(nft) == signer::address_of(creator), 1);
+        assert!(
+            object::owner(nft) == signer::address_of(creator),
+            1,
+        );
         object::transfer(creator, nft, @0x345);
         assert!(object::owner(nft) == @0x345, 1);
     }
@@ -429,9 +463,18 @@ module minitia_std::simple_nft {
 
         create_collection_helper(creator, collection_name, true);
         let nft = mint_helper(creator, collection_name, token_id);
-        add_property(creator, nft, property_name, property_type, vector [ 0x08 ]);
+        add_property(
+            creator,
+            nft,
+            property_name,
+            property_type,
+            vector[0x08],
+        );
 
-        assert!(property_map::read_u8(nft, &property_name) == 0x8, 0);
+        assert!(
+            property_map::read_u8(nft, &property_name) == 0x8,
+            0,
+        );
     }
 
     #[test(creator = @0x123)]
@@ -444,7 +487,10 @@ module minitia_std::simple_nft {
         let nft = mint_helper(creator, collection_name, token_id);
         add_typed_property<SimpleNft, u8>(creator, nft, property_name, 0x8);
 
-        assert!(property_map::read_u8(nft, &property_name) == 0x8, 0);
+        assert!(
+            property_map::read_u8(nft, &property_name) == 0x8,
+            0,
+        );
     }
 
     #[test(creator = @0x123)]
@@ -456,9 +502,18 @@ module minitia_std::simple_nft {
 
         create_collection_helper(creator, collection_name, true);
         let nft = mint_helper(creator, collection_name, token_id);
-        update_property(creator, nft, property_name, property_type, vector [ 0x00 ]);
+        update_property(
+            creator,
+            nft,
+            property_name,
+            property_type,
+            vector[0x00],
+        );
 
-        assert!(!property_map::read_bool(nft, &property_name), 0);
+        assert!(
+            !property_map::read_bool(nft, &property_name),
+            0,
+        );
     }
 
     #[test(creator = @0x123)]
@@ -471,7 +526,10 @@ module minitia_std::simple_nft {
         let nft = mint_helper(creator, collection_name, token_id);
         update_typed_property<SimpleNft, bool>(creator, nft, property_name, false);
 
-        assert!(!property_map::read_bool(nft, &property_name), 0);
+        assert!(
+            !property_map::read_bool(nft, &property_name),
+            0,
+        );
     }
 
     #[test(creator = @0x123)]

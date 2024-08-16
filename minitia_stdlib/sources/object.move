@@ -107,7 +107,7 @@ module minitia_std::object {
     /// This is a one time ability given to the creator to configure the object as necessary
     struct ConstructorRef has drop {
         self: address,
-        /// True if the object can be deleted. Named objects are not deletable.
+        /// True if the object can be deleted.
         can_delete: bool,
         version: u64,
     }
@@ -162,8 +162,14 @@ module minitia_std::object {
 
     /// Produces an ObjectId from the given address. This is not verified.
     public fun address_to_object<T: key>(object: address): Object<T> {
-        assert!(exists<ObjectCore>(object), error::not_found(EOBJECT_DOES_NOT_EXIST));
-        assert!(exists_at<T>(object), error::not_found(ERESOURCE_DOES_NOT_EXIST));
+        assert!(
+            exists<ObjectCore>(object),
+            error::not_found(EOBJECT_DOES_NOT_EXIST),
+        );
+        assert!(
+            exists_at<T>(object),
+            error::not_found(ERESOURCE_DOES_NOT_EXIST),
+        );
         Object<T> { inner: object }
     }
 
@@ -173,15 +179,17 @@ module minitia_std::object {
     }
 
     /// Derives an object address from source material: sha3_256([creator address | seed | 0xFE]).
-    public fun create_object_address(source: address, seed: vector<u8>): address {
-        let bytes = bcs::to_bytes(&source);
+    public fun create_object_address(source: &address, seed: vector<u8>): address {
+        let bytes = bcs::to_bytes(source);
         vector::append(&mut bytes, seed);
         vector::push_back(&mut bytes, OBJECT_FROM_SEED_ADDRESS_SCHEME);
         from_bcs::to_address(hash::sha3_256(bytes))
     }
 
     /// Derives an object address from the source address and an object: sha3_256([source | object addr | 0xFC]).
-    public fun create_user_derived_object_address(source: address, derive_from: address): address {
+    public fun create_user_derived_object_address(
+        source: address, derive_from: address
+    ): address {
         let bytes = bcs::to_bytes(&source);
         vector::append(&mut bytes, bcs::to_bytes(&derive_from));
         vector::push_back(&mut bytes, OBJECT_DERIVED_SCHEME);
@@ -189,7 +197,9 @@ module minitia_std::object {
     }
 
     /// Derives an object from an Account GUID.
-    public fun create_guid_object_address(source: address, creation_num: u64): address {
+    public fun create_guid_object_address(
+        source: address, creation_num: u64
+    ): address {
         let id = guid::create_id(source, creation_num);
         let bytes = bcs::to_bytes(&id);
         vector::push_back(&mut bytes, OBJECT_FROM_GUID_ADDRESS_SCHEME);
@@ -199,7 +209,7 @@ module minitia_std::object {
     native fun exists_at<T: key>(object: address): bool;
 
     /// Returns the address of within an ObjectId.
-    public fun object_address<T: key>(object: Object<T>): address {
+    public fun object_address<T: key>(object: &Object<T>): address {
         object.inner
     }
 
@@ -208,26 +218,47 @@ module minitia_std::object {
         address_to_object<Y>(object.inner)
     }
 
-    /// Create a new named object and return the ConstructorRef. Named objects can be queried globally
-    /// by knowing the user generated seed used to create them. Named objects cannot be deleted.
-    public fun create_named_object(creator: &signer, seed: vector<u8>, can_delete: bool): ConstructorRef acquires Tombstone {
+    /// Create a new named object and return the ConstructorRef.
+    /// Named objects can be queried globally by knowing the user generated seed used to create them.
+    public fun create_named_object(creator: &signer, seed: vector<u8>): ConstructorRef acquires Tombstone {
         let creator_address = signer::address_of(creator);
-        let obj_addr = create_object_address(creator_address, seed);
-        create_object_internal(creator_address, obj_addr, can_delete)
+        let obj_addr = create_object_address(&creator_address, seed);
+        create_object_internal(creator_address, obj_addr, false)
+    }
+
+    /// Create a new object that can be deleted and return the ConstructorRef.
+    /// Named objects can be queried globally by knowing the user generated seed used to create them.
+    public fun create_deletable_named_object(
+        creator: &signer, seed: vector<u8>
+    ): ConstructorRef acquires Tombstone {
+        let creator_address = signer::address_of(creator);
+        let obj_addr = create_object_address(&creator_address, seed);
+        create_object_internal(creator_address, obj_addr, true)
     }
 
     /// Create a new object whose address is derived based on the creator account address and another object.
     /// Derivde objects, similar to named objects, cannot be deleted.
-    public(friend) fun create_user_derived_object(creator_address: address, derive_ref: &DeriveRef, can_delete: bool): ConstructorRef acquires Tombstone {
-        let obj_addr = create_user_derived_object_address(creator_address, derive_ref.self);
-        create_object_internal(creator_address, obj_addr, can_delete)
+    public(friend) fun create_user_derived_object(
+        creator_address: address, derive_ref: &DeriveRef, can_delete: bool
+    ): ConstructorRef acquires Tombstone {
+        let obj_addr =
+            create_user_derived_object_address(creator_address, derive_ref.self);
+        create_object_internal(
+            creator_address,
+            obj_addr,
+            can_delete,
+        )
     }
 
     /// Create a new object by generating a random unique address based on transaction hash.
     /// The unique address is computed sha3_256([transaction hash | auid counter | 0xFB]).
     public fun create_object(owner_address: address, can_delete: bool): ConstructorRef acquires Tombstone {
         let unique_address = transaction_context::generate_unique_address();
-        create_object_internal(owner_address, unique_address, can_delete)
+        create_object_internal(
+            owner_address,
+            unique_address,
+            can_delete,
+        )
     }
 
     fun create_object_internal(
@@ -238,30 +269,24 @@ module minitia_std::object {
         // create resource account to prevent address overapping.
         account::create_object_account(object);
 
-        assert!(!exists<ObjectCore>(object), error::already_exists(EOBJECT_EXISTS));
+        assert!(
+            !exists<ObjectCore>(object),
+            error::already_exists(EOBJECT_EXISTS),
+        );
         let object_signer = account::create_signer(object);
-        let version = if (exists<Tombstone>(object)) {
-            let Tombstone { version } = move_from<Tombstone>(object);
-            (version+1)
-        } else {
-            1
-        };
+        let version =
+            if (exists<Tombstone>(object)) {
+                let Tombstone { version } = move_from<Tombstone>(object);
+                (version + 1)
+            } else { 1 };
 
         move_to(
             &object_signer,
-            ObjectCore {
-                owner: creator_address,
-                allow_ungated_transfer: true,
-                version,
-            },
+            ObjectCore { owner: creator_address, allow_ungated_transfer: true, version, },
         );
 
-        event::emit (
-            CreateEvent {
-                owner: creator_address,
-                object,
-                version,
-            }
+        event::emit(
+            CreateEvent { owner: creator_address, object, version, }
         );
 
         ConstructorRef { self: object, version, can_delete }
@@ -271,7 +296,10 @@ module minitia_std::object {
 
     /// Generates the DeleteRef, which can be used to remove ObjectCore from global storage.
     public fun generate_delete_ref(ref: &ConstructorRef): DeleteRef {
-        assert!(ref.can_delete, error::permission_denied(ECANNOT_DELETE));
+        assert!(
+            ref.can_delete,
+            error::permission_denied(ECANNOT_DELETE),
+        );
         DeleteRef { self: ref.self, version: ref.version }
     }
 
@@ -325,18 +353,18 @@ module minitia_std::object {
     /// Removes from the specified Object from global storage.
     public fun delete(ref: DeleteRef) acquires ObjectCore {
         let object_core = move_from<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
 
-        let ObjectCore {
-            owner: _,
-            allow_ungated_transfer: _,
-            version,
-        } = object_core;
+        let ObjectCore { owner: _, allow_ungated_transfer: _, version, } = object_core;
 
-        // set tombstone 
-        move_to<Tombstone>(&account::create_signer(ref.self), Tombstone {
-            version,
-        });
+        // set tombstone
+        move_to<Tombstone>(
+            &account::create_signer(ref.self),
+            Tombstone { version, },
+        );
     }
 
     // Extension helpers
@@ -344,7 +372,10 @@ module minitia_std::object {
     /// Create a signer for the ExtendRef
     public fun generate_signer_for_extending(ref: &ExtendRef): signer acquires ObjectCore {
         let object_core = borrow_global<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
 
         account::create_signer(ref.self)
     }
@@ -359,7 +390,10 @@ module minitia_std::object {
     /// Disable direct transfer, transfers can only be triggered via a TransferRef
     public fun disable_ungated_transfer(ref: &TransferRef) acquires ObjectCore {
         let object_core = borrow_global_mut<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
 
         object_core.allow_ungated_transfer = false;
     }
@@ -367,7 +401,10 @@ module minitia_std::object {
     /// Enable direct transfer.
     public fun enable_ungated_transfer(ref: &TransferRef) acquires ObjectCore {
         let object_core = borrow_global_mut<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
 
         object_core.allow_ungated_transfer = true;
     }
@@ -376,7 +413,10 @@ module minitia_std::object {
     /// time of generation is the owner at the time of transferring.
     public fun generate_linear_transfer_ref(ref: &TransferRef): LinearTransferRef acquires ObjectCore {
         let object_core = borrow_global<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
 
         LinearTransferRef {
             self: ref.self,
@@ -388,15 +428,17 @@ module minitia_std::object {
     /// Transfer to the destination address using a LinearTransferRef.
     public fun transfer_with_ref(ref: LinearTransferRef, to: address) acquires ObjectCore {
         let object_core = borrow_global_mut<ObjectCore>(ref.self);
-        assert!(ref.version == object_core.version, error::permission_denied(EVERSION_MISMATCH));
-        assert!(object_core.owner == ref.owner, error::permission_denied(ENOT_OBJECT_OWNER));
+        assert!(
+            ref.version == object_core.version,
+            error::permission_denied(EVERSION_MISMATCH),
+        );
+        assert!(
+            object_core.owner == ref.owner,
+            error::permission_denied(ENOT_OBJECT_OWNER),
+        );
 
         event::emit(
-            TransferEvent {
-                object: ref.self,
-                from: object_core.owner,
-                to,
-            },
+            TransferEvent { object: ref.self, from: object_core.owner, to, },
         );
 
         object_core.owner = to;
@@ -434,16 +476,10 @@ module minitia_std::object {
         verify_ungated_and_descendant(owner_address, object);
 
         let object_core = borrow_global_mut<ObjectCore>(object);
-        if (object_core.owner == to) {
-            return
-        };
+        if (object_core.owner == to) { return };
 
         event::emit(
-            TransferEvent {
-                object: object,
-                from: object_core.owner,
-                to,
-            },
+            TransferEvent { object: object, from: object_core.owner, to, },
         );
         object_core.owner = to;
     }
@@ -460,7 +496,9 @@ module minitia_std::object {
     /// This checks that the destination address is eventually owned by the owner and that each
     /// object between the two allows for ungated transfers. Note, this is limited to a depth of 8
     /// objects may have cyclic dependencies.
-    fun verify_ungated_and_descendant(owner: address, destination: address) acquires ObjectCore {
+    fun verify_ungated_and_descendant(
+        owner: address, destination: address
+    ) acquires ObjectCore {
         let current_address = destination;
         assert!(
             exists<ObjectCore>(current_address),
@@ -477,8 +515,11 @@ module minitia_std::object {
 
         let count = 0;
         while (owner != current_address) {
-            let count = count + 1;
-            assert!(count < MAXIMUM_OBJECT_NESTING, error::out_of_range(EMAXIMUM_NESTING));
+            count = count + 1;
+            assert!(
+                count < MAXIMUM_OBJECT_NESTING,
+                error::out_of_range(EMAXIMUM_NESTING),
+            );
 
             // At this point, the first object exists and so the more likely case is that the
             // object's owner is not an object. So we return a more sensible error.
@@ -498,7 +539,7 @@ module minitia_std::object {
 
     // Accessors
 
-    #[view] 
+    #[view]
     /// Return true if ungated transfer is allowed.
     public fun ungated_transfer_allowed<T: key>(object: Object<T>): bool acquires ObjectCore {
         assert!(
@@ -527,7 +568,7 @@ module minitia_std::object {
     #[view]
     /// Return true if the provided address has indirect or direct ownership of the provided object.
     public fun owns<T: key>(object: Object<T>, owner: address): bool acquires ObjectCore {
-        let current_address = object_address(object);
+        let current_address = object_address(&object);
         if (current_address == owner) {
             return true
         };
@@ -542,8 +583,11 @@ module minitia_std::object {
 
         let count = 0;
         while (owner != current_address) {
-            let count = count + 1;
-            assert!(count < MAXIMUM_OBJECT_NESTING, error::out_of_range(EMAXIMUM_NESTING));
+            count = count + 1;
+            assert!(
+                count < MAXIMUM_OBJECT_NESTING,
+                error::out_of_range(EMAXIMUM_NESTING),
+            );
             if (!exists<ObjectCore>(current_address)) {
                 return false
             };
@@ -578,14 +622,9 @@ module minitia_std::object {
 
     #[test_only]
     public fun create_hero(creator: &signer): (ConstructorRef, Object<Hero>) acquires Tombstone {
-        let hero_constructor_ref = create_named_object(creator, b"hero", true);
+        let hero_constructor_ref = create_deletable_named_object(creator, b"hero");
         let hero_signer = generate_signer(&hero_constructor_ref);
-        move_to(
-            &hero_signer,
-            Hero {
-                weapon: option::none(),
-            },
-        );
+        move_to(&hero_signer, Hero { weapon: option::none(), });
 
         let hero = object_from_constructor_ref<Hero>(&hero_constructor_ref);
         (hero_constructor_ref, hero)
@@ -599,7 +638,7 @@ module minitia_std::object {
 
     #[test_only]
     public fun create_weapon(creator: &signer): (ConstructorRef, Object<Weapon>) acquires Tombstone {
-        let weapon_constructor_ref = create_named_object(creator, b"weapon", true);
+        let weapon_constructor_ref = create_deletable_named_object(creator, b"weapon");
         let weapon_signer = generate_signer(&weapon_constructor_ref);
         move_to(&weapon_signer, Weapon {});
         let weapon = object_from_constructor_ref<Weapon>(&weapon_constructor_ref);
@@ -613,11 +652,9 @@ module minitia_std::object {
         weapon: Object<Weapon>,
     ) acquires Hero, ObjectCore {
         transfer_to_object(owner, weapon, hero);
-        let hero_obj = borrow_global_mut<Hero>(object_address(hero));
+        let hero_obj = borrow_global_mut<Hero>(object_address(&hero));
         option::fill(&mut hero_obj.weapon, weapon);
-        event::emit(
-            HeroEquipEvent { weapon_id: option::some(weapon) },
-        );
+        event::emit(HeroEquipEvent { weapon_id: option::some(weapon) });
     }
 
     #[test_only]
@@ -626,12 +663,14 @@ module minitia_std::object {
         hero: Object<Hero>,
         weapon: Object<Weapon>,
     ) acquires Hero, ObjectCore {
-        transfer(owner, weapon, signer::address_of(owner));
-        let hero = borrow_global_mut<Hero>(object_address(hero));
-        option::extract(&mut hero.weapon);
-        event::emit(
-            HeroEquipEvent { weapon_id: option::none() },
+        transfer(
+            owner,
+            weapon,
+            signer::address_of(owner),
         );
+        let hero = borrow_global_mut<Hero>(object_address(&hero));
+        option::extract(&mut hero.weapon);
+        event::emit(HeroEquipEvent { weapon_id: option::none() });
     }
 
     #[test(creator = @0x123)]
@@ -679,14 +718,16 @@ module minitia_std::object {
 
     #[test(creator = @0x123, receiver = @0x456)]
     #[expected_failure(abort_code = 0x50009, location = Self)]
-    fun test_cannot_use_linear_transfer_ref_with_old_version(creator: &signer, receiver: address) acquires Tombstone, ObjectCore, Hero {
+    fun test_cannot_use_linear_transfer_ref_with_old_version(
+        creator: &signer, receiver: address
+    ) acquires Tombstone, ObjectCore, Hero {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let transfer_ref = generate_transfer_ref(&hero_constructor);
         let linear_transfer_ref = generate_linear_transfer_ref(&transfer_ref);
 
         delete_hero(delete_ref);
-        
+
         let (_, _) = create_hero(creator);
         transfer_with_ref(linear_transfer_ref, receiver);
     }
@@ -697,7 +738,7 @@ module minitia_std::object {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let transfer_ref = generate_transfer_ref(&hero_constructor);
-        
+
         delete_hero(delete_ref);
 
         let (_, _) = create_hero(creator);
@@ -710,9 +751,8 @@ module minitia_std::object {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let transfer_ref = generate_transfer_ref(&hero_constructor);
-        
+
         delete_hero(delete_ref);
-        
 
         let (_, _) = create_hero(creator);
         disable_ungated_transfer(&transfer_ref);
@@ -724,7 +764,7 @@ module minitia_std::object {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let transfer_ref = generate_transfer_ref(&hero_constructor);
-        
+
         delete_hero(delete_ref);
 
         let (_, _) = create_hero(creator);
@@ -737,7 +777,7 @@ module minitia_std::object {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let delete_ref2 = generate_delete_ref(&hero_constructor);
-        
+
         delete_hero(delete_ref);
 
         let (_, _) = create_hero(creator);
@@ -750,7 +790,7 @@ module minitia_std::object {
         let (hero_constructor, _) = create_hero(creator);
         let delete_ref = generate_delete_ref(&hero_constructor);
         let extend_ref = generate_extend_ref(&hero_constructor);
-        
+
         delete_hero(delete_ref);
 
         let (_, _) = create_hero(creator);

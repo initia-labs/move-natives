@@ -18,12 +18,15 @@ module std::acl {
 
     /// Return an empty ACL.
     public fun empty(): ACL {
-        ACL{ list: vector::empty<address>() }
+        ACL { list: vector::empty<address>() }
     }
 
     /// Add the address to the ACL.
     public fun add(acl: &mut ACL, addr: address) {
-        assert!(!vector::contains(&mut acl.list, &addr), error::invalid_argument(ECONTAIN));
+        assert!(
+            !vector::contains(&mut acl.list, &addr),
+            error::invalid_argument(ECONTAIN),
+        );
         vector::push_back(&mut acl.list, addr);
     }
 
@@ -41,6 +44,9 @@ module std::acl {
 
     /// assert! that the ACL has the address.
     public fun assert_contains(acl: &ACL, addr: address) {
-        assert!(contains(acl, addr), error::invalid_argument(ENOT_CONTAIN));
+        assert!(
+            contains(acl, addr),
+            error::invalid_argument(ENOT_CONTAIN),
+        );
     }
 }

@@ -42,6 +42,8 @@ module initia_std::collection {
     const EDESCRIPTION_TOO_LONG: u64 = 5;
     /// The max supply must be positive
     const EMAX_SUPPLY_CANNOT_BE_ZERO: u64 = 6;
+    /// The collection name is invalid
+    const EINVALID_COLLECTION_NAME: u64 = 7;
 
     const MAX_COLLECTION_NAME_LENGTH: u64 = 128;
     const MAX_URI_LENGTH: u64 = 512;
@@ -132,15 +134,14 @@ module initia_std::collection {
         royalty: Option<Royalty>,
         uri: String,
     ): ConstructorRef {
-        assert!(max_supply != 0, error::invalid_argument(EMAX_SUPPLY_CANNOT_BE_ZERO));
+        assert!(
+            max_supply != 0,
+            error::invalid_argument(EMAX_SUPPLY_CANNOT_BE_ZERO),
+        );
         let collection_seed = create_collection_seed(&name);
-        let constructor_ref = object::create_named_object(creator, collection_seed, false);
+        let constructor_ref = object::create_named_object(creator, collection_seed);
 
-        let supply = FixedSupply {
-            current_supply: 0,
-            max_supply,
-            total_minted: 0,
-        };
+        let supply = FixedSupply { current_supply: 0, max_supply, total_minted: 0, };
 
         create_collection_internal(
             creator,
@@ -163,12 +164,9 @@ module initia_std::collection {
         uri: String,
     ): ConstructorRef {
         let collection_seed = create_collection_seed(&name);
-        let constructor_ref = object::create_named_object(creator, collection_seed, false);
+        let constructor_ref = object::create_named_object(creator, collection_seed);
 
-        let supply = UnlimitedSupply {
-            current_supply: 0,
-            total_minted: 0,
-        };
+        let supply = UnlimitedSupply { current_supply: 0, total_minted: 0, };
 
         create_collection_internal(
             creator,
@@ -192,7 +190,7 @@ module initia_std::collection {
         uri: String,
     ): ConstructorRef {
         let collection_seed = create_collection_seed(&name);
-        let constructor_ref = object::create_named_object(creator, collection_seed, false);
+        let constructor_ref = object::create_named_object(creator, collection_seed);
 
         create_collection_internal<FixedSupply>(
             creator,
@@ -205,6 +203,18 @@ module initia_std::collection {
         )
     }
 
+    fun assert_collection_name(name: &String) {
+        let len = string::length(name);
+        assert!(
+            len <= MAX_COLLECTION_NAME_LENGTH,
+            error::out_of_range(ECOLLECTION_NAME_TOO_LONG),
+        );
+        assert!(
+            string::index_of(name, &string::utf8(b"::")) == len,
+            error::invalid_argument(EINVALID_COLLECTION_NAME),
+        );
+    }
+
     inline fun create_collection_internal<Supply: key>(
         creator: &signer,
         constructor_ref: ConstructorRef,
@@ -214,9 +224,16 @@ module initia_std::collection {
         uri: String,
         supply: Option<Supply>,
     ): ConstructorRef {
-        assert!(string::length(&name) <= MAX_COLLECTION_NAME_LENGTH, error::out_of_range(ECOLLECTION_NAME_TOO_LONG));
-        assert!(string::length(&uri) <= MAX_URI_LENGTH, error::out_of_range(EURI_TOO_LONG));
-        assert!(string::length(&description) <= MAX_DESCRIPTION_LENGTH, error::out_of_range(EDESCRIPTION_TOO_LONG));
+        assert_collection_name(&name);
+
+        assert!(
+            string::length(&uri) <= MAX_URI_LENGTH,
+            error::out_of_range(EURI_TOO_LONG),
+        );
+        assert!(
+            string::length(&description) <= MAX_DESCRIPTION_LENGTH,
+            error::out_of_range(EDESCRIPTION_TOO_LONG),
+        );
 
         let object_signer = &object::generate_signer(&constructor_ref);
         let creator_addr = signer::address_of(creator);
@@ -231,15 +248,27 @@ module initia_std::collection {
         move_to(object_signer, collection);
 
         if (option::is_some(&supply)) {
-            move_to(object_signer, option::destroy_some(supply));
+            move_to(
+                object_signer,
+                option::destroy_some(supply),
+            );
             let collection_addr = signer::address_of(object_signer);
-            event::emit(CreateCollectionEvent { collection: collection_addr, creator: creator_addr, name });
+            event::emit(
+                CreateCollectionEvent {
+                    collection: collection_addr,
+                    creator: creator_addr,
+                    name
+                },
+            );
         } else {
             option::destroy_none(supply)
         };
 
         if (option::is_some(&royalty)) {
-            royalty::init(&constructor_ref, option::extract(&mut royalty))
+            royalty::init(
+                &constructor_ref,
+                option::extract(&mut royalty),
+            )
         };
 
         let transfer_ref = object::generate_transfer_ref(&constructor_ref);
@@ -250,12 +279,15 @@ module initia_std::collection {
 
     /// Generates the collections address based upon the creators address and the collection's name
     public fun create_collection_address(creator: address, name: &String): address {
-        object::create_object_address(creator, create_collection_seed(name))
+        object::create_object_address(&creator, create_collection_seed(name))
     }
 
     /// Named objects are derived from a seed, the collection's seed is its name.
     public fun create_collection_seed(name: &String): vector<u8> {
-        assert!(string::length(name) <= MAX_COLLECTION_NAME_LENGTH, error::out_of_range(ECOLLECTION_NAME_TOO_LONG));
+        assert!(
+            string::length(name) <= MAX_COLLECTION_NAME_LENGTH,
+            error::out_of_range(ECOLLECTION_NAME_TOO_LONG),
+        );
         *string::bytes(name)
     }
 
@@ -265,7 +297,7 @@ module initia_std::collection {
         token_id: String,
         nft: address,
     ) acquires Collection, FixedSupply, UnlimitedSupply {
-        let collection_addr = object::object_address(collection);
+        let collection_addr = object::object_address(&collection);
         let collection = borrow_global_mut<Collection>(collection_addr);
         if (exists<FixedSupply>(collection_addr)) {
             let supply = borrow_global_mut<FixedSupply>(collection_addr);
@@ -287,7 +319,7 @@ module initia_std::collection {
             event::emit(
                 MintEvent { collection: collection_addr, token_id, nft },
             );
-        } 
+        }
     }
 
     /// Called by nft on burn to decrement supply if there's an appropriate Supply struct.
@@ -296,7 +328,7 @@ module initia_std::collection {
         token_id: String,
         nft: address,
     ) acquires Collection, FixedSupply, UnlimitedSupply {
-        let collection_addr = object::object_address(collection);
+        let collection_addr = object::object_address(&collection);
         let collection = borrow_global_mut<Collection>(collection_addr);
         if (exists<FixedSupply>(collection_addr)) {
             let supply = borrow_global_mut<FixedSupply>(collection_addr);
@@ -318,7 +350,7 @@ module initia_std::collection {
     /// Creates a MutatorRef, which gates the ability to mutate any fields that support mutation.
     public fun generate_mutator_ref(ref: &ConstructorRef): MutatorRef {
         let object = object::object_from_constructor_ref<Collection>(ref);
-        MutatorRef { self: object::object_address(object) }
+        MutatorRef { self: object::object_address(&object) }
     }
 
     // Accessors
@@ -331,7 +363,7 @@ module initia_std::collection {
     }
 
     inline fun borrow<T: key>(collection: Object<T>): &Collection {
-        let collection_address = object::object_address(collection);
+        let collection_address = object::object_address(&collection);
         check_collection_exists(collection_address);
         borrow_global<Collection>(collection_address)
     }
@@ -339,7 +371,7 @@ module initia_std::collection {
     #[view]
     /// Provides the count of the current selection if supply tracking is used
     public fun count<T: key>(collection: Object<T>): Option<u64> acquires FixedSupply, UnlimitedSupply {
-        let collection_address = object::object_address(collection);
+        let collection_address = object::object_address(&collection);
         check_collection_exists(collection_address);
 
         if (exists<FixedSupply>(collection_address)) {
@@ -396,15 +428,13 @@ module initia_std::collection {
 
         let res: vector<NftResponse> = vector[];
 
-        while (table::prepare<String, address>(&mut nfts_iter) && vector::length(&res) < (limit as u64)) {
-            let (token_id, nft) = table::next<String, address>(&mut nfts_iter);
+        while (table::prepare<String, address>(nfts_iter)
+                && vector::length(&res) < (limit as u64)) {
+            let (token_id, nft) = table::next<String, address>(nfts_iter);
 
             vector::push_back(
                 &mut res,
-                NftResponse {
-                    token_id,
-                    nft: *nft,
-                },
+                NftResponse { token_id, nft: *nft, },
             );
         };
 
@@ -422,8 +452,13 @@ module initia_std::collection {
         borrow_global_mut<Collection>(mutator_ref.self)
     }
 
-    public fun set_description(mutator_ref: &MutatorRef, description: String) acquires Collection {
-        assert!(string::length(&description) <= MAX_DESCRIPTION_LENGTH, error::out_of_range(EDESCRIPTION_TOO_LONG));
+    public fun set_description(
+        mutator_ref: &MutatorRef, description: String
+    ) acquires Collection {
+        assert!(
+            string::length(&description) <= MAX_DESCRIPTION_LENGTH,
+            error::out_of_range(EDESCRIPTION_TOO_LONG),
+        );
         let collection = borrow_mut(mutator_ref);
         event::emit(
             MutationEvent {
@@ -437,7 +472,10 @@ module initia_std::collection {
     }
 
     public fun set_uri(mutator_ref: &MutatorRef, uri: String) acquires Collection {
-        assert!(string::length(&uri) <= MAX_URI_LENGTH, error::out_of_range(EURI_TOO_LONG));
+        assert!(
+            string::length(&uri) <= MAX_URI_LENGTH,
+            error::out_of_range(EURI_TOO_LONG),
+        );
         let collection = borrow_mut(mutator_ref);
         event::emit(
             MutationEvent {
@@ -456,13 +494,27 @@ module initia_std::collection {
     fun test_create_mint_burn_for_unlimited(creator: &signer) acquires Collection, FixedSupply, UnlimitedSupply {
         let creator_address = signer::address_of(creator);
         let name = string::utf8(b"collection name");
-        create_unlimited_collection(creator, string::utf8(b""), name, option::none(), string::utf8(b""));
+        create_unlimited_collection(
+            creator,
+            string::utf8(b""),
+            name,
+            option::none(),
+            string::utf8(b""),
+        );
         let collection_address = create_collection_address(creator_address, &name);
         let collection = object::address_to_object<Collection>(collection_address);
         assert!(count(collection) == option::some(0), 0);
-        increment_supply(collection, string::utf8(b"token_id"), @0x11111);
+        increment_supply(
+            collection,
+            string::utf8(b"token_id"),
+            @0x11111,
+        );
         assert!(count(collection) == option::some(1), 0);
-        decrement_supply(collection, string::utf8(b"token_id"), @0x11112);
+        decrement_supply(
+            collection,
+            string::utf8(b"token_id"),
+            @0x11112,
+        );
         assert!(count(collection) == option::some(0), 0);
     }
 
@@ -470,14 +522,35 @@ module initia_std::collection {
     fun test_create_mint_burn_for_fixed(creator: &signer) acquires Collection, FixedSupply, UnlimitedSupply {
         let creator_address = signer::address_of(creator);
         let name = string::utf8(b"collection name");
-        create_fixed_collection(creator, string::utf8(b""), 1, name, option::none(), string::utf8(b""));
+        create_fixed_collection(
+            creator,
+            string::utf8(b""),
+            1,
+            name,
+            option::none(),
+            string::utf8(b""),
+        );
         let collection_address = create_collection_address(creator_address, &name);
         let collection = object::address_to_object<Collection>(collection_address);
         assert!(count(collection) == option::some(0), 0);
-        increment_supply(collection, string::utf8(b"token_id"), @0x11111);
+        increment_supply(
+            collection,
+            string::utf8(b"token_id"),
+            @0x11111,
+        );
         assert!(count(collection) == option::some(1), 0);
-        decrement_supply(collection, string::utf8(b"token_id"), @0x11112);
+        decrement_supply(
+            collection,
+            string::utf8(b"token_id"),
+            @0x11112,
+        );
         assert!(count(collection) == option::some(0), 0);
+    }
+
+    #[test(creator = @0x123)]
+    #[expected_failure(abort_code = 0x10007, location = Self)]
+    fun test_create_collection_with_invalid_name(creator: &signer) {
+        create_collection_helper(creator, string::utf8(b"collection::hello"));
     }
 
     #[test(creator = @0x123, trader = @0x456)]
@@ -487,11 +560,19 @@ module initia_std::collection {
         let collection_name = string::utf8(b"collection name");
         create_collection_helper(creator, collection_name);
 
-        let collection = object::address_to_object<Collection>(
-            create_collection_address(creator_address, &collection_name),
+        let collection =
+            object::address_to_object<Collection>(
+                create_collection_address(creator_address, &collection_name)
+            );
+        assert!(
+            object::owner(collection) == creator_address,
+            1,
         );
-        assert!(object::owner(collection) == creator_address, 1);
-        object::transfer(creator, collection, signer::address_of(trader));
+        object::transfer(
+            creator,
+            collection,
+            signer::address_of(trader),
+        );
     }
 
     #[test(creator = @0x123)]
@@ -506,9 +587,13 @@ module initia_std::collection {
     entry fun test_set_description(creator: &signer) acquires Collection {
         let collection_name = string::utf8(b"collection name");
         let constructor_ref = create_collection_helper(creator, collection_name);
-        let collection = object::address_to_object<Collection>(
-            create_collection_address(signer::address_of(creator), &collection_name),
-        );
+        let collection =
+            object::address_to_object<Collection>(
+                create_collection_address(
+                    signer::address_of(creator),
+                    &collection_name,
+                ),
+            );
         let mutator_ref = generate_mutator_ref(&constructor_ref);
         let description = string::utf8(b"no fail");
         assert!(description != description(collection), 0);
@@ -521,9 +606,13 @@ module initia_std::collection {
         let collection_name = string::utf8(b"collection name");
         let constructor_ref = create_collection_helper(creator, collection_name);
         let mutator_ref = generate_mutator_ref(&constructor_ref);
-        let collection = object::address_to_object<Collection>(
-            create_collection_address(signer::address_of(creator), &collection_name),
-        );
+        let collection =
+            object::address_to_object<Collection>(
+                create_collection_address(
+                    signer::address_of(creator),
+                    &collection_name,
+                ),
+            );
         let uri = string::utf8(b"no fail");
         assert!(uri != uri(collection), 0);
         set_uri(&mutator_ref, uri);
@@ -534,33 +623,54 @@ module initia_std::collection {
     fun test_nfts_query(creator: &signer) acquires Collection, FixedSupply, UnlimitedSupply {
         let creator_address = signer::address_of(creator);
         let name = string::utf8(b"collection name");
-        create_unlimited_collection(creator, string::utf8(b""), name, option::none(), string::utf8(b""));
+        create_unlimited_collection(
+            creator,
+            string::utf8(b""),
+            name,
+            option::none(),
+            string::utf8(b""),
+        );
         let collection_address = create_collection_address(creator_address, &name);
         let collection = object::address_to_object<Collection>(collection_address);
-        increment_supply(collection, string::utf8(b"1"), @0x001);
-        increment_supply(collection, string::utf8(b"2"), @0x002);
-        increment_supply(collection, string::utf8(b"3"), @0x003);
+        increment_supply(
+            collection,
+            string::utf8(b"1"),
+            @0x001,
+        );
+        increment_supply(
+            collection,
+            string::utf8(b"2"),
+            @0x002,
+        );
+        increment_supply(
+            collection,
+            string::utf8(b"3"),
+            @0x003,
+        );
 
         let nfts = nfts(collection, option::none(), 5);
         assert!(
-            nfts == vector[
-                NftResponse { token_id: string::utf8(b"3"), nft: @0x003 },
-                NftResponse { token_id: string::utf8(b"2"), nft: @0x002 },
-                NftResponse { token_id: string::utf8(b"1"), nft: @0x001 },
-            ],
-            0
+            nfts
+                == vector[
+                    NftResponse { token_id: string::utf8(b"3"), nft: @0x003 },
+                    NftResponse { token_id: string::utf8(b"2"), nft: @0x002 },
+                    NftResponse { token_id: string::utf8(b"1"), nft: @0x001 },],
+            0,
         );
 
-        nfts = nfts(collection, option::some(string::utf8(b"3")), 5);
+        nfts = nfts(
+            collection,
+            option::some(string::utf8(b"3")),
+            5,
+        );
         assert!(
-            nfts == vector[
-                NftResponse { token_id: string::utf8(b"2"), nft: @0x002 },
-                NftResponse { token_id: string::utf8(b"1"), nft: @0x001 },
-            ],
-            1
+            nfts
+                == vector[
+                    NftResponse { token_id: string::utf8(b"2"), nft: @0x002 },
+                    NftResponse { token_id: string::utf8(b"1"), nft: @0x001 },],
+            1,
         )
     }
-
 
     #[test_only]
     fun create_collection_helper(creator: &signer, name: String): ConstructorRef {

@@ -13,6 +13,9 @@ module minitia_std::ed25519 {
     /// Wrong number of bytes were given as input when deserializing an Ed25519 signature.
     const E_WRONG_SIGNATURE_SIZE: u64 = 2;
 
+    /// The number of messages, public keys, and signatures do not match.
+    const E_UNMATCHED_ARGS_LENGTH: u64 = 3;
+
     //
     // Constants
     //
@@ -48,7 +51,10 @@ module minitia_std::ed25519 {
 
     /// Constructs an Signature struct from the given 64 bytes.
     public fun signature_from_bytes(bytes: vector<u8>): Signature {
-        assert!(std::vector::length(&bytes) == SIGNATURE_SIZE, std::error::invalid_argument(E_WRONG_SIGNATURE_SIZE));
+        assert!(
+            std::vector::length(&bytes) == SIGNATURE_SIZE,
+            std::error::invalid_argument(E_WRONG_SIGNATURE_SIZE),
+        );
         Signature { bytes }
     }
 
@@ -68,7 +74,11 @@ module minitia_std::ed25519 {
         public_key: &PublicKey,
         signature: &Signature,
     ): bool {
-        verify_internal(message, public_key.bytes, signature.bytes)
+        verify_internal(
+            message,
+            public_key.bytes,
+            signature.bytes,
+        )
     }
 
     /// Performs batch Ed25519 signature verification.
@@ -92,10 +102,36 @@ module minitia_std::ed25519 {
         public_keys: vector<PublicKey>,
         signatures: vector<Signature>,
     ): bool {
+        let message_length = std::vector::length(&messages);
+        let public_key_length = std::vector::length(&public_keys);
+        let signature_length = std::vector::length(&signatures);
+
+        if (message_length == 1) {
+            assert!(
+                public_key_length == signature_length,
+                std::error::invalid_argument(E_UNMATCHED_ARGS_LENGTH),
+            );
+            if (public_key_length == 0) return true;
+        } else if (public_key_length == 1) {
+            assert!(
+                message_length == signature_length,
+                std::error::invalid_argument(E_UNMATCHED_ARGS_LENGTH),
+            );
+            if (message_length == 0) return true;
+        } else {
+            assert!(
+                message_length == public_key_length && public_key_length == signature_length,
+                std::error::invalid_argument(E_UNMATCHED_ARGS_LENGTH),
+            );
+            if (message_length == 0) return true;
+        };
+
         batch_verify_internal(messages, public_keys, signatures)
     }
 
-    native fun verify_internal(message: vector<u8>, public_key: vector<u8>, signature: vector<u8>): bool;
+    native fun verify_internal(
+        message: vector<u8>, public_key: vector<u8>, signature: vector<u8>
+    ): bool;
 
     native fun batch_verify_internal(
         messages: vector<vector<u8>>,

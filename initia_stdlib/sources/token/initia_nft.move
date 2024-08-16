@@ -3,7 +3,7 @@
 /// IBC transfer will only support nft that is created by initia_nft
 /// The key features are:
 /// * Base nft and collection features
-/// * Only owner can burn or no one can burn nft 
+/// * Only owner can burn or no one can burn nft
 /// * Only support object's ungated transfer
 /// * Freeze is not available
 /// * Standard object-based transfer and events
@@ -99,37 +99,44 @@ module initia_std::initia_nft {
     ): (Object<InitiaNftCollection>, ExtendRef) {
         let creator_addr = signer::address_of(creator);
         let royalty = royalty::create(royalty, creator_addr);
-        let constructor_ref = if (option::is_some(&max_supply)) {
-            collection::create_fixed_collection(
-                creator,
-                description,
-                option::extract(&mut max_supply),
-                name,
-                option::some(royalty),
-                uri,
-            )
-        } else {
-            collection::create_unlimited_collection(
-                creator,
-                description,
-                name,
-                option::some(royalty),
-                uri,
-            )
-        };
+        let constructor_ref =
+            if (option::is_some(&max_supply)) {
+                collection::create_fixed_collection(
+                    creator,
+                    description,
+                    option::extract(&mut max_supply),
+                    name,
+                    option::some(royalty),
+                    uri,
+                )
+            } else {
+                collection::create_unlimited_collection(
+                    creator,
+                    description,
+                    name,
+                    option::some(royalty),
+                    uri,
+                )
+            };
 
         let object_signer = object::generate_signer(&constructor_ref);
-        let mutator_ref = if (mutable_description || mutable_uri) {
-            option::some(collection::generate_mutator_ref(&constructor_ref))
-        } else {
-            option::none()
-        };
+        let mutator_ref =
+            if (mutable_description || mutable_uri) {
+                option::some(collection::generate_mutator_ref(&constructor_ref))
+            } else {
+                option::none()
+            };
 
-        let royalty_mutator_ref = if (mutable_royalty) {
-            option::some(royalty::generate_mutator_ref(object::generate_extend_ref(&constructor_ref)))
-        } else {
-            option::none()
-        };
+        let royalty_mutator_ref =
+            if (mutable_royalty) {
+                option::some(
+                    royalty::generate_mutator_ref(
+                        object::generate_extend_ref(&constructor_ref)
+                    ),
+                )
+            } else {
+                option::none()
+            };
 
         let extend_ref = object::generate_extend_ref(&constructor_ref);
 
@@ -142,7 +149,7 @@ module initia_std::initia_nft {
             mutable_nft_uri,
         };
         move_to(&object_signer, initia_nft_collection);
-        (object::object_from_constructor_ref(&constructor_ref), extend_ref) 
+        (object::object_from_constructor_ref(&constructor_ref), extend_ref)
     }
 
     /// With an existing collection, directly mint a viable nft into the creators account.
@@ -155,9 +162,21 @@ module initia_std::initia_nft {
         can_burn: bool,
         to: Option<address>,
     ) acquires InitiaNftCollection {
-        let (nft_object, _) = mint_nft_object(creator, collection, description, token_id, uri, can_burn);
+        let (nft_object, _) =
+            mint_nft_object(
+                creator,
+                collection,
+                description,
+                token_id,
+                uri,
+                can_burn,
+            );
         if (option::is_some(&to)) {
-            object::transfer(creator, nft_object, option::extract(&mut to));
+            object::transfer(
+                creator,
+                nft_object,
+                option::extract(&mut to),
+            );
         }
     }
 
@@ -170,14 +189,15 @@ module initia_std::initia_nft {
         uri: String,
         can_burn: bool,
     ): (Object<InitiaNft>, ExtendRef) acquires InitiaNftCollection {
-        let constructor_ref = mint_internal(
-            creator,
-            collection,
-            description,
-            token_id,
-            uri,
-            can_burn,
-        );
+        let constructor_ref =
+            mint_internal(
+                creator,
+                collection,
+                description,
+                token_id,
+                uri,
+                can_burn,
+            );
         let extend_ref = object::generate_extend_ref(&constructor_ref);
 
         (object::object_from_constructor_ref(&constructor_ref), extend_ref)
@@ -191,7 +211,8 @@ module initia_std::initia_nft {
         uri: String,
         can_burn: bool,
     ): ConstructorRef acquires InitiaNftCollection {
-        let constructor_ref = nft::create(
+        let constructor_ref =
+            nft::create(
                 creator,
                 collection,
                 description,
@@ -205,25 +226,21 @@ module initia_std::initia_nft {
         let collection_obj = collection_object(creator, &collection);
         let collection = borrow_collection(collection_obj);
 
-        let mutator_ref = if (
-            collection.mutable_nft_description
-                || collection.mutable_nft_uri
-        ) {
-            option::some(nft::generate_mutator_ref(&constructor_ref))
-        } else {
-            option::none()
-        };
+        let mutator_ref =
+            if (collection.mutable_nft_description || collection.mutable_nft_uri) {
+                option::some(nft::generate_mutator_ref(&constructor_ref))
+            } else {
+                option::none()
+            };
 
-        let burn_ref = if (can_burn) {
-            option::some(nft::generate_burn_ref(&constructor_ref))
-        } else {
-            option::none()
-        };
+        let burn_ref =
+            if (can_burn) {
+                option::some(nft::generate_burn_ref(&constructor_ref))
+            } else {
+                option::none()
+            };
 
-        let initia_nft = InitiaNft {
-            burn_ref,
-            mutator_ref,
-        };
+        let initia_nft = InitiaNft { burn_ref, mutator_ref, };
         move_to(&object_signer, initia_nft);
 
         constructor_ref
@@ -232,7 +249,7 @@ module initia_std::initia_nft {
     // Nft accessors
 
     inline fun borrow<T: key>(nft: Object<T>): &InitiaNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<InitiaNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -253,7 +270,7 @@ module initia_std::initia_nft {
     // Nft mutators
 
     inline fun authorized_borrow<T: key>(nft: Object<T>, creator: &signer): &InitiaNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<InitiaNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -267,7 +284,7 @@ module initia_std::initia_nft {
     }
 
     public entry fun burn<T: key>(owner: &signer, nft: Object<T>) acquires InitiaNft {
-        let nft_address = object::object_address(nft);
+        let nft_address = object::object_address(&nft);
         assert!(
             exists<InitiaNft>(nft_address),
             error::not_found(ENFT_DOES_NOT_EXIST),
@@ -277,12 +294,12 @@ module initia_std::initia_nft {
             error::permission_denied(ENOT_OWNER),
         );
 
-        let initia_nft = move_from<InitiaNft>(object::object_address(nft));
-        assert!(option::is_some(&initia_nft.burn_ref), error::invalid_state(ECAN_NOT_BURN));
-        let InitiaNft {
-            burn_ref,
-            mutator_ref: _,
-        } = initia_nft;
+        let initia_nft = move_from<InitiaNft>(object::object_address(&nft));
+        assert!(
+            option::is_some(&initia_nft.burn_ref),
+            error::invalid_state(ECAN_NOT_BURN),
+        );
+        let InitiaNft { burn_ref, mutator_ref: _, } = initia_nft;
         nft::burn(option::extract(&mut burn_ref));
     }
 
@@ -296,7 +313,10 @@ module initia_std::initia_nft {
             error::permission_denied(EFIELD_NOT_MUTABLE),
         );
         let initia_nft = authorized_borrow(nft, creator);
-        nft::set_description(option::borrow(&initia_nft.mutator_ref), description);
+        nft::set_description(
+            option::borrow(&initia_nft.mutator_ref),
+            description,
+        );
     }
 
     public entry fun set_uri<T: key>(
@@ -315,12 +335,13 @@ module initia_std::initia_nft {
     // Collection accessors
 
     inline fun collection_object(creator: &signer, name: &String): Object<InitiaNftCollection> {
-        let collection_addr = collection::create_collection_address(signer::address_of(creator), name);
+        let collection_addr =
+            collection::create_collection_address(signer::address_of(creator), name);
         object::address_to_object<InitiaNftCollection>(collection_addr)
     }
 
     inline fun borrow_collection<T: key>(nft: Object<T>): &InitiaNftCollection {
-        let collection_address = object::object_address(nft);
+        let collection_address = object::object_address(&nft);
         assert!(
             exists<InitiaNftCollection>(collection_address),
             error::not_found(ECOLLECTION_DOES_NOT_EXIST),
@@ -340,9 +361,7 @@ module initia_std::initia_nft {
         option::is_some(&borrow_collection(collection).royalty_mutator_ref)
     }
 
-    public fun is_mutable_collection_uri<T: key>(
-        collection: Object<T>,
-    ): bool acquires InitiaNftCollection {
+    public fun is_mutable_collection_uri<T: key>(collection: Object<T>,): bool acquires InitiaNftCollection {
         borrow_collection(collection).mutable_uri
     }
 
@@ -360,8 +379,10 @@ module initia_std::initia_nft {
 
     // Collection mutators
 
-    inline fun authorized_borrow_collection<T: key>(collection: Object<T>, creator: &signer): &InitiaNftCollection {
-        let collection_address = object::object_address(collection);
+    inline fun authorized_borrow_collection<T: key>(
+        collection: Object<T>, creator: &signer
+    ): &InitiaNftCollection {
+        let collection_address = object::object_address(&collection);
         assert!(
             exists<InitiaNftCollection>(collection_address),
             error::not_found(ECOLLECTION_DOES_NOT_EXIST),
@@ -383,7 +404,10 @@ module initia_std::initia_nft {
             initia_nft_collection.mutable_description,
             error::permission_denied(EFIELD_NOT_MUTABLE),
         );
-        collection::set_description(option::borrow(&initia_nft_collection.mutator_ref), description);
+        collection::set_description(
+            option::borrow(&initia_nft_collection.mutator_ref),
+            description,
+        );
     }
 
     public fun set_collection_royalties<T: key>(
@@ -396,7 +420,10 @@ module initia_std::initia_nft {
             option::is_some(&initia_nft_collection.royalty_mutator_ref),
             error::permission_denied(EFIELD_NOT_MUTABLE),
         );
-        royalty::update(option::borrow(&initia_nft_collection.royalty_mutator_ref), royalty);
+        royalty::update(
+            option::borrow(&initia_nft_collection.royalty_mutator_ref),
+            royalty,
+        );
     }
 
     public fun set_collection_royalties_call<T: key>(
@@ -419,7 +446,10 @@ module initia_std::initia_nft {
             initia_nft_collection.mutable_uri,
             error::permission_denied(EFIELD_NOT_MUTABLE),
         );
-        collection::set_uri(option::borrow(&initia_nft_collection.mutator_ref), uri);
+        collection::set_uri(
+            option::borrow(&initia_nft_collection.mutator_ref),
+            uri,
+        );
     }
 
     // Tests
@@ -438,7 +468,10 @@ module initia_std::initia_nft {
         create_collection_helper(creator, collection_name, true);
         let nft = mint_helper(creator, collection_name, token_id);
 
-        assert!(object::owner(nft) == signer::address_of(creator), 1);
+        assert!(
+            object::owner(nft) == signer::address_of(creator),
+            1,
+        );
         object::transfer(creator, nft, @0x345);
         assert!(object::owner(nft) == @0x345, 1);
     }
@@ -472,8 +505,7 @@ module initia_std::initia_nft {
     #[test(creator = @0x123, noncreator = @0x456)]
     #[expected_failure(abort_code = 0x50003, location = Self)]
     fun test_set_description_non_creator(
-        creator: &signer,
-        noncreator: &signer,
+        creator: &signer, noncreator: &signer,
     ) acquires InitiaNftCollection, InitiaNft {
         let collection_name = string::utf8(b"collection name");
         let token_id = string::utf8(b"nft name");
@@ -513,10 +545,7 @@ module initia_std::initia_nft {
 
     #[test(creator = @0x123, noncreator = @0x456)]
     #[expected_failure(abort_code = 0x50003, location = Self)]
-    fun test_set_uri_non_creator(
-        creator: &signer,
-        noncreator: &signer,
-    ) acquires InitiaNftCollection, InitiaNft {
+    fun test_set_uri_non_creator(creator: &signer, noncreator: &signer,) acquires InitiaNftCollection, InitiaNft {
         let collection_name = string::utf8(b"collection name");
         let token_id = string::utf8(b"nft name");
 
@@ -534,7 +563,7 @@ module initia_std::initia_nft {
 
         create_collection_helper(creator, collection_name, true);
         let nft = mint_helper(creator, collection_name, token_id);
-        let nft_addr = object::object_address(nft);
+        let nft_addr = object::object_address(&nft);
 
         assert!(exists<InitiaNft>(nft_addr), 0);
         burn(creator, nft);
@@ -543,10 +572,7 @@ module initia_std::initia_nft {
 
     #[test(creator = @0x123, nonowner = @0x456)]
     #[expected_failure(abort_code = 0x50005, location = Self)]
-    fun test_burn_non_owner(
-        creator: &signer,
-        nonowner: &signer,
-    ) acquires InitiaNftCollection, InitiaNft {
+    fun test_burn_non_owner(creator: &signer, nonowner: &signer,) acquires InitiaNftCollection, InitiaNft {
         let collection_name = string::utf8(b"collection name");
         let token_id = string::utf8(b"nft name");
 
@@ -561,9 +587,15 @@ module initia_std::initia_nft {
         let collection_name = string::utf8(b"collection name");
         let collection = create_collection_helper(creator, collection_name, true);
         let value = string::utf8(b"not");
-        assert!(collection::description(collection) != value, 0);
+        assert!(
+            collection::description(collection) != value,
+            0,
+        );
         set_collection_description(creator, collection, value);
-        assert!(collection::description(collection) == value, 1);
+        assert!(
+            collection::description(collection) == value,
+            1,
+        );
     }
 
     #[test(creator = @0x123)]
@@ -571,18 +603,25 @@ module initia_std::initia_nft {
     fun test_set_immutable_collection_description(creator: &signer) acquires InitiaNftCollection {
         let collection_name = string::utf8(b"collection name");
         let collection = create_collection_helper(creator, collection_name, false);
-        set_collection_description(creator, collection, string::utf8(b""));
+        set_collection_description(
+            creator,
+            collection,
+            string::utf8(b""),
+        );
     }
 
     #[test(creator = @0x123, noncreator = @0x456)]
     #[expected_failure(abort_code = 0x50003, location = Self)]
     fun test_set_collection_description_non_creator(
-        creator: &signer,
-        noncreator: &signer,
+        creator: &signer, noncreator: &signer,
     ) acquires InitiaNftCollection {
         let collection_name = string::utf8(b"collection name");
         let collection = create_collection_helper(creator, collection_name, true);
-        set_collection_description(noncreator, collection, string::utf8(b""));
+        set_collection_description(
+            noncreator,
+            collection,
+            string::utf8(b""),
+        );
     }
 
     #[test(creator = @0x123)]
@@ -600,18 +639,25 @@ module initia_std::initia_nft {
     fun test_set_immutable_collection_uri(creator: &signer) acquires InitiaNftCollection {
         let collection_name = string::utf8(b"collection name");
         let collection = create_collection_helper(creator, collection_name, false);
-        set_collection_uri(creator, collection, string::utf8(b""));
+        set_collection_uri(
+            creator,
+            collection,
+            string::utf8(b""),
+        );
     }
 
     #[test(creator = @0x123, noncreator = @0x456)]
     #[expected_failure(abort_code = 0x50003, location = Self)]
     fun test_set_collection_uri_non_creator(
-        creator: &signer,
-        noncreator: &signer,
+        creator: &signer, noncreator: &signer,
     ) acquires InitiaNftCollection {
         let collection_name = string::utf8(b"collection name");
         let collection = create_collection_helper(creator, collection_name, true);
-        set_collection_uri(noncreator, collection, string::utf8(b""));
+        set_collection_uri(
+            noncreator,
+            collection,
+            string::utf8(b""),
+        );
     }
 
     #[test(creator = @0x123)]
@@ -623,7 +669,12 @@ module initia_std::initia_nft {
         let nft = mint_helper(creator, collection_name, token_id);
 
         let royalty_before = option::extract(&mut nft::royalty(nft));
-        set_collection_royalties_call(creator, collection, decimal128::from_ratio(2, 3), @0x444);
+        set_collection_royalties_call(
+            creator,
+            collection,
+            decimal128::from_ratio(2, 3),
+            @0x444,
+        );
         let royalty_after = option::extract(&mut nft::royalty(nft));
         assert!(royalty_before != royalty_after, 0);
     }
@@ -634,19 +685,20 @@ module initia_std::initia_nft {
         collection_name: String,
         flag: bool,
     ): Object<InitiaNftCollection> {
-        let (obj, _) = create_collection_object(
-            creator,
-            string::utf8(b"collection description"),
-            option::some(1),
-            collection_name,
-            string::utf8(b"collection uri"),
-            flag,
-            flag,
-            flag,
-            flag,
-            flag,
-            decimal128::from_ratio(1, 100),
-        );
+        let (obj, _) =
+            create_collection_object(
+                creator,
+                string::utf8(b"collection description"),
+                option::some(1),
+                collection_name,
+                string::utf8(b"collection uri"),
+                flag,
+                flag,
+                flag,
+                flag,
+                flag,
+                decimal128::from_ratio(1, 100),
+            );
 
         obj
     }
@@ -657,14 +709,15 @@ module initia_std::initia_nft {
         collection_name: String,
         token_id: String,
     ): Object<InitiaNft> acquires InitiaNftCollection {
-        let (obj, _) = mint_nft_object(
-            creator,
-            collection_name,
-            string::utf8(b"description"),
-            token_id,
-            string::utf8(b"uri"),
-            true,
-        );
+        let (obj, _) =
+            mint_nft_object(
+                creator,
+                collection_name,
+                string::utf8(b"description"),
+                token_id,
+                string::utf8(b"uri"),
+                true,
+            );
 
         obj
     }

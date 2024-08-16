@@ -44,8 +44,13 @@ module std::guid {
         ID { creation_num, addr }
     }
 
-    public fun create_with_capability(addr: address, _cap: &CreateCapability): GUID acquires Generator {
-        assert!(exists<Generator>(addr), EGUID_GENERATOR_NOT_PUBLISHED);
+    public fun create_with_capability(
+        addr: address, _cap: &CreateCapability
+    ): GUID acquires Generator {
+        assert!(
+            exists<Generator>(addr),
+            EGUID_GENERATOR_NOT_PUBLISHED,
+        );
         create_impl(addr)
     }
 
@@ -103,9 +108,8 @@ module std::guid {
 
     /// Return the number of the next GUID to be created by `addr`
     public fun get_next_creation_num(addr: address): u64 acquires Generator {
-        if (!exists<Generator>(addr)) {
-            0
-        } else {
+        if (!exists<Generator>(addr)) { 0 }
+        else {
             borrow_global<Generator>(addr).counter
         }
     }

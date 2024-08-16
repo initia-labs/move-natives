@@ -6,9 +6,9 @@ module minitia_std::managed_coin {
     use std::signer;
     use std::string::String;
     use std::option::Option;
-    
+
     use minitia_std::object::{Self, Object};
-    use minitia_std::fungible_asset::Metadata;
+    use minitia_std::fungible_asset::{Metadata, FungibleAsset};
     use minitia_std::coin::{Self, BurnCapability, FreezeCapability, MintCapability};
 
     //
@@ -34,6 +34,43 @@ module minitia_std::managed_coin {
     }
 
     //
+    // sudo functions
+    //
+
+    fun check_sudo(account: &signer) {
+        assert!(
+            signer::address_of(account) == @minitia_std,
+            error::permission_denied(EUNAUTHORIZED),
+        );
+    }
+
+    /// Create new metadata coins and deposit them into dst_addr's account.
+    public entry fun sudo_mint(
+        account: &signer,
+        dst_addr: address,
+        metadata: Object<Metadata>,
+        amount: u64,
+    ) acquires Capabilities {
+        check_sudo(account);
+
+        let account_addr = signer::address_of(account);
+        assert!(
+            object::is_owner(metadata, account_addr),
+            error::not_found(EUNAUTHORIZED),
+        );
+
+        let object_addr = object::object_address(&metadata);
+        assert!(
+            exists<Capabilities>(object_addr),
+            error::not_found(ENO_CAPABILITIES),
+        );
+
+        let capabilities = borrow_global<Capabilities>(object_addr);
+        let fa = coin::mint(&capabilities.mint_cap, amount);
+        coin::sudo_deposit(dst_addr, fa);
+    }
+
+    //
     // Public functions
     //
 
@@ -48,22 +85,22 @@ module minitia_std::managed_coin {
         icon_uri: String,
         project_uri: String,
     ) {
-        let (mint_cap, burn_cap, freeze_cap, extend_ref) = coin::initialize_and_generate_extend_ref (
-            account,
-            maximum_supply,
-            name,
-            symbol,
-            decimals,
-            icon_uri,
-            project_uri,
-        );
+        let (mint_cap, burn_cap, freeze_cap, extend_ref) =
+            coin::initialize_and_generate_extend_ref(
+                account,
+                maximum_supply,
+                name,
+                symbol,
+                decimals,
+                icon_uri,
+                project_uri,
+            );
 
         let metadata_signer = object::generate_signer_for_extending(&extend_ref);
-        move_to(&metadata_signer, Capabilities {
-            mint_cap,
-            burn_cap,
-            freeze_cap,
-        });
+        move_to(
+            &metadata_signer,
+            Capabilities { mint_cap, burn_cap, freeze_cap, },
+        );
     }
 
     /// Withdraw an `amount` of metadata coin from `account` and burn it.
@@ -79,7 +116,7 @@ module minitia_std::managed_coin {
             error::not_found(EUNAUTHORIZED),
         );
 
-        let object_addr = object::object_address(metadata);
+        let object_addr = object::object_address(&metadata);
         assert!(
             exists<Capabilities>(object_addr),
             error::not_found(ENO_CAPABILITIES),
@@ -91,13 +128,12 @@ module minitia_std::managed_coin {
         coin::burn(&capabilities.burn_cap, to_burn);
     }
 
-    /// Create new metadata coins and deposit them into dst_addr's account.
-    public entry fun mint(
+    /// Create new metadata coins.
+    public fun mint(
         account: &signer,
-        dst_addr: address,
         metadata: Object<Metadata>,
         amount: u64,
-    ) acquires Capabilities {
+    ): FungibleAsset acquires Capabilities {
         let account_addr = signer::address_of(account);
 
         assert!(
@@ -105,14 +141,26 @@ module minitia_std::managed_coin {
             error::not_found(EUNAUTHORIZED),
         );
 
-        let object_addr = object::object_address(metadata);
+        let object_addr = object::object_address(&metadata);
         assert!(
             exists<Capabilities>(object_addr),
             error::not_found(ENO_CAPABILITIES),
         );
 
         let capabilities = borrow_global<Capabilities>(object_addr);
-        coin::mint_to(&capabilities.mint_cap, dst_addr, amount);
+        coin::mint(&capabilities.mint_cap, amount)
+    }
+
+    /// Create new metadata coins and deposit them into dst_addr's account.
+    public entry fun mint_to(
+        account: &signer,
+        dst_addr: address,
+        metadata: Object<Metadata>,
+        amount: u64,
+    ) acquires Capabilities {
+        let fa = mint(account, metadata, amount);
+
+        coin::deposit(dst_addr, fa);
     }
 
     //
@@ -132,17 +180,15 @@ module minitia_std::managed_coin {
     const TEST_SYMBOL: vector<u8> = b"FMD";
 
     #[test_only]
-    public fun test_metadata (): Object<Metadata> {
+    public fun test_metadata(): Object<Metadata> {
         coin::metadata(@minitia_std, string::utf8(TEST_SYMBOL))
     }
 
     #[test(source = @0xa11ce, destination = @0xb0b, mod_account = @0x1)]
     public entry fun test_end_to_end(
-        source: signer,
-        destination: signer,
-        mod_account: signer
+        source: signer, destination: signer, mod_account: signer
     ) acquires Capabilities {
-        primary_fungible_store::init_module_for_test(&mod_account);
+        primary_fungible_store::init_module_for_test();
 
         let source_addr = signer::address_of(&source);
         let destination_addr = signer::address_of(&destination);
@@ -158,21 +204,47 @@ module minitia_std::managed_coin {
         );
 
         let metadata = test_metadata();
-        assert!(coin::is_coin_initialized(metadata), 0);
+        assert!(coin::is_coin(object::object_address(&metadata)), 0);
 
-        mint(&mod_account, source_addr, metadata, 50);
-        mint(&mod_account, destination_addr, metadata, 10);
+        mint_to(
+            &mod_account,
+            source_addr,
+            metadata,
+            50,
+        );
+        mint_to(
+            &mod_account,
+            destination_addr,
+            metadata,
+            10,
+        );
         assert!(coin::balance(source_addr, metadata) == 50, 1);
-        assert!(coin::balance(destination_addr, metadata) == 10, 2);
+        assert!(
+            coin::balance(destination_addr, metadata) == 10,
+            2,
+        );
 
         let supply = coin::supply(metadata);
         assert!(supply == option::some(60), 2);
 
-        coin::transfer(&source, destination_addr, metadata, 10);
+        coin::transfer(
+            &source,
+            destination_addr,
+            metadata,
+            10,
+        );
         assert!(coin::balance(source_addr, metadata) == 40, 3);
-        assert!(coin::balance(destination_addr, metadata) == 20, 4);
+        assert!(
+            coin::balance(destination_addr, metadata) == 20,
+            4,
+        );
 
-        coin::transfer(&source, signer::address_of(&mod_account), metadata, 40);
+        coin::transfer(
+            &source,
+            signer::address_of(&mod_account),
+            metadata,
+            40,
+        );
         burn(&mod_account, metadata, 40);
 
         assert!(coin::balance(source_addr, metadata) == 0, 1);
@@ -188,7 +260,7 @@ module minitia_std::managed_coin {
         destination: signer,
         mod_account: signer,
     ) acquires Capabilities {
-        primary_fungible_store::init_module_for_test(&mod_account);
+        primary_fungible_store::init_module_for_test();
 
         let source_addr = signer::address_of(&source);
 
@@ -203,7 +275,12 @@ module minitia_std::managed_coin {
         );
 
         let metadata = test_metadata();
-        mint(&destination, source_addr, metadata, 100);
+        mint_to(
+            &destination,
+            source_addr,
+            metadata,
+            100,
+        );
     }
 
     #[test(source = @0xa11ce, destination = @0xb0b, mod_account = @0x1)]
@@ -213,7 +290,7 @@ module minitia_std::managed_coin {
         destination: signer,
         mod_account: signer,
     ) acquires Capabilities {
-        primary_fungible_store::init_module_for_test(&mod_account);
+        primary_fungible_store::init_module_for_test();
 
         let source_addr = signer::address_of(&source);
 
@@ -228,7 +305,12 @@ module minitia_std::managed_coin {
         );
 
         let metadata = test_metadata();
-        mint(&mod_account, source_addr, metadata, 100);
+        mint_to(
+            &mod_account,
+            source_addr,
+            metadata,
+            100,
+        );
         burn(&destination, metadata, 10);
     }
 }
