@@ -36,7 +36,7 @@ module minitia_std::query {
     */
 
     struct ProposalRequest has copy, drop {
-        proposal_id: u64,
+        proposal_id: u64
     }
 
     struct ProposalResponse has copy, drop {
@@ -45,7 +45,7 @@ module minitia_std::query {
         summary: String,
         status: String,
         submit_time: String,
-        emergency: bool,
+        emergency: bool
     }
 
     #[view]
@@ -53,7 +53,7 @@ module minitia_std::query {
         let response =
             query_stargate(
                 b"/initia.gov.v1.Query/Proposal",
-                json::marshal(&ProposalRequest { proposal_id, }),
+                json::marshal(&ProposalRequest { proposal_id })
             );
         let res = json::unmarshal<ProposalResponse>(response);
         (res.id, res.title, res.summary, string::utf8(response))
@@ -64,7 +64,7 @@ module minitia_std::query {
         let response =
             query_stargate(
                 b"/initia.gov.v1.Query/Proposal",
-                json::marshal(&ProposalRequest { proposal_id, }),
+                json::marshal(&ProposalRequest { proposal_id })
             );
         let res = json::unmarshal<ProposalResponse>(response);
         (res.id, res.status, res.submit_time, res.emergency)
@@ -77,6 +77,11 @@ module minitia_std::query {
     #[test_only]
     native public fun set_query_response(
         path_or_name: vector<u8>, data: vector<u8>, response: vector<u8>
+    );
+
+    #[test_only]
+    native public fun unset_query_response(
+        path_or_name: vector<u8>, data: vector<u8>
     );
 
     #[test]
@@ -93,5 +98,15 @@ module minitia_std::query {
 
         let res = query_stargate(b"path", b"data123");
         assert!(res == b"output", 0);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 0x1006E, location = Self)]
+    fun test_query_unsset() {
+        set_query_response(b"path", b"data123", b"output");
+        unset_query_response(b"path", b"data123");
+
+        let res = query_custom(b"path", b"data123");
+        assert!(res == b"", 0);
     }
 }
