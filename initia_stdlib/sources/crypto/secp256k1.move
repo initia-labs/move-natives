@@ -45,7 +45,7 @@ module initia_std::secp256k1 {
     public fun ecdsa_signature_from_bytes(bytes: vector<u8>): ECDSASignature {
         assert!(
             std::vector::length(&bytes) == SIGNATURE_NUM_BYTES,
-            std::error::invalid_argument(E_DESERIALIZE),
+            std::error::invalid_argument(E_DESERIALIZE)
         );
         ECDSASignature { bytes }
     }
@@ -59,17 +59,17 @@ module initia_std::secp256k1 {
     public fun ecdsa_raw_public_key_from_bytes(bytes: vector<u8>): ECDSARawPublicKey {
         assert!(
             std::vector::length(&bytes) == RAW_PUBLIC_KEY_NUM_BYTES,
-            std::error::invalid_argument(E_DESERIALIZE),
+            std::error::invalid_argument(E_DESERIALIZE)
         );
         ECDSARawPublicKey { bytes }
     }
 
     /// Constructs an ECDSACompressedPublicKey struct, given a 33-byte raw representation.
-    public fun ecdsa_compressed_public_key_from_bytes(bytes: vector<u8>)
-        : ECDSACompressedPublicKey {
+    public fun ecdsa_compressed_public_key_from_bytes(bytes: vector<u8>):
+        ECDSACompressedPublicKey {
         assert!(
             std::vector::length(&bytes) == COMPRESSED_PUBLIC_KEY_SIZE,
-            std::error::invalid_argument(E_DESERIALIZE),
+            std::error::invalid_argument(E_DESERIALIZE)
         );
         ECDSACompressedPublicKey { bytes }
     }
@@ -91,6 +91,24 @@ module initia_std::secp256k1 {
         sig.bytes
     }
 
+    /// Returns `true` if the signature can verify the public key on the message
+    public fun verify(
+        message: vector<u8>,
+        public_key: &ECDSACompressedPublicKey,
+        signature: &ECDSASignature
+    ): bool {
+        assert!(
+            std::vector::length(&message) == MESSAGE_SIZE,
+            std::error::invalid_argument(E_DESERIALIZE)
+        );
+
+        return verify_internal(
+            message,
+            public_key.bytes,
+            signature.bytes
+        )
+    }
+
     /// Recovers the signer's raw (64-byte) public key from a secp256k1 ECDSA `signature` given the `recovery_id` and the signed
     /// `message` (32 byte digest).
     ///
@@ -98,13 +116,11 @@ module initia_std::secp256k1 {
     /// incorrect public key. This recovery algorithm can only be used to check validity of a signature if the signer's
     /// public key (or its hash) is known beforehand.
     public fun ecdsa_recover(
-        message: vector<u8>,
-        recovery_id: u8,
-        signature: &ECDSASignature,
+        message: vector<u8>, recovery_id: u8, signature: &ECDSASignature
     ): Option<ECDSARawPublicKey> {
         assert!(
             std::vector::length(&message) == MESSAGE_SIZE,
-            std::error::invalid_argument(E_DESERIALIZE),
+            std::error::invalid_argument(E_DESERIALIZE)
         );
 
         let (pk, success) =
@@ -112,7 +128,7 @@ module initia_std::secp256k1 {
                 recovery_id,
                 message,
                 signature.bytes,
-                false,
+                false
             );
         if (success) {
             std::option::some(ecdsa_raw_public_key_from_bytes(pk))
@@ -128,13 +144,11 @@ module initia_std::secp256k1 {
     /// incorrect public key. This recovery algorithm can only be used to check validity of a signature if the signer's
     /// public key (or its hash) is known beforehand.
     public fun ecdsa_recover_compressed(
-        message: vector<u8>,
-        recovery_id: u8,
-        signature: &ECDSASignature,
+        message: vector<u8>, recovery_id: u8, signature: &ECDSASignature
     ): Option<ECDSACompressedPublicKey> {
         assert!(
             std::vector::length(&message) == MESSAGE_SIZE,
-            std::error::invalid_argument(E_DESERIALIZE),
+            std::error::invalid_argument(E_DESERIALIZE)
         );
 
         let (pk, success) =
@@ -142,7 +156,7 @@ module initia_std::secp256k1 {
                 recovery_id,
                 message,
                 signature.bytes,
-                true,
+                true
             );
         if (success) {
             std::option::some(ecdsa_compressed_public_key_from_bytes(pk))
@@ -155,10 +169,25 @@ module initia_std::secp256k1 {
     // Native functions
     //
 
+    /// Returns `true` if `signature` verifies on `public_key` and `message`
+    /// and returns `false` otherwise.
+    /// 
+    /// - `message`: A 32-byte hashed message.
+    /// - `public_key`: A compressed public key in bytes.
+    /// - `signature`: A 64-byte ECDSA signature.
+    native fun verify_internal(
+        message: vector<u8>,
+        public_key: vector<u8>,
+        signature: vector<u8>
+    ): bool;
+
     /// Returns `(public_key, true)` if `signature` verifies on `message` under the recovered `public_key`
     /// and returns `([], false)` otherwise.
     native fun recover_public_key_internal(
-        recovery_id: u8, message: vector<u8>, signature: vector<u8>, compressed: bool,
+        recovery_id: u8,
+        message: vector<u8>,
+        signature: vector<u8>,
+        compressed: bool
     ): (vector<u8>, bool);
 
     #[test_only]
@@ -174,6 +203,29 @@ module initia_std::secp256k1 {
     //
 
     #[test]
+    fun test_secp256k1_sign_verify() {
+        use std::hash;
+
+        let (sk, vk) = generate_keys(true);
+        let pk = ecdsa_compressed_public_key_from_bytes(vk);
+
+        let msg: vector<u8> = hash::sha2_256(b"test initia secp256k1");
+        let (_rid, sig_bytes) = sign(msg, sk);
+        let sig = ecdsa_signature_from_bytes(sig_bytes);
+        assert!(verify(msg, &pk, &sig), 1);
+
+        // Test with an incorrect message
+        let wrong_msg: vector<u8> = hash::sha2_256(b"wrong message");
+        assert!(!verify(wrong_msg, &pk, &sig), 2);
+
+        // Test with an incorrect signature
+        let invalid_sig_bytes = sig_bytes;
+        *std::vector::borrow_mut(&mut invalid_sig_bytes, 0) = 0xFF; // Corrupt the signature
+        let invalid_sig = ecdsa_signature_from_bytes(invalid_sig_bytes);
+        assert!(!verify(msg, &pk, &invalid_sig), 3);
+    }
+
+    #[test]
     fun test_gen_sign_recover() {
         use std::hash;
 
@@ -187,7 +239,7 @@ module initia_std::secp256k1 {
         assert!(std::option::is_some(&recovered_pk), 1);
         assert!(
             std::option::extract(&mut recovered_pk).bytes == pk.bytes,
-            2,
+            2
         );
 
         let wrong_msg: vector<u8> = hash::sha2_256(b"test initia");
@@ -195,7 +247,7 @@ module initia_std::secp256k1 {
         assert!(std::option::is_some(&recovered_pk), 3);
         assert!(
             std::option::extract(&mut recovered_pk).bytes != pk.bytes,
-            4,
+            4
         );
     }
 
@@ -213,7 +265,7 @@ module initia_std::secp256k1 {
         assert!(std::option::is_some(&recovered_pk), 1);
         assert!(
             std::option::extract(&mut recovered_pk).bytes == pk.bytes,
-            2,
+            2
         );
 
         let wrong_msg: vector<u8> = hash::sha2_256(b"test initia");
@@ -221,7 +273,7 @@ module initia_std::secp256k1 {
         assert!(std::option::is_some(&recovered_pk), 3);
         assert!(
             std::option::extract(&mut recovered_pk).bytes != pk.bytes,
-            4,
+            4
         );
     }
 }
