@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    if: github.event.head_commit.author.email == 'infra@initia.xyz'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
