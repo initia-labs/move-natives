@@ -7,14 +7,17 @@ on:
 
 jobs:
   build:
+    if: github.event.head_commit.author.email == 'infra@initia.xyz'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: get versions
         id: get_version
-        run: echo "##[set-output name=version;]$(echo '${{ github.event.head_commit.message }}' | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
-      - name: make release
-        uses: actions/create-release@v1
+        run: |
+          version=$(echo '${{ github.event.head_commit.message }}' | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+          echo "version=v$version" >> $GITHUB_OUTPUT
+      - name: create release
+        uses: initia-labs/actions/create-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
