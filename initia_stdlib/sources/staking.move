@@ -180,6 +180,9 @@ module initia_std::staking {
     /// Chain already has `StakingState` for the given metadata
     const ESTAKING_STATE_ALREADY_EXISTS: u64 = 16;
 
+    /// Invalid slash fraction
+    const EINVALID_SLASH_FRACTION: u64 = 17;
+
     // Constants
 
     /// Max number of view function response items.
@@ -356,7 +359,7 @@ module initia_std::staking {
     }
 
     #[view]
-    /// Get delegation info of specifed addr and validator
+    /// Get delegation info of specified addr and validator
     public fun get_delegation(
         addr: address, metadata: Object<Metadata>, validator: String
     ): DelegationResponse acquires DelegationStore, ModuleStore {
@@ -621,6 +624,11 @@ module initia_std::staking {
         validator: String,
         fraction: BigDecimal
     ) acquires ModuleStore {
+        assert!(
+            bigdecimal::le(fraction, bigdecimal::one()),
+            error::invalid_argument(EINVALID_SLASH_FRACTION)
+        );
+
         check_chain_permission(chain);
 
         let module_store = borrow_global_mut<ModuleStore>(@initia_std);
@@ -1078,7 +1086,7 @@ module initia_std::staking {
         delegation.share
     }
 
-    /// Destory empty delegation
+    /// Destroy empty delegation
     public fun destroy_empty_delegation(delegation: Delegation) {
         assert!(
             bigdecimal::is_zero(delegation.share),
@@ -1347,7 +1355,7 @@ module initia_std::staking {
         )
     }
 
-    /// Destory empty unbonding
+    /// Destroy empty unbonding
     public fun destroy_empty_unbonding(unbonding: Unbonding) {
         assert!(
             bigdecimal::is_zero(unbonding.unbonding_share),
@@ -1404,7 +1412,7 @@ module initia_std::staking {
         merge_unbonding(dst_unbonding, unbonding);
     }
 
-    /// Withdraw specifed `amount` of unbonding_amount from the unbonding.
+    /// Withdraw specified `amount` of unbonding_amount from the unbonding.
     public fun withdraw_unbonding(
         account: &signer,
         metadata: Object<Metadata>,

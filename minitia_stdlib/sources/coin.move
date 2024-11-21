@@ -1,4 +1,3 @@
-/// TODO - make is_module_account or some blacklist from freeze.
 module minitia_std::coin {
     use std::bcs;
     use std::from_bcs;
@@ -6,6 +5,7 @@ module minitia_std::coin {
     use std::string::{Self, String};
     use std::error;
     use std::signer;
+    use std::vector;
 
     use minitia_std::event;
     use minitia_std::primary_fungible_store;
@@ -80,6 +80,27 @@ module minitia_std::coin {
         account_addr: address, fa: FungibleAsset
     ) {
         primary_fungible_store::sudo_deposit(account_addr, fa)
+    }
+
+    public entry fun sudo_multisend(
+        chain: &signer,
+        sender: &signer,
+        metadata: Object<Metadata>,
+        recipients: vector<address>,
+        amounts: vector<u64>
+    ) {
+        check_sudo(chain);
+
+        // error checkings
+        // - vector length equivalence would be checked in vector::zip_reverse
+        // - insufficient balance would be checked in primary_fungible_store::sudo_transfer
+        vector::zip_reverse(
+            recipients,
+            amounts,
+            |recipient, amount| {
+                primary_fungible_store::sudo_transfer(sender, metadata, recipient, amount)
+            }
+        )
     }
 
     //
@@ -177,7 +198,7 @@ module minitia_std::coin {
     // Admin operations
     //
 
-    /// Mint FAs as the owner of metadat object.
+    /// Mint FAs as the owner of metadata object.
     public fun mint(mint_cap: &MintCapability, amount: u64): FungibleAsset acquires ManagingRefs {
         let metadata = mint_cap.metadata;
         let metadata_addr = object::object_address(&metadata);
@@ -191,7 +212,7 @@ module minitia_std::coin {
         fungible_asset::mint(&refs.mint_ref, amount)
     }
 
-    /// Mint FAs as the owner of metadat object to the primary fungible store of the given recipient.
+    /// Mint FAs as the owner of metadata object to the primary fungible store of the given recipient.
     public fun mint_to(
         mint_cap: &MintCapability, recipient: address, amount: u64
     ) acquires ManagingRefs {
@@ -207,7 +228,7 @@ module minitia_std::coin {
         primary_fungible_store::mint(&refs.mint_ref, recipient, amount)
     }
 
-    /// Burn FAs as the owner of metadat object.
+    /// Burn FAs as the owner of metadata object.
     public fun burn(burn_cap: &BurnCapability, fa: FungibleAsset) acquires ManagingRefs {
         let metadata = burn_cap.metadata;
         let metadata_addr = object::object_address(&metadata);

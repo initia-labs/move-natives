@@ -22,9 +22,11 @@ module initia_std::collection {
     use std::signer;
     use std::string::{Self, String};
     use std::vector;
+    use std::bcs;
     use initia_std::event;
     use initia_std::object::{Self, ConstructorRef, Object};
     use initia_std::table::{Self, Table};
+    use initia_std::hex;
 
     use initia_std::royalty::{Self, Royalty};
 
@@ -388,8 +390,23 @@ module initia_std::collection {
     }
 
     #[view]
+    public fun collection_to_class_id<T: key>(collection: Object<T>): String acquires Collection {
+        let col = borrow(collection);
+        if (col.creator == @initia_std) {
+            return col.name
+        };
+
+        let metadata_addr = object::object_address(&collection);
+        let denom = string::utf8(b"move/");
+        let addr_bytes = bcs::to_bytes(&metadata_addr);
+        let addr_string = hex::encode_to_string(&addr_bytes);
+        string::append(&mut denom, addr_string);
+        return denom
+    }
+
+    #[view]
     /// get nft list from collection
-    /// if `start_after` is not none, seach nfts in range (start_after, ...]
+    /// if `start_after` is not none, search nfts in range (start_after, ...]
     public fun nfts<T: key>(
         collection: Object<T>, start_after: Option<String>, limit: u64
     ): vector<NftResponse> acquires Collection {
@@ -528,9 +545,9 @@ module initia_std::collection {
         assert!(count(collection) == option::some(0), 0);
     }
 
-    #[test(creator = @0x123, receipient = @0x456)]
+    #[test(creator = @0x123, recipient = @0x456)]
     entry fun test_create_and_transfer(
-        creator: &signer, receipient: &signer
+        creator: &signer, recipient: &signer
     ) {
         let creator_address = signer::address_of(creator);
         let collection_name = string::utf8(b"collection name");
@@ -547,7 +564,7 @@ module initia_std::collection {
         object::transfer(
             creator,
             collection,
-            signer::address_of(receipient)
+            signer::address_of(recipient)
         );
     }
 
