@@ -66,6 +66,15 @@ module initia_std::nft {
     }
 
     #[event]
+    // Contains the minted NFT information.
+    struct CreateEvent has drop, store {
+        collection: Object<Collection>,
+        token_id: String,
+        description: String,
+        uri: String
+    }
+
+    #[event]
     /// Contains the mutated fields name. This makes the life of indexers easier, so that they can
     /// directly understand the behavior in a writeset.
     struct MutationEvent has drop, store {
@@ -135,6 +144,10 @@ module initia_std::nft {
                 option::extract(&mut royalty)
             )
         };
+
+        event::emit(
+            CreateEvent { collection, token_id, description, uri }
+        );
     }
 
     /// Creates a new nft object from a nft name and returns the ConstructorRef for
@@ -164,6 +177,24 @@ module initia_std::nft {
             uri
         );
         constructor_ref
+    }
+
+    // Transfers an nft based on the collection object and token id
+    public fun transfer(
+        owner: &signer,
+        collection: Object<Collection>,
+        token_id: String,
+        to: address
+    ) {
+        let creator_address = collection::creator(collection);
+        let collection_name = collection::name(collection);
+
+        let nft_address = create_nft_address(
+            creator_address, &collection_name, &token_id
+        );
+        let nft = object::address_to_object<Nft>(nft_address);
+
+        object::transfer(owner, nft, to)
     }
 
     /// Generates the nft's address based upon the creator's address, the collection's name and the nft's token_id.
@@ -408,7 +439,14 @@ module initia_std::nft {
         let nft_addr = create_nft_address(creator_address, &collection_name, &token_id);
         let nft = object::address_to_object<Nft>(nft_addr);
         assert!(object::owner(nft) == creator_address, 1);
-        object::transfer(creator, nft, signer::address_of(trader));
+
+        let collection = generate_collection_object(creator, &collection_name);
+        transfer(
+            creator,
+            collection,
+            token_id,
+            signer::address_of(trader)
+        );
         assert!(
             object::owner(nft) == signer::address_of(trader),
             1
@@ -422,6 +460,47 @@ module initia_std::nft {
         assert!(
             option::some(expected_royalty) == royalty(nft),
             2
+        );
+    }
+
+    #[test(creator = @0x123, trader = @0x456, invalid = @0x789)]
+    #[expected_failure(abort_code = 0x50004, location = initia_std::object)]
+    fun test_transfer_invalid_owner(
+        creator: &signer, trader: &signer, invalid: &signer
+    ) {
+        let collection_name = string::utf8(b"collection name");
+        let token_id = string::utf8(b"nft token_id");
+
+        create_collection_helper(creator, collection_name, 1);
+        create_nft_helper(creator, creator, collection_name, token_id);
+
+        let collection = generate_collection_object(creator, &collection_name);
+        transfer(
+            invalid,
+            collection,
+            token_id,
+            signer::address_of(trader)
+        );
+    }
+
+    #[test(creator = @0x123, trader = @0x456)]
+    #[expected_failure(abort_code = 0x60002, location = initia_std::object)]
+    fun test_transfer_invalid_token_id(
+        creator: &signer, trader: &signer
+    ) {
+        let collection_name = string::utf8(b"collection name");
+        let token_id = string::utf8(b"nft token_id");
+
+        create_collection_helper(creator, collection_name, 1);
+        create_nft_helper(creator, creator, collection_name, token_id);
+
+        let invalid_token_id = string::utf8(b"invalid nft token_id");
+        let collection = generate_collection_object(creator, &collection_name);
+        transfer(
+            creator,
+            collection,
+            invalid_token_id,
+            signer::address_of(trader)
         );
     }
 

@@ -23,6 +23,7 @@ module minitia_std::collection {
     use std::string::{Self, String};
     use std::vector;
     use std::bcs;
+    use std::json::{Self, JSONObject};
     use minitia_std::event;
     use minitia_std::object::{Self, ConstructorRef, Object};
     use minitia_std::table::{Self, Table};
@@ -107,6 +108,18 @@ module minitia_std::collection {
         collection: address,
         creator: address,
         name: String
+    }
+
+    #[event]
+    // Contains the minted NFT information.
+    struct CreateEvent has drop {
+        collection: address,
+        creator: address,
+        name: String,
+        description: String,
+        uri: String,
+        royalty: Option<Royalty>,
+        supply: Option<JSONObject>
     }
 
     #[event]
@@ -249,6 +262,18 @@ module minitia_std::collection {
         };
         move_to(object_signer, collection);
 
+        event::emit(
+            CreateEvent {
+                collection: object::address_from_constructor_ref(&constructor_ref),
+                creator: signer::address_of(creator),
+                name,
+                description,
+                uri,
+                royalty,
+                supply: json::unmarshal(json::marshal_v2(&supply))
+            }
+        );
+
         if (option::is_some(&supply)) {
             move_to(object_signer, option::destroy_some(supply));
             let collection_addr = signer::address_of(object_signer);
@@ -359,10 +384,10 @@ module minitia_std::collection {
         check_collection_exists(collection_address);
 
         if (exists<FixedSupply>(collection_address)) {
-            let supply = borrow_global_mut<FixedSupply>(collection_address);
+            let supply = borrow_global<FixedSupply>(collection_address);
             option::some(supply.current_supply)
         } else if (exists<UnlimitedSupply>(collection_address)) {
-            let supply = borrow_global_mut<UnlimitedSupply>(collection_address);
+            let supply = borrow_global<UnlimitedSupply>(collection_address);
             option::some(supply.current_supply)
         } else {
             option::none()

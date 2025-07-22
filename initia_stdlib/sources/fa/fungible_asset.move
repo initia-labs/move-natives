@@ -175,11 +175,23 @@ module initia_std::fungible_asset {
     }
 
     #[event]
+    /// Emitted when fungible assets are deposited into a store.
+    struct DepositOwnerEvent has drop {
+        owner: address
+    }
+
+    #[event]
     /// Emitted when fungible assets are withdrawn from a store.
     struct WithdrawEvent has drop, store {
         store_addr: address,
         metadata_addr: address,
         amount: u64
+    }
+
+    #[event]
+    /// Emitted when fungible assets are withdrawn from a store.
+    struct WithdrawOwnerEvent has drop {
+        owner: address
     }
 
     #[event]
@@ -450,7 +462,26 @@ module initia_std::fungible_asset {
 
     #[view]
     /// Get the current supply from the `metadata` object.
+    ///
+    /// Note: This function will abort on FAs with `derived_supply` hook set up.
+    ///       Use `dispatchable_fungible_asset::supply` instead if you intend to work with those FAs.
     public fun supply<T: key>(metadata: Object<T>): Option<u128> acquires Supply {
+        let metadata_address = object::object_address(&metadata);
+        assert!(
+            !has_supply_dispatch_function(metadata_address),
+            error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+        );
+        if (exists<Supply>(metadata_address)) {
+            let supply = borrow_global<Supply>(metadata_address);
+            option::some(supply.current)
+        } else {
+            option::none()
+        }
+    }
+
+    #[view]
+    /// Get the current supply from the `metadata` object without sanity check.
+    public fun supply_without_sanity_check<T: key>(metadata: Object<T>): Option<u128> acquires Supply {
         let metadata_address = object::object_address(&metadata);
         if (exists<Supply>(metadata_address)) {
             let supply = borrow_global<Supply>(metadata_address);
@@ -539,7 +570,23 @@ module initia_std::fungible_asset {
 
     #[view]
     /// Get the balance of a given store.
-    public fun balance<T: key>(store: Object<T>): u64 acquires FungibleStore {
+    ///
+    /// Note: This function will abort on FAs with `derived_balance` hook set up.
+    ///       Use `dispatchable_fungible_asset::derived_balance` instead if you intend to work with those FAs.
+    public fun balance<T: key>(store: Object<T>): u64 acquires FungibleStore, DispatchFunctionStore {
+        if (store_exists(object::object_address(&store))) {
+            let fa_store = borrow_store_resource(&store);
+            assert!(
+                !has_balance_dispatch_function(fa_store.metadata),
+                error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+            );
+            fa_store.balance
+        } else { 0 }
+    }
+
+    #[view]
+    /// Get the balance of a given store without sanity check.
+    public fun balance_without_sanity_check<T: key>(store: Object<T>): u64 acquires FungibleStore {
         if (store_exists(object::object_address(&store))) {
             borrow_store_resource(&store).balance
         } else { 0 }
@@ -578,9 +625,8 @@ module initia_std::fungible_asset {
         metadata: Object<Metadata>
     ): bool acquires DispatchFunctionStore {
         let metadata_addr = object::object_address(&metadata);
-        // Short circuit on APT for better perf
-        if (metadata_addr != @initia_std
-            && exists<DispatchFunctionStore>(metadata_addr)) {
+        // Short circuit on INIT for better perf
+        if (metadata_addr != @init_fa && exists<DispatchFunctionStore>(metadata_addr)) {
             option::is_some(
                 &borrow_global<DispatchFunctionStore>(metadata_addr).deposit_function
             )
@@ -603,12 +649,30 @@ module initia_std::fungible_asset {
         metadata: Object<Metadata>
     ): bool acquires DispatchFunctionStore {
         let metadata_addr = object::object_address(&metadata);
-        // Short circuit on APT for better perf
-        if (metadata_addr != @initia_std
-            && exists<DispatchFunctionStore>(metadata_addr)) {
+        // Short circuit on INIT for better perf
+        if (metadata_addr != @init_fa && exists<DispatchFunctionStore>(metadata_addr)) {
             option::is_some(
                 &borrow_global<DispatchFunctionStore>(metadata_addr).withdraw_function
             )
+        } else { false }
+    }
+
+    fun has_balance_dispatch_function(
+        metadata: Object<Metadata>
+    ): bool acquires DispatchFunctionStore {
+        let metadata_addr = object::object_address(&metadata);
+        // Short circuit on INIT for better perf
+        if (metadata_addr != @init_fa && exists<DispatchFunctionStore>(metadata_addr)) {
+            option::is_some(
+                &borrow_global<DispatchFunctionStore>(metadata_addr).derived_balance_function
+            )
+        } else { false }
+    }
+
+    fun has_supply_dispatch_function(metadata_addr: address): bool {
+        // Short circuit on INIT for better perf
+        if (metadata_addr != @init_fa) {
+            exists<DeriveSupply>(metadata_addr)
         } else { false }
     }
 
@@ -729,7 +793,7 @@ module initia_std::fungible_asset {
         assert!(!fa_store.frozen, error::permission_denied(ESTORE_IS_FROZEN));
     }
 
-    /// Deposit `amount` of the fungible asset to `store`.
+    /// sanity check for deposit operation.
     public fun deposit_sanity_check<T: key>(
         store: Object<T>, abort_on_dispatch: bool
     ) acquires FungibleStore, DispatchFunctionStore {
@@ -747,6 +811,19 @@ module initia_std::fungible_asset {
             !is_blocked_store_addr(store_addr),
             error::invalid_argument(ECANNOT_DEPOSIT_TO_BLOCKED_ACCOUNT)
         );
+    }
+
+    /// sanity check for sudo deposit operation.
+    public(friend) fun sudo_deposit_sanity_check<T: key>(
+        store: Object<T>, abort_on_dispatch: bool
+    ) acquires FungibleStore, DispatchFunctionStore {
+        let fa_store = borrow_store_resource(&store);
+        assert!(
+            !abort_on_dispatch || !has_deposit_dispatch_function(fa_store.metadata),
+            error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+        );
+
+        assert!(!fa_store.frozen, error::permission_denied(ESTORE_IS_FROZEN));
     }
 
     /// Withdraw `amount` of the fungible asset from `store` by the owner.
@@ -815,7 +892,7 @@ module initia_std::fungible_asset {
     public fun burn(ref: &BurnRef, fa: FungibleAsset) acquires Supply {
         let FungibleAsset { metadata, amount } = fa;
         assert!(
-            ref.metadata == metadata,
+            &ref.metadata == &metadata,
             error::invalid_argument(EBURN_REF_AND_FUNGIBLE_ASSET_MISMATCH)
         );
         decrease_supply(metadata, amount);
@@ -965,12 +1042,8 @@ module initia_std::fungible_asset {
     /// This function is only callable by the chain.
     public(friend) fun sudo_deposit<T: key>(
         store: Object<T>, fa: FungibleAsset
-    ) acquires FungibleStore {
-        assert!(
-            !is_frozen(store),
-            error::invalid_argument(ESTORE_IS_FROZEN)
-        );
-
+    ) acquires FungibleStore, DispatchFunctionStore {
+        sudo_deposit_sanity_check(store, true);
         deposit_internal(object::object_address(&store), fa);
     }
 
@@ -1033,6 +1106,9 @@ module initia_std::fungible_asset {
         // emit event
         let metadata_addr = object::object_address(&metadata);
         event::emit(DepositEvent { store_addr, metadata_addr, amount });
+        let fungible_store = object::address_to_object<FungibleStore>(store_addr);
+        let owner_addr = object::owner(fungible_store);
+        event::emit(DepositOwnerEvent { owner: owner_addr });
     }
 
     /// Extract `amount` of the fungible asset from `store`.
@@ -1052,6 +1128,9 @@ module initia_std::fungible_asset {
         // emit event
         let metadata_addr = object::object_address(&metadata);
         event::emit(WithdrawEvent { store_addr, metadata_addr, amount });
+        let fungible_store = object::address_to_object<FungibleStore>(store_addr);
+        let owner_addr = object::owner(fungible_store);
+        event::emit(WithdrawOwnerEvent { owner: owner_addr });
 
         FungibleAsset { metadata, amount }
     }
@@ -1277,7 +1356,9 @@ module initia_std::fungible_asset {
     }
 
     #[test(creator = @0xcafe, aaron = @0xface)]
-    fun test_transfer_with_ref(creator: &signer, aaron: &signer) acquires FungibleStore, Supply {
+    fun test_transfer_with_ref(
+        creator: &signer, aaron: &signer
+    ) acquires FungibleStore, Supply, DispatchFunctionStore {
         let (mint_ref, transfer_ref, _burn_ref, _mutate_metadata_ref, _) =
             create_fungible_asset(creator);
         let metadata = mint_ref.metadata;

@@ -118,6 +118,25 @@ module minitia_std::fungible_asset {
         project_uri: String
     }
 
+    /// Extra metadata of a Fungible asset
+    /// @dev - this interface only exists in minitia_stdlib.
+    struct ExtraMetadata has key, copy, drop {
+        /// Name of the fungible metadata, i.e., "USDT".
+        name: String,
+        /// Symbol of the fungible metadata, usually a shorter version of the name.
+        /// For example, Singapore Dollar is SGD.
+        symbol: String,
+        /// Number of decimals used for display purposes.
+        /// For example, if `decimals` equals `2`, a balance of `505` coins should
+        /// be displayed to a user as `5.05` (`505 / 10 ** 2`).
+        decimals: u8,
+        /// The Uniform Resource Identifier (uri) pointing to an image that can be used as the icon for this fungible
+        /// asset.
+        icon_uri: String,
+        /// The Uniform Resource Identifier (uri) pointing to the website for the fungible asset.
+        project_uri: String
+    }
+
     /// The store object that holds fungible assets of a specific type associated with an account.
     struct FungibleStore has key {
         /// The address of the base metadata object.
@@ -175,11 +194,23 @@ module minitia_std::fungible_asset {
     }
 
     #[event]
+    /// Emitted when fungible assets are deposited into a store.
+    struct DepositOwnerEvent has drop {
+        owner: address
+    }
+
+    #[event]
     /// Emitted when fungible assets are withdrawn from a store.
     struct WithdrawEvent has drop, store {
         store_addr: address,
         metadata_addr: address,
         amount: u64
+    }
+
+    #[event]
+    /// Emitted when fungible assets are withdrawn from a store.
+    struct WithdrawOwnerEvent has drop {
+        owner: address
     }
 
     #[event]
@@ -442,6 +473,15 @@ module minitia_std::fungible_asset {
         MutateMetadataRef { metadata }
     }
 
+    /// Creates a mutate metadata ref that can be used to change the metadata information of fungible assets from the
+    /// given mint ref.
+    /// @dev - this interface only exists in minitia_stdlib.
+    public fun generate_mutate_metadata_ref_from_mint_ref(
+        mint_ref: &MintRef
+    ): MutateMetadataRef {
+        MutateMetadataRef { metadata: mint_ref.metadata }
+    }
+
     #[view]
     /// Return true if given address has Metadata else return false
     public fun is_fungible_asset(metadata_addr: address): bool {
@@ -450,7 +490,26 @@ module minitia_std::fungible_asset {
 
     #[view]
     /// Get the current supply from the `metadata` object.
+    ///
+    /// Note: This function will abort on FAs with `derived_supply` hook set up.
+    ///       Use `dispatchable_fungible_asset::supply` instead if you intend to work with those FAs.
     public fun supply<T: key>(metadata: Object<T>): Option<u128> acquires Supply {
+        let metadata_address = object::object_address(&metadata);
+        assert!(
+            !has_supply_dispatch_function(metadata_address),
+            error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+        );
+        if (exists<Supply>(metadata_address)) {
+            let supply = borrow_global<Supply>(metadata_address);
+            option::some(supply.current)
+        } else {
+            option::none()
+        }
+    }
+
+    #[view]
+    /// Get the current supply from the `metadata` object without sanity check.
+    public fun supply_without_sanity_check<T: key>(metadata: Object<T>): Option<u128> acquires Supply {
         let metadata_address = object::object_address(&metadata);
         if (exists<Supply>(metadata_address)) {
             let supply = borrow_global<Supply>(metadata_address);
@@ -474,37 +533,75 @@ module minitia_std::fungible_asset {
 
     #[view]
     /// Get the name of the fungible asset from the `metadata` object.
-    public fun name<T: key>(metadata: Object<T>): String acquires Metadata {
+    public fun name<T: key>(metadata: Object<T>): String acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            return borrow_global<ExtraMetadata>(object::object_address(&metadata)).name
+        };
+
         borrow_fungible_metadata(&metadata).name
     }
 
     #[view]
     /// Get the symbol of the fungible asset from the `metadata` object.
-    public fun symbol<T: key>(metadata: Object<T>): String acquires Metadata {
+    public fun raw_symbol<T: key>(metadata: Object<T>): String acquires Metadata {
         borrow_fungible_metadata(&metadata).symbol
     }
 
     #[view]
+    /// Get the symbol of the fungible asset from the `extra_metadata`, if not exists, get from the `metadata` object.
+    public fun symbol<T: key>(metadata: Object<T>): String acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            return borrow_global<ExtraMetadata>(object::object_address(&metadata)).symbol
+        };
+
+        raw_symbol(metadata)
+    }
+
+    #[view]
     /// Get the icon uri from the `metadata` object.
-    public fun icon_uri<T: key>(metadata: Object<T>): String acquires Metadata {
+    public fun icon_uri<T: key>(metadata: Object<T>): String acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            return borrow_global<ExtraMetadata>(object::object_address(&metadata)).icon_uri
+        };
+
         borrow_fungible_metadata(&metadata).icon_uri
     }
 
     #[view]
     /// Get the project uri from the `metadata` object.
-    public fun project_uri<T: key>(metadata: Object<T>): String acquires Metadata {
+    public fun project_uri<T: key>(metadata: Object<T>): String acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            return borrow_global<ExtraMetadata>(object::object_address(&metadata)).project_uri
+        };
+
         borrow_fungible_metadata(&metadata).project_uri
     }
 
     #[view]
     /// Get the metadata struct from the `metadata` object.
-    public fun metadata<T: key>(metadata: Object<T>): Metadata acquires Metadata {
+    public fun metadata<T: key>(metadata: Object<T>): Metadata acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            let extra_metadata =
+                borrow_global<ExtraMetadata>(object::object_address(&metadata));
+            return Metadata {
+                name: extra_metadata.name,
+                symbol: extra_metadata.symbol,
+                decimals: extra_metadata.decimals,
+                icon_uri: extra_metadata.icon_uri,
+                project_uri: extra_metadata.project_uri
+            }
+        };
+
         *borrow_fungible_metadata(&metadata)
     }
 
     #[view]
     /// Get the decimals from the `metadata` object.
-    public fun decimals<T: key>(metadata: Object<T>): u8 acquires Metadata {
+    public fun decimals<T: key>(metadata: Object<T>): u8 acquires Metadata, ExtraMetadata {
+        if (exists<ExtraMetadata>(object::object_address(&metadata))) {
+            return borrow_global<ExtraMetadata>(object::object_address(&metadata)).decimals
+        };
+
         borrow_fungible_metadata(&metadata).decimals
     }
 
@@ -532,7 +629,23 @@ module minitia_std::fungible_asset {
 
     #[view]
     /// Get the balance of a given store.
-    public fun balance<T: key>(store: Object<T>): u64 acquires FungibleStore {
+    ///
+    /// Note: This function will abort on FAs with `derived_balance` hook set up.
+    ///       Use `dispatchable_fungible_asset::derived_balance` instead if you intend to work with those FAs.
+    public fun balance<T: key>(store: Object<T>): u64 acquires FungibleStore, DispatchFunctionStore {
+        if (store_exists(object::object_address(&store))) {
+            let fa_store = borrow_store_resource(&store);
+            assert!(
+                !has_balance_dispatch_function(fa_store.metadata),
+                error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+            );
+            fa_store.balance
+        } else { 0 }
+    }
+
+    #[view]
+    /// Get the balance of a given store without sanity check.
+    public fun balance_without_sanity_check<T: key>(store: Object<T>): u64 acquires FungibleStore {
         if (store_exists(object::object_address(&store))) {
             borrow_store_resource(&store).balance
         } else { 0 }
@@ -571,9 +684,7 @@ module minitia_std::fungible_asset {
         metadata: Object<Metadata>
     ): bool acquires DispatchFunctionStore {
         let metadata_addr = object::object_address(&metadata);
-        // Short circuit on APT for better perf
-        if (metadata_addr != @minitia_std
-            && exists<DispatchFunctionStore>(metadata_addr)) {
+        if (exists<DispatchFunctionStore>(metadata_addr)) {
             option::is_some(
                 &borrow_global<DispatchFunctionStore>(metadata_addr).deposit_function
             )
@@ -596,13 +707,26 @@ module minitia_std::fungible_asset {
         metadata: Object<Metadata>
     ): bool acquires DispatchFunctionStore {
         let metadata_addr = object::object_address(&metadata);
-        // Short circuit on APT for better perf
-        if (metadata_addr != @minitia_std
-            && exists<DispatchFunctionStore>(metadata_addr)) {
+        if (exists<DispatchFunctionStore>(metadata_addr)) {
             option::is_some(
                 &borrow_global<DispatchFunctionStore>(metadata_addr).withdraw_function
             )
         } else { false }
+    }
+
+    fun has_balance_dispatch_function(
+        metadata: Object<Metadata>
+    ): bool acquires DispatchFunctionStore {
+        let metadata_addr = object::object_address(&metadata);
+        if (exists<DispatchFunctionStore>(metadata_addr)) {
+            option::is_some(
+                &borrow_global<DispatchFunctionStore>(metadata_addr).derived_balance_function
+            )
+        } else { false }
+    }
+
+    fun has_supply_dispatch_function(metadata_addr: address): bool {
+        exists<DeriveSupply>(metadata_addr)
     }
 
     public(friend) fun derived_balance_dispatch_function<T: key>(
@@ -722,7 +846,7 @@ module minitia_std::fungible_asset {
         assert!(!fa_store.frozen, error::permission_denied(ESTORE_IS_FROZEN));
     }
 
-    /// Deposit `amount` of the fungible asset to `store`.
+    /// sanity check for deposit operation.
     public fun deposit_sanity_check<T: key>(
         store: Object<T>, abort_on_dispatch: bool
     ) acquires FungibleStore, DispatchFunctionStore {
@@ -740,6 +864,19 @@ module minitia_std::fungible_asset {
             !is_blocked_store_addr(store_addr),
             error::invalid_argument(ECANNOT_DEPOSIT_TO_BLOCKED_ACCOUNT)
         );
+    }
+
+    /// sanity check for sudo deposit operation.
+    public(friend) fun sudo_deposit_sanity_check<T: key>(
+        store: Object<T>, abort_on_dispatch: bool
+    ) acquires FungibleStore, DispatchFunctionStore {
+        let fa_store = borrow_store_resource(&store);
+        assert!(
+            !abort_on_dispatch || !has_deposit_dispatch_function(fa_store.metadata),
+            error::invalid_argument(EINVALID_DISPATCHABLE_OPERATIONS)
+        );
+
+        assert!(!fa_store.frozen, error::permission_denied(ESTORE_IS_FROZEN));
     }
 
     /// Withdraw `amount` of the fungible asset from `store` by the owner.
@@ -808,7 +945,7 @@ module minitia_std::fungible_asset {
     public fun burn(ref: &BurnRef, fa: FungibleAsset) acquires Supply {
         let FungibleAsset { metadata, amount } = fa;
         assert!(
-            ref.metadata == metadata,
+            &ref.metadata == &metadata,
             error::invalid_argument(EBURN_REF_AND_FUNGIBLE_ASSET_MISMATCH)
         );
         decrease_supply(metadata, amount);
@@ -896,10 +1033,23 @@ module minitia_std::fungible_asset {
         decimals: Option<u8>,
         icon_uri: Option<String>,
         project_uri: Option<String>
-    ) acquires Metadata {
+    ) acquires Metadata, ExtraMetadata {
         let metadata_address = object::object_address(&metadata_ref.metadata);
-        let mutable_metadata = borrow_global_mut<Metadata>(metadata_address);
+        if (!exists<ExtraMetadata>(metadata_address)) {
+            let metadata = borrow_global<Metadata>(metadata_address);
+            move_to(
+                &account::create_signer(metadata_address),
+                ExtraMetadata {
+                    name: metadata.name,
+                    symbol: metadata.symbol,
+                    decimals: metadata.decimals,
+                    icon_uri: metadata.icon_uri,
+                    project_uri: metadata.project_uri
+                }
+            );
+        };
 
+        let mutable_metadata = borrow_global_mut<ExtraMetadata>(metadata_address);
         if (option::is_some(&name)) {
             let name = option::extract(&mut name);
             assert!(
@@ -958,12 +1108,8 @@ module minitia_std::fungible_asset {
     /// This function is only callable by the chain.
     public(friend) fun sudo_deposit<T: key>(
         store: Object<T>, fa: FungibleAsset
-    ) acquires FungibleStore {
-        assert!(
-            !is_frozen(store),
-            error::invalid_argument(ESTORE_IS_FROZEN)
-        );
-
+    ) acquires FungibleStore, DispatchFunctionStore {
+        sudo_deposit_sanity_check(store, true);
         deposit_internal(object::object_address(&store), fa);
     }
 
@@ -1026,6 +1172,9 @@ module minitia_std::fungible_asset {
         // emit event
         let metadata_addr = object::object_address(&metadata);
         event::emit(DepositEvent { store_addr, metadata_addr, amount });
+        let fungible_store = object::address_to_object<FungibleStore>(store_addr);
+        let owner_addr = object::owner(fungible_store);
+        event::emit(DepositOwnerEvent { owner: owner_addr });
     }
 
     /// Extract `amount` of the fungible asset from `store`.
@@ -1045,6 +1194,9 @@ module minitia_std::fungible_asset {
         // emit event
         let metadata_addr = object::object_address(&metadata);
         event::emit(WithdrawEvent { store_addr, metadata_addr, amount });
+        let fungible_store = object::address_to_object<FungibleStore>(store_addr);
+        let owner_addr = object::owner(fungible_store);
+        event::emit(WithdrawOwnerEvent { owner: owner_addr });
 
         FungibleAsset { metadata, amount }
     }
@@ -1172,7 +1324,7 @@ module minitia_std::fungible_asset {
     }
 
     #[test(creator = @0xcafe)]
-    fun test_metadata_basic_flow(creator: &signer) acquires Metadata, Supply {
+    fun test_metadata_basic_flow(creator: &signer) acquires Metadata, Supply, ExtraMetadata {
         let (creator_ref, metadata) = create_test_token(creator);
         init_test_metadata(&creator_ref);
         assert!(supply(metadata) == option::some(0), 1);
@@ -1207,7 +1359,7 @@ module minitia_std::fungible_asset {
     #[test(creator = @0xcafe, aaron = @0xface)]
     fun test_e2e_basic_flow(
         creator: &signer, aaron: &signer
-    ) acquires FungibleStore, Supply, DispatchFunctionStore, Metadata {
+    ) acquires FungibleStore, Supply, DispatchFunctionStore, Metadata, ExtraMetadata {
         let (mint_ref, transfer_ref, burn_ref, mutate_metadata_ref, test_token) =
             create_fungible_asset(creator);
         let metadata = mint_ref.metadata;
@@ -1246,14 +1398,15 @@ module minitia_std::fungible_asset {
         );
         assert!(name(metadata) == string::utf8(b"mutated_name"), 8);
         assert!(symbol(metadata) == string::utf8(b"mutated_symbol"), 9);
-        assert!(decimals(metadata) == 0, 10);
+        assert!(raw_symbol(metadata) == string::utf8(b"@@"), 10);
+        assert!(decimals(metadata) == 0, 11);
         assert!(
             icon_uri(metadata) == string::utf8(b"http://www.example.com/favicon.ico"),
-            11
+            12
         );
         assert!(
             project_uri(metadata) == string::utf8(b"http://www.example.com"),
-            12
+            13
         );
     }
 
@@ -1270,7 +1423,9 @@ module minitia_std::fungible_asset {
     }
 
     #[test(creator = @0xcafe, aaron = @0xface)]
-    fun test_transfer_with_ref(creator: &signer, aaron: &signer) acquires FungibleStore, Supply {
+    fun test_transfer_with_ref(
+        creator: &signer, aaron: &signer
+    ) acquires FungibleStore, Supply, DispatchFunctionStore {
         let (mint_ref, transfer_ref, _burn_ref, _mutate_metadata_ref, _) =
             create_fungible_asset(creator);
         let metadata = mint_ref.metadata;

@@ -9,6 +9,7 @@ module minitia_std::coin {
 
     use minitia_std::event;
     use minitia_std::primary_fungible_store;
+    use minitia_std::dispatchable_fungible_asset;
     use minitia_std::fungible_asset::{
         Self,
         MintRef,
@@ -275,6 +276,37 @@ module minitia_std::coin {
         primary_fungible_store::set_frozen_flag(&refs.transfer_ref, account_addr, false)
     }
 
+    /// Mutate the metadata information of the fungible asset.
+    /// @dev - this interface only exists in minitia_stdlib.
+    public fun mutate_metadata(
+        mint_cap: &MintCapability,
+        name: Option<String>,
+        symbol: Option<String>,
+        decimals: Option<u8>,
+        icon_uri: Option<String>,
+        project_uri: Option<String>
+    ) acquires ManagingRefs {
+        let metadata = mint_cap.metadata;
+        let metadata_addr = object::object_address(&metadata);
+
+        assert!(
+            exists<ManagingRefs>(metadata_addr),
+            ERR_MANAGING_REFS_NOT_FOUND
+        );
+
+        let refs = borrow_global<ManagingRefs>(metadata_addr);
+        let mutate_metadata_ref =
+            fungible_asset::generate_mutate_metadata_ref_from_mint_ref(&refs.mint_ref);
+        fungible_asset::mutate_metadata(
+            &mutate_metadata_ref,
+            name,
+            symbol,
+            decimals,
+            icon_uri,
+            project_uri
+        );
+    }
+
     //
     // Query interfaces
     //
@@ -299,7 +331,7 @@ module minitia_std::coin {
     #[view]
     /// Get the current supply from the `metadata` object.
     public fun supply(metadata: Object<Metadata>): Option<u128> {
-        fungible_asset::supply(metadata)
+        dispatchable_fungible_asset::derived_supply(metadata)
     }
 
     #[view]
@@ -316,6 +348,12 @@ module minitia_std::coin {
 
     #[view]
     /// Get the symbol of the fungible asset from the `metadata` object.
+    public fun raw_symbol<T: key>(metadata: Object<T>): String {
+        fungible_asset::raw_symbol(metadata)
+    }
+
+    #[view]
+    /// Get the symbol of the fungible asset from the `extra_metadata`, if not exists, get from the `metadata` object.
     public fun symbol(metadata: Object<Metadata>): String {
         fungible_asset::symbol(metadata)
     }
@@ -350,7 +388,7 @@ module minitia_std::coin {
     #[view]
     public fun metadata_to_denom(metadata: Object<Metadata>): String {
         let metadata_addr = object::object_address(&metadata);
-        let symbol = symbol(metadata);
+        let symbol = raw_symbol(metadata);
         let std_metadata_addr = metadata_address(@minitia_std, symbol);
 
         if (std_metadata_addr == metadata_addr) {
