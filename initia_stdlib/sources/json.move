@@ -151,6 +151,8 @@ module initia_std::json {
     /// NOTE: key `@type` is converted to `_type_`
     /// NOTE: key `move` is converted to `_move_`
     /// NOTE: key `signer` is converted to `_signer_`
+    ///
+    /// Enum unmarshaling is intentionally unsupported for security reasons.
     public fun unmarshal<T: drop>(json: vector<u8>): T {
         unmarshal_internal(json)
     }
@@ -190,6 +192,25 @@ module initia_std::json {
     #[test_only]
     struct EmptyObject has copy, drop {}
 
+    #[test_only]
+    enum Shape has drop {
+        Spot {},
+        Circle {
+            radius: u64
+        },
+        Rectangle {
+            width: u64,
+            height: u64
+        }
+    }
+
+    #[test_only]
+    enum Color has drop {
+        Red,
+        Blue,
+        Green
+    }
+
     #[test]
     fun test_json_empty_marshal_unmarshal_empty() {
         let json = marshal(&EmptyObject {});
@@ -215,6 +236,27 @@ module initia_std::json {
 
         let val = unmarshal<vector<u8>>(json);
         assert!(val == vector[1u8, 2u8, 3u8], 2);
+    }
+
+    #[test]
+    fun test_json_marshal_enum() {
+        let json = marshal(&Shape::Spot);
+        assert!(json == b"{\"Spot\":{}}", 1);
+
+        let json = marshal(&Shape::Circle { radius: 5u64 });
+        assert!(json == b"{\"Circle\":{\"radius\":\"5\"}}", 1);
+
+        let json = marshal(&Shape::Rectangle { width: 5u64, height: 5u64 });
+        assert!(json == b"{\"Rectangle\":{\"width\":\"5\",\"height\":\"5\"}}", 1);
+
+        let json = marshal(&Color::Red);
+        assert!(json == b"{\"Red\":{}}", 1);
+
+        let json = marshal(&Color::Blue);
+        assert!(json == b"{\"Blue\":{}}", 1);
+
+        let json = marshal(&Color::Green);
+        assert!(json == b"{\"Green\":{}}", 1);
     }
 
     #[test]
